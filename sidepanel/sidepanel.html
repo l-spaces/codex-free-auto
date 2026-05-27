@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codex Free 注册机</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+
+<body class="is-restoring">
+  <header>
+    <div class="header-btns">
+      <div class="run-group">
+        <input type="number" id="input-run-count" class="run-count-input" value="1" min="1" title="运行次数" />
+        <button id="btn-auto-run" class="btn btn-primary" title="自动执行全部步骤">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          自动
+        </button>
+        <button id="btn-stop" class="btn btn-danger" title="停止当前流程" disabled>停止</button>
+      </div>
+      <div class="header-tools">
+        <button id="btn-reset" class="btn btn-ghost" title="重置全部步骤">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10" />
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+          </svg>
+        </button>
+        <button id="btn-theme" class="theme-toggle" title="切换主题">
+          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+        </button>
+        <div id="config-menu-shell" class="header-menu">
+          <button id="btn-config-menu" class="btn btn-ghost btn-sm header-config-btn" type="button" aria-haspopup="menu"
+            aria-expanded="false">配置</button>
+          <div id="config-menu" class="header-dropdown" role="menu" aria-labelledby="btn-config-menu" hidden>
+            <button id="btn-export-settings" class="header-dropdown-item" type="button" role="menuitem">导出配置</button>
+            <button id="btn-import-settings" class="header-dropdown-item" type="button" role="menuitem">导入配置</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="data-section">
+    <div id="settings-card" class="data-card">
+      <div class="data-row">
+        <span class="data-label">执行流程</span>
+        <div class="data-inline">
+          <select id="select-flow" class="data-select" aria-label="Flow 选择">
+            <option value="full-flow" selected>全流程</option>
+            <option value="register-gpt">注册GPT</option>
+            <option value="authorize-codex">授权Codex</option>
+          </select>
+          <button id="btn-export-accounts" class="btn btn-outline btn-sm data-inline-btn" type="button">1.导出账号</button>
+          <button id="btn-import-accounts" class="btn btn-outline btn-sm data-inline-btn" type="button">2.导入账号</button>
+          <div id="account-write-control" class="account-write-control">
+            <span id="label-write-accounts" class="account-write-label">3.写入账号</span>
+            <label id="label-write-accounts-toggle" class="toggle-switch account-write-toggle"
+              for="input-write-accounts-enabled" title="开启后选择目录并启用写入账号，关闭后不写入账号">
+              <input type="checkbox" id="input-write-accounts-enabled" />
+              <span class="toggle-switch-track" aria-hidden="true">
+                <span class="toggle-switch-thumb"></span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="data-row">
+        <span class="data-label">来源</span>
+        <select id="select-panel-mode" class="data-select">
+          <option value="cpa">CPA 面板</option>
+          <option value="sub2api">SUB2API</option>
+          <option value="codex2api">Codex2API</option>
+        </select>
+      </div>
+      <div class="data-row" id="row-vps-url">
+        <span class="data-label">CPA</span>
+        <div class="input-with-icon">
+          <input type="password" id="input-vps-url" class="data-input data-input-with-icon"
+            placeholder="http://ip:port/management.html#/oauth" />
+          <button id="btn-toggle-vps-url" class="input-icon-btn" type="button" aria-label="显示 CPA 地址"
+            title="显示 CPA 地址"></button>
+        </div>
+      </div>
+      <div class="data-row" id="row-vps-password">
+        <span class="data-label">管理密钥</span>
+        <div class="input-with-icon">
+          <input type="password" id="input-vps-password" class="data-input data-input-with-icon"
+            placeholder="请输入 CPA 管理密钥" />
+          <button id="btn-toggle-vps-password" class="input-icon-btn" type="button" aria-label="显示管理密钥"
+            title="显示管理密钥"></button>
+        </div>
+      </div>
+      <div class="data-row" id="row-local-cpa-step9-mode">
+        <span class="data-label">回调方式</span>
+        <div id="local-cpa-step9-mode-group" class="choice-group" role="group" aria-label="回调方式">
+          <button type="button" class="choice-btn" data-local-cpa-step9-mode="submit">服务器部署</button>
+          <button type="button" class="choice-btn" data-local-cpa-step9-mode="bypass">本地部署</button>
+        </div>
+      </div>
+      <div class="data-row" id="row-sub2api-url" style="display:none;">
+        <span class="data-label">SUB2API</span>
+        <input type="text" id="input-sub2api-url" class="data-input"
+          placeholder="https://your-sub2api-domain/admin/accounts" />
+      </div>
+      <div class="data-row" id="row-sub2api-email" style="display:none;">
+        <span class="data-label">账号</span>
+        <input type="text" id="input-sub2api-email" class="data-input" placeholder="请输入 SUB2API 登录邮箱" />
+      </div>
+      <div class="data-row" id="row-sub2api-password" style="display:none;">
+        <span class="data-label">密码</span>
+        <div class="input-with-icon">
+          <input type="password" id="input-sub2api-password" class="data-input data-input-with-icon"
+            placeholder="请输入 SUB2API 登录密码" />
+          <button id="btn-toggle-sub2api-password" class="input-icon-btn" type="button"
+            data-password-toggle="input-sub2api-password" data-show-label="显示 SUB2API 密码"
+            data-hide-label="隐藏 SUB2API 密码" aria-label="显示 SUB2API 密码" title="显示 SUB2API 密码"></button>
+        </div>
+      </div>
+      <div class="data-row" id="row-sub2api-group" style="display:none;">
+        <span class="data-label">分组</span>
+        <div class="data-inline">
+          <input type="hidden" id="input-sub2api-group" value="codex" />
+          <div id="sub2api-group-picker" class="editable-list-picker">
+            <button id="btn-sub2api-group-menu" class="data-select editable-list-trigger" type="button"
+              aria-haspopup="listbox" aria-expanded="false">
+              <span id="sub2api-group-current" class="truncate">codex</span>
+              <span class="editable-list-caret" aria-hidden="true"></span>
+            </button>
+            <div id="sub2api-group-menu" class="editable-list-menu" role="listbox" hidden></div>
+          </div>
+          <button id="btn-add-sub2api-group" class="btn btn-outline btn-sm data-inline-btn" type="button">添加</button>
+        </div>
+      </div>
+      <div class="data-row" id="row-sub2api-account-priority" style="display:none;">
+        <span class="data-label">优先级</span>
+        <input type="number" id="input-sub2api-account-priority" class="data-input mono" value="1" min="1" step="1" />
+      </div>
+      <div class="data-row" id="row-sub2api-default-proxy" style="display:none;">
+        <span class="data-label">默认代理</span>
+        <input type="text" id="input-sub2api-default-proxy" class="data-input" placeholder="留空则不使用代理；或填写代理名称 / ID" />
+      </div>
+      <div class="data-row" id="row-codex2api-url" style="display:none;">
+        <span class="data-label">Codex2API</span>
+        <input type="text" id="input-codex2api-url" class="data-input"
+          placeholder="http://localhost:8080/admin/accounts" />
+      </div>
+      <div class="data-row" id="row-codex2api-admin-key" style="display:none;">
+        <span class="data-label">管理密钥</span>
+        <div class="input-with-icon">
+          <input type="password" id="input-codex2api-admin-key" class="data-input data-input-with-icon"
+            placeholder="请输入 Codex2API Admin Secret" />
+          <button id="btn-toggle-codex2api-admin-key" class="input-icon-btn" type="button"
+            data-password-toggle="input-codex2api-admin-key" data-show-label="显示 Codex2API 管理密钥"
+            data-hide-label="隐藏 Codex2API 管理密钥" aria-label="显示 Codex2API 管理密钥"
+            title="显示 Codex2API 管理密钥"></button>
+        </div>
+      </div>
+      <div class="data-row module-divider-start" id="row-custom-password">
+        <span class="data-label">账户密码</span>
+        <div class="input-with-icon">
+          <input type="password" id="input-password" class="data-input data-input-with-icon"
+            placeholder="codex密码，留空则自动生成" />
+          <button id="btn-toggle-password" class="input-icon-btn" type="button" aria-label="显示密码" title="显示密码"></button>
+        </div>
+      </div>
+      <div class="data-row module-divider-start" id="row-mail-provider">
+        <span class="data-label">邮箱服务</span>
+        <div class="data-inline">
+          <select id="select-mail-provider" class="data-select">
+            <option value="custom">自定义邮箱</option>
+            <option value="hotmail-api">Hotmail（账号池）</option>
+            <option value="luckmail-api">LuckMail（API 购邮）</option>
+            <option value="icloud">iCloud 邮箱</option>
+            <option value="163">163 邮箱 (mail.163.com) 版本老旧，请自行维护使用</option>
+            <option value="163-vip">163 VIP 邮箱 (vip.163.com) 版本老旧，请自行维护使用</option>
+            <option value="126">126 邮箱 (mail.126.com) 版本老旧，请自行维护使用</option>
+            <option value="qq">QQ 邮箱 (wx.mail.qq.com) 版本老旧，请自行维护使用</option>
+            <option value="inbucket">Inbucket（自定义主机）</option>
+            <option value="gmail">Gmail 邮箱 (mail.google.com)</option>
+            <option value="cloudmail">Cloud Mail</option>
+            <option value="2925">2925 邮箱 (2925.com)（推荐）</option>
+            <option value="cloudflare-temp-email">Cloudflare Temp Email（推荐）</option>
+            <option value="gptmail">GPTMail（免费）</option>
+            <option value="yyds-mail">YYDS Mail（免费）</option>
+          </select>
+          <button id="btn-mail-login" class="btn btn-outline btn-sm data-inline-btn" type="button" disabled>登录</button>
+        </div>
+      </div>
+      <div class="data-row data-check-row" id="row-custom-mail-provider-pool" style="display:none;">
+        <span class="data-label">自定义号池</span>
+        <textarea id="input-custom-mail-provider-pool" class="data-textarea"
+          placeholder="每行一个注册邮箱，例如&#10;alias001@example.com&#10;alias002@example.com"></textarea>
+      </div>
+      <div class="data-row" id="row-mail-2925-mode" style="display:none;">
+        <span class="data-label">2925 模式</span>
+        <div id="mail-2925-mode-group" class="choice-group" role="group" aria-label="2925 邮箱模式">
+          <button type="button" class="choice-btn" data-mail2925-mode="provide">提供邮箱</button>
+          <button type="button" class="choice-btn" data-mail2925-mode="receive">接收邮箱</button>
+        </div>
+      </div>
+      <div class="data-row" id="row-email-generator">
+        <span class="data-label">邮箱生成</span>
+        <select id="select-email-generator" class="data-select">
+          <option value="gmail-alias">Gmail +tag</option>
+          <option value="duck">DuckDuckGo</option>
+          <option value="custom-pool">自定义邮箱池</option>
+          <option value="cloudflare">Cloudflare</option>
+          <option value="icloud">iCloud 隐私邮箱</option>
+          <option value="cloudflare-temp-email">Cloudflare Temp Email（推荐）</option>
+          <option value="cloudmail">Cloud Mail</option>
+        </select>
+      </div>
+      <div class="data-row" id="row-duck-api-authorization" style="display:none;">
+        <span class="data-label">Duck Auth</span>
+        <div class="input-with-icon">
+          <input type="password" id="input-duck-api-authorization" class="data-input data-input-with-icon"
+            placeholder="请输入 DuckDuckGo API Authorization（Bearer Token）" />
+          <button id="btn-toggle-duck-api-authorization" class="input-icon-btn" type="button"
+            data-password-toggle="input-duck-api-authorization" data-show-label="显示 Duck Authorization"
+            data-hide-label="隐藏 Duck Authorization" aria-label="显示 Duck Authorization"
+            title="显示 Duck Authorization"></button>
+        </div>
+      </div>
+      <div class="data-row data-check-row" id="row-custom-email-pool" style="display:none;">
+        <span class="data-label">邮箱池</span>
+        <div class="hotmail-import-box">
+          <textarea id="input-custom-email-pool" class="data-textarea mono" hidden
+            placeholder="每行一个邮箱，例如&#10;alias001@gmail.com&#10;alias002@gmail.com"></textarea>
+          <div class="section-mini-header">
+            <div class="section-mini-copy">
+              <span class="section-label">自定义邮箱池</span>
+            </div>
+            <div class="section-mini-actions">
+              <button id="btn-custom-email-pool-refresh" class="btn btn-ghost btn-xs" type="button">刷新</button>
+              <button id="btn-custom-email-pool-clear-used" class="btn btn-ghost btn-xs" type="button">清空已用</button>
+              <button id="btn-custom-email-pool-delete-all" class="btn btn-ghost btn-xs" type="button">全部删除</button>
+            </div>
+          </div>
+          <textarea id="input-custom-email-pool-import" class="data-textarea mono" rows="4"
+            placeholder="每行一个邮箱，例如&#10;alias001@gmail.com&#10;alias002@gmail.com"></textarea>
+          <div class="data-inline">
+            <button id="btn-custom-email-pool-import" class="btn btn-primary btn-sm" type="button">导入邮箱</button>
+          </div>
+          <div class="icloud-card">
+            <div id="custom-email-pool-summary" class="icloud-summary">导入你提前准备好的注册邮箱，每行一个邮箱地址。</div>
+            <div class="icloud-toolbar">
+              <input id="input-custom-email-pool-search" class="data-input icloud-search" type="text"
+                placeholder="搜索邮箱 / 备注" />
+              <select id="select-custom-email-pool-filter" class="data-select icloud-filter">
+                <option value="all">全部</option>
+                <option value="current">当前</option>
+                <option value="enabled">启用</option>
+                <option value="disabled">停用</option>
+                <option value="used">已用</option>
+                <option value="unused">未用</option>
+              </select>
+            </div>
+            <div class="icloud-bulkbar">
+              <label class="option-toggle luckmail-select-all" for="checkbox-custom-email-pool-select-all">
+                <input type="checkbox" id="checkbox-custom-email-pool-select-all" />
+                <span id="custom-email-pool-selection-summary">已选 0 个</span>
+              </label>
+              <div class="luckmail-bulk-actions">
+                <button id="btn-custom-email-pool-bulk-used" class="btn btn-outline btn-xs" type="button">标记已用</button>
+                <button id="btn-custom-email-pool-bulk-unused" class="btn btn-outline btn-xs" type="button">标记未用</button>
+                <button id="btn-custom-email-pool-bulk-enable" class="btn btn-outline btn-xs" type="button">启用</button>
+                <button id="btn-custom-email-pool-bulk-disable" class="btn btn-outline btn-xs" type="button">停用</button>
+                <button id="btn-custom-email-pool-bulk-delete" class="btn btn-outline btn-xs" type="button">删除</button>
+              </div>
+            </div>
+            <div id="custom-email-pool-list" class="luckmail-list"></div>
+          </div>
+        </div>
+      </div>
+      <div class="data-row" id="row-cf-domain" style="display:none;">
+        <span class="data-label">CF 域名</span>
+        <div class="data-inline">
+          <input type="hidden" id="select-cf-domain" value="" />
+          <div id="cf-domain-picker" class="editable-list-picker">
+            <button id="btn-cf-domain-menu" class="data-select editable-list-trigger" type="button"
+              aria-haspopup="listbox" aria-expanded="false">
+              <span id="cf-domain-current" class="truncate">请先添加域名</span>
+              <span class="editable-list-caret" aria-hidden="true"></span>
+            </button>
+            <div id="cf-domain-menu" class="editable-list-menu" role="listbox" hidden></div>
+          </div>
+          <input type="text" id="input-cf-domain" class="data-input" placeholder="例如 yourdomain.xyz"
+            style="display:none;" />
+          <button id="btn-cf-domain-mode" class="btn btn-outline btn-sm data-inline-btn" type="button">添加</button>
+        </div>
+      </div>
+      <div class="data-row" id="row-mail2925-pool-settings" style="display:none;">
+        <span class="data-label">2925 号池</span>
+        <div class="data-inline mail2925-base-inline">
+          <label class="toggle-switch mail2925-pool-toggle" id="label-mail2925-use-account-pool"
+            for="input-mail2925-use-account-pool" style="display:none;" title="开启后启用 2925 账号池">
+            <input type="checkbox" id="input-mail2925-use-account-pool" />
+            <span class="toggle-switch-track" aria-hidden="true">
+              <span class="toggle-switch-thumb"></span>
+            </span>
+            <span>号池</span>
+          </label>
+          <select id="select-mail2925-pool-account" class="data-select mail2925-pool-select" style="display:none;">
+            <option value="">请选择号池邮箱</option>
+          </select>
+        </div>
+      </div>
+      <div class="data-row" id="row-email-prefix" style="display:none;">
+        <span class="data-label" id="label-email-prefix">别名基邮箱</span>
+        <div class="data-inline">
+          <input type="text" id="input-email-prefix" class="data-input mail2925-base-input"
+            placeholder="例如 yourname@example.com" />
+        </div>
+      </div>
+      <div class="data-row" id="row-inbucket-host" style="display:none;">
+        <span class="data-label">Inbucket</span>
+        <input type="text" id="input-inbucket-host" class="data-input" placeholder="填写主机或 https://主机地址" />
+      </div>
+      <div class="data-row" id="row-inbucket-mailbox" style="display:none;">
+        <span class="data-label">邮箱名</span>
+        <input type="text" id="input-inbucket-mailbox" class="data-input" placeholder="例如 zju2001" />
+      </div>
+      <div class="data-row" id="row-auto-run-controls">
+        <span class="data-label">注册邮箱</span>
+        <div class="data-inline">
+          <input type="text" id="input-email" class="data-input" placeholder="自动生成或手动粘贴邮箱" />
+          <button id="btn-fetch-email" class="btn btn-outline btn-sm data-inline-btn" type="button">获取</button>
+        </div>
+      </div>
+      <div class="settings-layout-card module-divider-start" id="row-auto-delay-settings">
+        <div class="settings-layout">
+          <div class="settings-layout-row settings-layout-row-7">
+          <div class="settings-layout-col settings-layout-col-switch">
+            <span class="settings-item-label">授权前清 Cookies</span>
+            <label class="toggle-switch" for="input-step6-cookie-cleanup-enabled"
+              title="开启后，每轮执行第 7 步前会先清理 ChatGPT / OpenAI Cookies。">
+              <input type="checkbox" id="input-step6-cookie-cleanup-enabled" />
+              <span class="toggle-switch-track" aria-hidden="true">
+                <span class="toggle-switch-thumb"></span>
+              </span>
+            </label>
+          </div>
+          <div class="settings-layout-col settings-layout-col-switch" id="row-operation-delay-settings">
+            <span class="settings-item-label" title="页面输入、选择、点击、提交、继续、授权后按类型分级等待（0.3~2 秒）">操作间延迟</span>
+            <label class="toggle-switch" for="input-operation-delay-enabled"
+              title="页面输入、选择、点击、提交、继续、授权后按类型分级等待（0.3~2 秒）">
+              <input type="checkbox" id="input-operation-delay-enabled" checked />
+              <span class="toggle-switch-track" aria-hidden="true">
+                <span class="toggle-switch-thumb"></span>
+              </span>
+              <span>启用</span>
+            </label>
+          </div>
+          <div class="settings-layout-col settings-layout-col-switch" id="row-auto-retry-settings">
+            <span class="settings-item-label">自动重试</span>
+            <label class="toggle-switch" for="input-auto-skip-failures"
+              title="开启后，当前轮失败会先自动重试；达到上限后再进入下一轮。">
+              <input type="checkbox" id="input-auto-skip-failures" />
+              <span class="toggle-switch-track" aria-hidden="true">
+                <span class="toggle-switch-thumb"></span>
+              </span>
+            </label>
+          </div>
+          <div class="settings-layout-col settings-layout-col-input">
+            <span class="settings-item-label" title="设置同一轮中步骤之间的额外等待秒数，0 或留空表示不额外等待。">步骤间隔</span>
+            <div class="setting-controls">
+              <input type="number" id="input-auto-step-delay-seconds" class="data-input auto-delay-input" value=""
+                min="0" max="600" step="1" title="设置同一轮中步骤之间的额外等待秒数，0 或留空表示不额外等待。" />
+              <span class="data-unit">秒钟</span>
+            </div>
+          </div>
+          <div class="settings-layout-col settings-layout-col-switch" id="row-oauth-flow-timeout">
+            <span class="settings-item-label" title="关闭后不再用 5 分钟总预算重启授权链，但页面、点击、回调等本地等待超时仍会生效">授权总超时</span>
+            <label class="toggle-switch" for="input-oauth-flow-timeout-enabled"
+              title="关闭后不再用 5 分钟总预算重启授权链，但页面、点击、回调等本地等待超时仍会生效">
+              <input type="checkbox" id="input-oauth-flow-timeout-enabled" checked />
+              <span class="toggle-switch-track" aria-hidden="true">
+                <span class="toggle-switch-thumb"></span>
+              </span>
+              <span>启用</span>
+            </label>
+          </div>
+          <div class="settings-layout-col settings-layout-col-input settings-layout-col-thread" id="row-thread-interval-settings">
+            <span class="settings-item-label" title="设置自动重试模式下，不同轮次之间的等待分钟数。">执行间隔</span>
+            <div class="setting-controls">
+              <input type="number" id="input-auto-skip-failures-thread-interval-minutes"
+                class="data-input auto-delay-input" value="0" min="0" max="1440" step="1"
+                title="设置自动重试模式下，不同轮次之间的等待分钟数。" />
+              <span class="data-unit">分钟</span>
+            </div>
+          </div>
+          <div class="settings-layout-col settings-layout-col-input">
+              <span class="settings-item-label" title="设置自动运行启动前倒计时，0 分钟表示立即开始。">延迟执行</span>
+              <div class="setting-controls">
+                <input type="number" id="input-auto-delay-minutes" class="data-input auto-delay-input" value="0" min="0"
+                       max="1440" step="1" title="设置自动运行启动前倒计时，0 分钟表示立即开始。" />
+                <span class="data-unit">分钟</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="data-row module-divider-start" id="row-oauth-display">
+        <span class="data-label">OAuth</span>
+        <span id="display-oauth-url" class="data-value mono truncate">等待中...</span>
+      </div>
+      <div class="data-row">
+        <span class="data-label">回调</span>
+        <div class="data-inline data-value-actions">
+          <span id="display-localhost-url" class="data-value data-value-fill mono truncate">等待中...</span>
+          <button id="btn-save-settings" class="btn btn-outline btn-sm data-inline-btn" type="button">保存</button>
+        </div>
+      </div>
+    </div>
+    <div id="cloudflare-temp-email-section" class="data-card hotmail-card" style="display:none;">
+      <div class="section-mini-header">
+        <div class="section-mini-copy">
+          <span class="section-label">Cloudflare Temp Email</span>
+          <span class="data-value">用于生成邮箱或接收转发邮件</span>
+        </div>
+        <div class="section-mini-actions">
+          <button id="btn-cloudflare-temp-email-github" class="btn btn-ghost btn-xs" type="button">部署</button>
+        </div>
+      </div>
+      <div class="data-row" id="row-temp-email-base-url" style="display:none;">
+        <span class="data-label">Temp API</span>
+        <input type="text" id="input-temp-email-base-url" class="data-input" placeholder="https://your-worker-domain" />
+      </div>
+      <div class="data-row" id="row-temp-email-admin-auth" style="display:none;">
+        <span class="data-label">Admin Auth</span>
+        <div class="input-with-icon">
+          <input type="password" id="input-temp-email-admin-auth" class="data-input data-input-with-icon"
+            placeholder="Cloudflare Temp Email admin password" />
+          <button id="btn-toggle-temp-email-admin-auth" class="input-icon-btn" type="button"
+            data-password-toggle="input-temp-email-admin-auth" data-show-label="显示 Admin Auth"
+            data-hide-label="隐藏 Admin Auth" aria-label="显示 Admin Auth" title="显示 Admin Auth"></button>
+        </div>
+      </div>
+      <div class="data-row" id="row-temp-email-custom-auth" style="display:none;">
+        <span class="data-label">Custom Auth</span>
+        <div class="input-with-icon">
+          <input type="password" id="input-temp-email-custom-auth" class="data-input data-input-with-icon"
+            placeholder="仅当站点启用了访问密码时再填写；这是额外鉴权，不替代 Admin Auth。" />
+          <button id="btn-toggle-temp-email-custom-auth" class="input-icon-btn" type="button"
+            data-password-toggle="input-temp-email-custom-auth" data-show-label="显示 Custom Auth"
+            data-hide-label="隐藏 Custom Auth" aria-label="显示 Custom Auth" title="显示 Custom Auth"></button>
+        </div>
+      </div>
+      <div class="data-row" id="row-temp-email-lookup-mode" style="display:none;">
+        <span class="data-label">查信方式</span>
+        <div id="temp-email-lookup-mode-group" class="choice-group" role="group" aria-label="Cloudflare Temp Email 查信方式">
+          <button type="button" class="choice-btn" data-temp-email-lookup-mode="receive-mailbox">邮件接收</button>
+          <button type="button" class="choice-btn" data-temp-email-lookup-mode="registration-email">注册邮箱</button>
+        </div>
+      </div>
+      <div class="data-row" id="row-temp-email-receive-mailbox" style="display:none;">
+        <span class="data-label">邮件接收</span>
+        <input type="text" id="input-temp-email-receive-mailbox" class="data-input"
+          placeholder="用于接收转发邮件的邮箱，例如 1@email.example.com" />
+      </div>
+      <div class="data-row" id="row-temp-email-random-subdomain-toggle" style="display:none;">
+        <span class="data-label">随机子域</span>
+        <div class="data-inline">
+          <label class="toggle-switch" for="input-temp-email-use-random-subdomain"
+            title="依赖后端 RANDOM_SUBDOMAIN_DOMAINS 配置">
+            <input type="checkbox" id="input-temp-email-use-random-subdomain" />
+            <span class="toggle-switch-track" aria-hidden="true">
+              <span class="toggle-switch-thumb"></span>
+            </span>
+            <span>启用</span>
+          </label>
+        </div>
+      </div>
+      <div class="data-row" id="row-temp-email-domain" style="display:none;">
+        <span class="data-label">Temp 域名</span>
+        <div class="data-inline">
+          <input type="hidden" id="select-temp-email-domain" value="" />
+          <div id="temp-email-domain-picker" class="editable-list-picker">
+            <button id="btn-temp-email-domain-menu" class="data-select editable-list-trigger" type="button"
+              aria-haspopup="listbox" aria-expanded="false">
+              <span id="temp-email-domain-current" class="truncate">请先更新域名</span>
+              <span class="editable-list-caret" aria-hidden="true"></span>
+            </button>
+            <div id="temp-email-domain-menu" class="editable-list-menu" role="listbox" hidden></div>
+          </div>
+          <input type="text" id="input-temp-email-domain" class="data-input" placeholder="例如 mail.example.com"
+            style="display:none;" />
+          <button id="btn-temp-email-domain-mode" class="btn btn-outline btn-sm" type="button">更新</button>
+        </div>
+      </div>
+      <div class="data-row" id="row-temp-email-fixed-mailbox" style="display:none;">
+        <span class="data-label">固定收件箱</span>
+        <input type="text" id="input-temp-email-fixed-mailbox" class="data-input"
+          placeholder="完整邮箱，例如 fixed@mail.example.com" />
+      </div>
+    </div>
+    <div id="cloud-mail-section" class="data-card hotmail-card" style="display:none;">
+      <div class="section-mini-header">
+        <div class="section-mini-copy">
+          <span class="section-label">Cloud Mail</span>
+          <span class="data-value">用于生成邮箱或接收转发邮件（skymail.ink API）</span>
+        </div>
+      </div>
+      <div class="data-row" id="row-cloud-mail-base-url" style="display:none;">
+        <span class="data-label">API 地址</span>
+        <input type="text" id="input-cloud-mail-base-url" class="data-input" placeholder="https://your-cloudmail-domain" />
+      </div>
+      <div class="data-row" id="row-cloud-mail-admin-email" style="display:none;">
+        <span class="data-label">管理员邮箱</span>
+        <input type="text" id="input-cloud-mail-admin-email" class="data-input" placeholder="admin@example.com" />
+      </div>
+      <div class="data-row" id="row-cloud-mail-admin-password" style="display:none;">
+        <span class="data-label">管理员密码</span>
+        <div class="input-with-icon">
+          <input type="password" id="input-cloud-mail-admin-password" class="data-input data-input-with-icon"
+            placeholder="Cloud Mail 管理员密码" />
+          <button id="btn-toggle-cloud-mail-admin-password" class="input-icon-btn" type="button"
+            data-password-toggle="input-cloud-mail-admin-password" data-show-label="显示 Cloud Mail 密码"
+            data-hide-label="隐藏 Cloud Mail 密码" aria-label="显示 Cloud Mail 密码" title="显示 Cloud Mail 密码"></button>
+        </div>
+      </div>
+      <div class="data-row" id="row-cloud-mail-receive-mailbox" style="display:none;">
+        <span class="data-label">邮件接收</span>
+        <input type="text" id="input-cloud-mail-receive-mailbox" class="data-input"
+          placeholder="用于接收转发邮件的邮箱，例如 1@email.example.com" />
+      </div>
+      <div class="data-row" id="row-cloud-mail-domain" style="display:none;">
+        <span class="data-label">域名</span>
+        <input type="text" id="input-cloud-mail-domain" class="data-input" placeholder="例如 mail.example.com" />
+      </div>
+    </div>
+    <div id="yyds-mail-section" class="data-card hotmail-card" style="display:none;">
+      <div class="section-mini-header">
+        <div class="section-mini-copy">
+          <span class="section-label">YYDS Mail</span>
+          <span class="data-value">自动创建临时邮箱并通过 API 收取验证码</span>
+        </div>
+      </div>
+      <div class="data-row">
+        <span class="data-label">API Key</span>
+        <div class="input-with-icon">
+          <input type="password" id="input-yyds-mail-api-key" class="data-input data-input-with-icon mono"
+            placeholder="请输入 YYDS Mail API Key（AC-...）" />
+          <button id="btn-toggle-yyds-mail-api-key" class="input-icon-btn" type="button"
+            data-password-toggle="input-yyds-mail-api-key" data-show-label="显示 YYDS Mail API Key"
+            data-hide-label="隐藏 YYDS Mail API Key" aria-label="显示 YYDS Mail API Key" title="显示 YYDS Mail API Key"></button>
+        </div>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Base URL</span>
+        <input type="text" id="input-yyds-mail-base-url" class="data-input mono"
+          placeholder="https://maliapi.215.im/v1" />
+      </div>
+    </div>
+    <div id="hotmail-section" class="data-card hotmail-card" style="display:none;">
+      <div class="section-mini-header">
+        <div class="section-mini-copy">
+          <span class="section-label">Hotmail 账号池</span>
+        </div>
+        <div class="section-mini-actions">
+          <button id="btn-toggle-hotmail-form" class="btn btn-outline btn-xs" type="button"
+            aria-expanded="false">添加账号</button>
+          <button id="btn-hotmail-usage-guide" class="btn btn-ghost btn-xs" type="button">使用教程</button>
+          <button id="btn-clear-used-hotmail-accounts" class="btn btn-ghost btn-xs" type="button">清空已用</button>
+          <button id="btn-delete-all-hotmail-accounts" class="btn btn-ghost btn-xs" type="button">全部删除</button>
+          <button id="btn-toggle-hotmail-list" class="btn btn-ghost btn-xs" type="button"
+            aria-expanded="false">展开列表</button>
+        </div>
+      </div>
+      <div class="data-row" id="row-hotmail-service-mode">
+        <span class="data-label">服务模式</span>
+        <div id="hotmail-service-mode-group" class="choice-group" role="group" aria-label="Hotmail 服务模式">
+          <button type="button" class="choice-btn" data-hotmail-service-mode="remote">API对接</button>
+          <button type="button" class="choice-btn" data-hotmail-service-mode="local">本地助手</button>
+        </div>
+      </div>
+      <div class="data-row" id="row-hotmail-remote-base-url">
+        <span class="data-label">API对接</span>
+        <input type="text" id="input-hotmail-remote-base-url" class="data-input mono"
+          placeholder="微软邮箱 API 对接模式无需填写地址" />
+      </div>
+      <div class="data-row" id="row-hotmail-local-base-url" style="display:none;">
+        <span class="data-label">本地助手</span>
+        <input type="text" id="input-hotmail-local-base-url" class="data-input mono"
+          placeholder="http://127.0.0.1:17373" />
+      </div>
+      <div id="hotmail-form-shell" class="account-pool-form-shell" hidden>
+        <div class="data-row">
+          <span class="data-label">邮箱</span>
+          <input type="text" id="input-hotmail-email" class="data-input" placeholder="name@hotmail.com" />
+        </div>
+        <div class="data-row">
+          <span class="data-label">客户端 ID</span>
+          <input type="text" id="input-hotmail-client-id" class="data-input mono" placeholder="微软应用客户端 ID" />
+        </div>
+        <div class="data-row">
+          <span class="data-label">邮箱密码</span>
+          <div class="input-with-icon">
+            <input type="password" id="input-hotmail-password" class="data-input data-input-with-icon"
+              placeholder="可选，仅用于记录" />
+            <button id="btn-toggle-hotmail-password" class="input-icon-btn" type="button"
+              data-password-toggle="input-hotmail-password" data-show-label="显示 Hotmail 密码"
+              data-hide-label="隐藏 Hotmail 密码" aria-label="显示 Hotmail 密码" title="显示 Hotmail 密码"></button>
+          </div>
+        </div>
+        <div class="data-row">
+          <span class="data-label">刷新令牌</span>
+          <div class="input-with-icon">
+            <input type="password" id="input-hotmail-refresh-token" class="data-input data-input-with-icon mono"
+              placeholder="必填，粘贴刷新令牌（refresh token）" />
+            <button id="btn-toggle-hotmail-refresh-token" class="input-icon-btn" type="button"
+              data-password-toggle="input-hotmail-refresh-token" data-show-label="显示 Hotmail 刷新令牌"
+              data-hide-label="隐藏 Hotmail 刷新令牌" aria-label="显示 Hotmail 刷新令牌"
+              title="显示 Hotmail 刷新令牌"></button>
+          </div>
+        </div>
+        <div class="data-row hotmail-actions-row">
+          <span class="data-label"></span>
+          <div class="data-inline account-pool-actions-inline">
+            <button id="btn-add-hotmail-account" class="btn btn-primary btn-sm" type="button">添加账号</button>
+            <button id="btn-import-hotmail-accounts" class="btn btn-outline btn-sm account-pool-import-action"
+              type="button">批量导入</button>
+          </div>
+        </div>
+        <div class="data-row hotmail-import-row">
+          <span class="data-label">批量导入</span>
+          <div class="hotmail-import-box">
+            <textarea id="input-hotmail-import" class="data-textarea mono"
+              placeholder="账号----密码----客户端ID----刷新令牌&#10;name@hotmail.com----password----client-id----refresh-token"></textarea>
+          </div>
+        </div>
+      </div>
+      <div id="hotmail-list-shell" class="hotmail-list-shell is-collapsed">
+        <div class="account-pool-toolbar">
+          <input id="input-hotmail-search" class="data-input account-pool-search" type="text"
+            placeholder="搜索邮箱 / 状态" />
+          <select id="select-hotmail-filter" class="data-select account-pool-filter">
+            <option value="all">全部</option>
+            <option value="current">当前</option>
+            <option value="available">可分配</option>
+            <option value="used">已用</option>
+            <option value="error">异常</option>
+          </select>
+        </div>
+        <div id="hotmail-accounts-list" class="hotmail-accounts-list"></div>
+      </div>
+    </div>
+    <div id="mail2925-section" class="data-card hotmail-card" style="display:none;">
+      <div class="section-mini-header">
+        <div class="section-mini-copy">
+          <span class="section-label">2925 账号池</span>
+        </div>
+        <div class="section-mini-actions">
+          <button id="btn-toggle-mail2925-form" class="btn btn-outline btn-xs" type="button"
+            aria-expanded="false">添加账号</button>
+          <button id="btn-delete-all-mail2925-accounts" class="btn btn-ghost btn-xs" type="button">全部删除</button>
+          <button id="btn-toggle-mail2925-list" class="btn btn-ghost btn-xs" type="button"
+            aria-expanded="false">展开列表</button>
+        </div>
+      </div>
+      <div id="mail2925-form-shell" class="account-pool-form-shell" hidden>
+        <div class="data-row">
+          <span class="data-label">邮箱</span>
+          <input type="text" id="input-mail2925-email" class="data-input" placeholder="name@2925.com" />
+        </div>
+        <div class="data-row">
+          <span class="data-label">密码</span>
+          <div class="input-with-icon">
+            <input type="password" id="input-mail2925-password" class="data-input data-input-with-icon"
+              placeholder="2925 登录密码" />
+            <button id="btn-toggle-mail2925-password" class="input-icon-btn" type="button"
+              data-password-toggle="input-mail2925-password" data-show-label="显示 2925 密码"
+              data-hide-label="隐藏 2925 密码" aria-label="显示 2925 密码" title="显示 2925 密码"></button>
+          </div>
+        </div>
+        <div class="data-row hotmail-actions-row">
+          <span class="data-label"></span>
+          <div class="data-inline account-pool-actions-inline">
+            <button id="btn-add-mail2925-account" class="btn btn-primary btn-sm" type="button">添加账号</button>
+            <button id="btn-import-mail2925-accounts" class="btn btn-outline btn-sm account-pool-import-action"
+              type="button">批量导入</button>
+          </div>
+        </div>
+        <div class="data-row hotmail-import-row">
+          <span class="data-label">批量导入</span>
+          <div class="hotmail-import-box">
+            <textarea id="input-mail2925-import" class="data-textarea mono"
+              placeholder="邮箱----密码&#10;name@2925.com----password"></textarea>
+          </div>
+        </div>
+      </div>
+      <div id="mail2925-list-shell" class="hotmail-list-shell is-collapsed">
+        <div class="account-pool-toolbar">
+          <input id="input-mail2925-search" class="data-input account-pool-search" type="text"
+            placeholder="搜索邮箱 / 状态" />
+          <select id="select-mail2925-filter" class="data-select account-pool-filter">
+            <option value="all">全部</option>
+            <option value="current">当前</option>
+            <option value="ready">可用</option>
+            <option value="cooldown">冷却中</option>
+            <option value="disabled">已禁用</option>
+            <option value="error">异常</option>
+          </select>
+        </div>
+        <div id="mail2925-accounts-list" class="hotmail-accounts-list"></div>
+      </div>
+    </div>
+    <div id="luckmail-section" class="data-card luckmail-card" style="display:none;">
+      <div class="section-mini-header">
+        <div class="section-mini-copy">
+          <span class="section-label">LuckMail 配置</span>
+        </div>
+      </div>
+      <div class="data-row">
+        <span class="data-label">API Key</span>
+        <div class="input-with-icon">
+          <input type="password" id="input-luckmail-api-key" class="data-input data-input-with-icon mono"
+            placeholder="请输入 LuckMail API Key" />
+          <button id="btn-toggle-luckmail-api-key" class="input-icon-btn" type="button"
+            data-password-toggle="input-luckmail-api-key" data-show-label="显示 LuckMail API Key"
+            data-hide-label="隐藏 LuckMail API Key" aria-label="显示 LuckMail API Key" title="显示 LuckMail API Key"></button>
+        </div>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Base URL</span>
+        <input type="text" id="input-luckmail-base-url" class="data-input mono"
+          placeholder="https://mails.luckyous.com" />
+      </div>
+      <div class="data-row">
+        <span class="data-label">邮箱类型</span>
+        <select id="select-luckmail-email-type" class="data-select">
+          <option value="self_built">自建邮箱</option>
+          <option value="ms_imap">微软 IMAP</option>
+          <option value="ms_graph">微软 Graph</option>
+          <option value="google_variant">谷歌变种</option>
+        </select>
+      </div>
+      <div class="data-row">
+        <span class="data-label">域名</span>
+        <input type="text" id="input-luckmail-domain" class="data-input mono" placeholder="可选，留空则由 LuckMail 默认处理" />
+      </div>
+      <div class="data-row">
+        <span class="data-label">项目</span>
+        <span class="data-value mono">openai</span>
+      </div>
+      <div class="luckmail-manager-card">
+        <div class="section-mini-header">
+          <div class="section-mini-copy">
+            <span class="section-label">LuckMail 邮箱列表</span>
+            <span class="data-value">仅显示项目为 <span class="mono">openai</span> 的邮箱</span>
+          </div>
+          <div class="section-mini-actions">
+            <button id="btn-luckmail-refresh" class="btn btn-ghost btn-xs" type="button">刷新</button>
+            <button id="btn-luckmail-disable-used" class="btn btn-ghost btn-xs" type="button">禁用已用</button>
+          </div>
+        </div>
+        <div id="luckmail-summary" class="luckmail-summary">加载已购邮箱后可在这里管理 openai 项目的 LuckMail 邮箱。</div>
+        <div class="luckmail-toolbar">
+          <input id="input-luckmail-search" class="data-input luckmail-search" type="text"
+            placeholder="搜索邮箱 / 标签 / 项目" />
+          <select id="select-luckmail-filter" class="data-select luckmail-filter">
+            <option value="all">全部</option>
+            <option value="reusable">可复用</option>
+            <option value="used">已用</option>
+            <option value="unused">未用</option>
+            <option value="preserved">保留</option>
+            <option value="disabled">已禁用</option>
+          </select>
+        </div>
+        <div class="luckmail-bulkbar">
+          <label class="option-toggle luckmail-select-all" for="checkbox-luckmail-select-all">
+            <input type="checkbox" id="checkbox-luckmail-select-all" />
+            <span id="luckmail-selection-summary">已选 0 个</span>
+          </label>
+          <div class="luckmail-bulk-actions">
+            <button id="btn-luckmail-bulk-used" class="btn btn-outline btn-xs" type="button">标记已用</button>
+            <button id="btn-luckmail-bulk-unused" class="btn btn-outline btn-xs" type="button">标记未用</button>
+            <button id="btn-luckmail-bulk-preserve" class="btn btn-outline btn-xs" type="button">保留</button>
+            <button id="btn-luckmail-bulk-unpreserve" class="btn btn-outline btn-xs" type="button">取消保留</button>
+            <button id="btn-luckmail-bulk-disable" class="btn btn-outline btn-xs" type="button">禁用</button>
+            <button id="btn-luckmail-bulk-enable" class="btn btn-outline btn-xs" type="button">启用</button>
+          </div>
+        </div>
+        <div id="luckmail-list" class="luckmail-list"></div>
+      </div>
+    </div>
+    <div id="gptmail-section" class="data-card luckmail-card" style="display:none;">
+      <div class="section-mini-header">
+        <div class="section-mini-copy">
+          <span class="section-label">GPTMail 配置</span>
+          <span class="data-value">自动生成邮箱并轮询收码</span>
+        </div>
+      </div>
+      <div class="data-row">
+        <span class="data-label">API Key</span>
+        <div class="data-inline gptmail-api-key-inline">
+          <div class="input-with-icon">
+            <input type="password" id="input-gptmail-api-key" class="data-input data-input-with-icon mono"
+              placeholder="可选，请输入 GPTMail API Key" />
+            <button id="btn-toggle-gptmail-api-key" class="input-icon-btn" type="button"
+              data-password-toggle="input-gptmail-api-key" data-show-label="显示 GPTMail API Key"
+              data-hide-label="隐藏 GPTMail API Key" aria-label="显示 GPTMail API Key" title="显示 GPTMail API Key"></button>
+          </div>
+          <span id="gptmail-api-usage" class="setting-caption gptmail-api-usage">剩余：--</span>
+        </div>
+      </div>
+      <div class="data-row">
+        <span class="data-label">Base URL</span>
+        <input type="text" id="input-gptmail-base-url" class="data-input mono"
+          placeholder="https://mail.chatgpt.org.uk" />
+      </div>
+      <div class="data-row">
+        <span class="data-label">域名</span>
+        <input type="text" id="input-gptmail-domain" class="data-input mono" placeholder="可选，配置后由 GPTMail 生成域名邮箱" />
+      </div>
+    </div>
+    <div id="icloud-section" class="data-card hotmail-card" style="display:none;">
+      <div class="section-mini-header">
+        <div class="section-mini-copy">
+          <span class="section-label">iCloud 隐私邮箱</span>
+        </div>
+        <div class="section-mini-actions">
+          <button id="btn-icloud-refresh" class="btn btn-ghost btn-xs" type="button">刷新</button>
+          <button id="btn-icloud-delete-used" class="btn btn-ghost btn-xs" type="button">删除已用</button>
+        </div>
+      </div>
+      <div class="data-row">
+        <span class="data-label">iCloud</span>
+        <select id="select-icloud-host-preference" class="data-select">
+          <option value="auto">自动</option>
+          <option value="icloud.com">iCloud.com</option>
+          <option value="icloud.com.cn">iCloud.com.cn</option>
+        </select>
+      </div>
+      <div class="data-row" id="row-icloud-target-mailbox-type">
+        <span class="data-label">目标邮箱类型</span>
+        <select id="select-icloud-target-mailbox-type" class="data-select">
+          <option value="icloud-inbox">iCloud 收件箱</option>
+          <option value="forward-mailbox">转发到其他邮箱</option>
+        </select>
+      </div>
+      <div class="data-row" id="row-icloud-forward-mail-provider" style="display:none;">
+        <span class="data-label">转发邮箱</span>
+        <select id="select-icloud-forward-mail-provider" class="data-select">
+          <option value="qq">QQ 邮箱</option>
+          <option value="163">163 邮箱</option>
+          <option value="163-vip">163 VIP 邮箱</option>
+          <option value="126">126 邮箱</option>
+          <option value="gmail">Gmail 邮箱</option>
+        </select>
+      </div>
+      <div class="data-row">
+        <span class="data-label">获取策略</span>
+        <select id="select-icloud-fetch-mode" class="data-select">
+          <option value="reuse_existing">优先复用已有未用别名</option>
+          <option value="always_new">始终创建新别名</option>
+        </select>
+      </div>
+      <div class="data-row">
+        <span class="data-label">自动删除</span>
+        <label class="option-toggle" for="checkbox-auto-delete-icloud">
+          <input type="checkbox" id="checkbox-auto-delete-icloud" />
+          <span>成功使用后自动删除 iCloud 别名</span>
+        </label>
+      </div>
+      <div class="icloud-card">
+        <div id="icloud-summary" class="icloud-summary">加载你的 iCloud Hide My Email 别名以便在这里管理。</div>
+        <div id="icloud-login-help" class="icloud-login-help" style="display:none;">
+          <div class="icloud-login-help-main">
+            <div id="icloud-login-help-title" class="icloud-login-help-title">需要登录 iCloud</div>
+            <div id="icloud-login-help-text" class="icloud-login-help-text">我已经为你打开 iCloud
+              登录页。请在那个页面完成登录，然后回到这里点击“我已登录”。</div>
+          </div>
+          <button id="btn-icloud-login-done" class="btn btn-primary btn-xs" type="button">我已登录</button>
+        </div>
+        <div class="icloud-toolbar">
+          <input id="input-icloud-search" class="data-input icloud-search" type="text" placeholder="搜索邮箱 / 标签 / 备注" />
+          <select id="select-icloud-filter" class="data-select icloud-filter">
+            <option value="all">全部</option>
+            <option value="active">可用</option>
+            <option value="used">已用</option>
+            <option value="unused">未用</option>
+            <option value="preserved">保留</option>
+          </select>
+        </div>
+        <div class="icloud-bulkbar">
+          <label class="option-toggle icloud-select-all" for="checkbox-icloud-select-all">
+            <input type="checkbox" id="checkbox-icloud-select-all" />
+            <span id="icloud-selection-summary">已选 0 个</span>
+          </label>
+          <div class="icloud-bulk-actions">
+            <button id="btn-icloud-bulk-used" class="btn btn-outline btn-xs" type="button">标记已用</button>
+            <button id="btn-icloud-bulk-unused" class="btn btn-outline btn-xs" type="button">标记未用</button>
+            <button id="btn-icloud-bulk-preserve" class="btn btn-outline btn-xs" type="button">保留</button>
+            <button id="btn-icloud-bulk-unpreserve" class="btn btn-outline btn-xs" type="button">取消保留</button>
+            <button id="btn-icloud-bulk-delete" class="btn btn-outline btn-xs" type="button">删除</button>
+          </div>
+        </div>
+        <div id="icloud-list" class="icloud-list"></div>
+      </div>
+    </div>
+    <div class="data-row" id="row-account-run-history-helper-base-url" style="display:none;">
+      <span class="data-label">同步服务</span>
+      <input type="text" id="input-account-run-history-helper-base-url" class="data-input mono"
+        placeholder="http://127.0.0.1:17373" />
+    </div>
+    <div id="status-bar" class="status-bar">
+      <div class="status-dot"></div>
+      <span id="display-status">就绪</span>
+    </div>
+    <div id="auto-continue-bar" class="auto-continue-bar" style="display:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+      <span class="auto-hint">先自动获取邮箱，或手动粘贴邮箱后再继续</span>
+      <button id="btn-auto-continue" class="btn btn-primary btn-sm">继续</button>
+    </div>
+    <div id="auto-schedule-bar" class="auto-schedule-bar" style="display:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </svg>
+      <div class="auto-schedule-copy">
+        <span id="auto-schedule-title" class="auto-schedule-title">已计划自动运行</span>
+        <span id="auto-schedule-meta" class="auto-schedule-meta">等待倒计时开始...</span>
+      </div>
+      <div class="auto-schedule-actions">
+        <button id="btn-auto-run-now" class="btn btn-primary btn-sm" type="button">立即开始</button>
+        <button id="btn-auto-cancel-schedule" class="btn btn-outline btn-sm" type="button">取消</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="steps-section">
+    <div class="steps-layout-card">
+      <div class="steps-header">
+        <span class="section-label">流程</span>
+        <span id="steps-progress" class="steps-progress">0 / 9</span>
+      </div>
+      <div class="steps-list"></div>
+    </div>
+  </section>
+
+  <section id="log-section">
+    <div class="log-header">
+      <span class="section-label">日志</span>
+      <span id="current-registration-email" class="current-registration-email" title="当前邮箱：未生成">当前邮箱：未生成</span>
+      <div class="log-header-actions">
+        <button id="btn-open-account-records" class="btn btn-ghost btn-xs" title="查看账号记录">记录</button>
+        <button id="btn-clear-log" class="btn btn-ghost btn-xs" title="清空日志">清空</button>
+      </div>
+    </div>
+    <div id="log-area"></div>
+  </section>
+
+  <div id="account-records-overlay" class="account-records-overlay" hidden>
+    <div class="account-records-panel">
+      <div class="account-records-panel-header">
+        <div class="account-records-panel-copy">
+          <span class="account-records-panel-title">账号记录</span>
+          <span id="account-records-meta" class="account-records-panel-meta">暂无账号记录</span>
+        </div>
+        <div class="account-records-panel-actions">
+          <button id="btn-close-account-records" class="modal-close" type="button" aria-label="关闭">×</button>
+        </div>
+      </div>
+      <div class="account-records-toolbar">
+        <div id="account-records-stats" class="account-records-stats" role="group" aria-label="账号记录筛选"></div>
+        <div class="account-records-toolbar-actions">
+          <button id="btn-toggle-account-records-selection" class="btn btn-ghost btn-xs" type="button">多选</button>
+          <button id="btn-delete-selected-account-records" class="btn btn-ghost btn-xs" type="button" hidden
+            disabled>删除选中</button>
+          <button id="btn-clear-account-records" class="btn btn-ghost btn-xs" type="button">清理记录</button>
+        </div>
+      </div>
+      <div id="account-records-list" class="account-records-list"></div>
+      <div class="account-records-pagination">
+        <button id="btn-account-records-prev" class="btn btn-outline btn-xs" type="button">上一页</button>
+        <span id="account-records-page-label" class="account-records-page-label mono">0 / 0</span>
+        <button id="btn-account-records-next" class="btn btn-outline btn-xs" type="button">下一页</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="shared-form-modal" class="modal-overlay" hidden>
+    <div class="modal-card modal-card-form">
+      <div class="modal-header">
+        <span id="shared-form-modal-title" class="modal-title">添加账号</span>
+        <button id="btn-shared-form-modal-close" class="modal-close" type="button" aria-label="关闭">×</button>
+      </div>
+      <p id="shared-form-modal-message" class="modal-message" hidden></p>
+      <p id="shared-form-modal-alert" class="modal-alert" hidden></p>
+      <div id="shared-form-modal-fields" class="modal-form-fields"></div>
+      <div class="modal-actions">
+        <button id="btn-shared-form-modal-cancel" class="btn btn-ghost btn-sm" type="button">取消</button>
+        <button id="btn-shared-form-modal-confirm" class="btn btn-primary btn-sm" type="button">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="auto-start-modal" class="modal-overlay" hidden>
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-title">启动自动</span>
+        <button id="btn-auto-start-close" class="modal-close" type="button" aria-label="关闭">×</button>
+      </div>
+      <p id="auto-start-message" class="modal-message">检测到已有流程进度，选择继续当前还是重新开始。</p>
+      <p id="auto-start-alert" class="modal-alert" hidden></p>
+      <div id="modal-option-row" class="modal-option-row" hidden>
+        <label class="modal-option-label" for="modal-option-input">
+          <input type="checkbox" id="modal-option-input" />
+          <span id="modal-option-text">不再提示</span>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-auto-start-cancel" class="btn btn-ghost btn-sm" type="button">取消</button>
+        <button id="btn-auto-start-restart" class="btn btn-outline btn-sm" type="button">重新开始</button>
+        <button id="btn-auto-start-continue" class="btn btn-primary btn-sm" type="button">继续当前</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <input id="input-import-settings-file" type="file" accept=".json,application/json" hidden />
+  <script src="../utils/managed-alias-utils.js"></script>
+  <script src="../utils/mail2925-utils.js"></script>
+  <script src="../utils/icloud-utils.js"></script>
+  <script src="../utils/mail-provider-utils.js"></script>
+  <script src="../utils/hotmail-utils.js"></script>
+  <script src="../utils/luckmail-utils.js"></script>
+  <script src="../utils/yyds-mail-utils.js"></script>
+  <script src="../shared/flow-capabilities.js"></script>
+  <script src="../data/step-definitions.js"></script>
+  <script src="account-pool-ui.js"></script>
+  <script src="form-dialog.js"></script>
+  <script src="editable-list-picker.js"></script>
+  <script src="hotmail-manager.js"></script>
+  <script src="mail-2925-manager.js"></script>
+  <script src="icloud-manager.js"></script>
+  <script src="luckmail-manager.js"></script>
+  <script src="custom-email-pool-manager.js"></script>
+  <script src="account-records-manager.js"></script>
+  <script src="sidepanel.js"></script>
+</body>
+
+</html>
+

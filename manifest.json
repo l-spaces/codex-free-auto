@@ -1,0 +1,128 @@
+{
+  "manifest_version": 3,
+  "name": "Codex Free 注册机",
+  "version": "0.0",
+  "version_name": "0.0",
+  "description": "自动注册GPT账号，并授权Codex",
+  "permissions": [
+    "sidePanel",
+    "alarms",
+    "tabs",
+    "webNavigation",
+    "declarativeNetRequest",
+    "debugger",
+    "browsingData",
+    "cookies",
+    "storage",
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://*.icloud.com/*",
+    "https://*.icloud.com.cn/*",
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "icloud_headers",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://auth0.openai.com/*",
+        "https://auth.openai.com/*",
+        "https://accounts.openai.com/*"
+      ],
+      "js": [
+        "content/activation-utils.js",
+        "shared/source-registry.js",
+        "content/utils.js",
+        "content/operation-delay.js",
+        "content/auth-page-recovery.js",
+        "content/signup-page.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://mail.qq.com/*",
+        "https://wx.mail.qq.com/*"
+      ],
+      "js": [
+        "content/activation-utils.js",
+        "shared/source-registry.js",
+        "content/utils.js",
+        "content/qq-mail.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://mail.163.com/*",
+        "https://*.mail.163.com/*",
+        "https://webmail.vip.163.com/*",
+        "https://mail.126.com/*",
+        "https://*.mail.126.com/*"
+      ],
+      "js": [
+        "content/activation-utils.js",
+        "shared/source-registry.js",
+        "content/utils.js",
+        "content/mail-163.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.icloud.com/*",
+        "https://www.icloud.com.cn/*"
+      ],
+      "js": [
+        "content/activation-utils.js",
+        "shared/source-registry.js",
+        "content/utils.js",
+        "content/icloud-mail.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://duckduckgo.com/email/settings/autofill*"
+      ],
+      "js": [
+        "content/activation-utils.js",
+        "shared/source-registry.js",
+        "content/utils.js",
+        "content/operation-delay.js",
+        "content/duck-mail.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
