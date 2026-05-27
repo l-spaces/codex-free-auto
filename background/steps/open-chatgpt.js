@@ -9,7 +9,18 @@
     'auth0.openai.com',
     'accounts.openai.com',
   ];
-  const STEP1_COOKIE_SCAN_DOMAINS = [...STEP1_COOKIE_CLEAR_DOMAINS];
+  const STEP1_COOKIE_CLEAR_ORIGINS = [
+    'https://chatgpt.com',
+    'https://chat.openai.com',
+    'https://auth.openai.com',
+    'https://auth0.openai.com',
+    'https://accounts.openai.com',
+    'https://openai.com',
+  ];
+  const STEP1_COOKIE_SCAN_DOMAINS = [
+    'chatgpt.com',
+    'openai.com',
+  ];
 
   function getStep1ErrorMessage(error) {
     return error?.message || String(error || '未知错误');
@@ -40,11 +51,11 @@
         return;
       }
 
-      const startedAt = Date.now();
       await addLog('步骤 1：打开 ChatGPT 官网前清理 ChatGPT / OpenAI cookies...', 'info');
       const cleanupResult = await cleanupCookies(chromeApi, {
         clearDomains: STEP1_COOKIE_CLEAR_DOMAINS,
         scanDomains: STEP1_COOKIE_SCAN_DOMAINS,
+        clearOrigins: STEP1_COOKIE_CLEAR_ORIGINS,
         skipBrowsingDataWhenNoMatch: true,
         removeConcurrency: 6,
         getErrorMessage: getStep1ErrorMessage,
@@ -54,9 +65,11 @@
         await addLog('步骤 1：未检测到待清理的 ChatGPT / OpenAI cookies，跳过清理。', 'info');
         return;
       }
+      if (cleanupResult.browsingDataError) {
+        await addLog(`步骤 1：browsingData 补扫 cookies 失败：${getStep1ErrorMessage(cleanupResult.browsingDataError)}`, 'warn');
+      }
 
-      const elapsedMs = Date.now() - startedAt;
-      await addLog(`步骤 1：已清理 ${cleanupResult.removedCount} 个 ChatGPT / OpenAI cookies（耗时 ${elapsedMs}ms）。`, 'ok');
+      await addLog(`步骤 1：已清理 ${cleanupResult.removedCount} 个 ChatGPT / OpenAI cookies。`, 'ok');
     }
 
     async function executeStep1() {

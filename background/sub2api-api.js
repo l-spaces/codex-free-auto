@@ -364,15 +364,15 @@
       }
 
       const code = normalizeString(parsed.searchParams.get('code'));
-      const oauthState = normalizeString(parsed.searchParams.get('state'));
-      if (!code || !oauthState) {
+      const state = normalizeString(parsed.searchParams.get('state'));
+      if (!code || !state) {
         throw new Error('回调 URL 中缺少 code 或 state。');
       }
 
       return {
         url: parsed.toString(),
         code,
-        state: oauthState,
+        state,
       };
     }
 

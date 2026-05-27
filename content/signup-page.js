@@ -72,7 +72,6 @@ const SIGNUP_PAGE_NODE_HANDLERS = Object.freeze({
   'fill-password': (payload) => step3_fillEmailPassword(payload),
   'fill-profile': (payload) => step5_fillNameBirthday(payload),
   'oauth-login': (payload) => step6_login(payload),
-  'relogin-bound-email': (payload) => step6_login(payload),
   'confirm-oauth': (_payload) => step8_findAndClick(),
 });
 
@@ -83,21 +82,6 @@ function resolveCommandNodeId(message = {}) {
   }
   const visibleStep = Number(message.payload?.visibleStep || message.step) || 0;
   if (visibleStep === 4) return 'fetch-signup-code';
-  if (message.type === 'FILL_CODE' && (visibleStep === 12 || visibleStep === 15)) {
-    return 'fetch-bound-email-login-code';
-  }
-  if (
-    (
-      message.type === 'SUBMIT_PHONE_NUMBER'
-      || message.type === 'SUBMIT_PHONE_VERIFICATION_CODE'
-      || message.type === 'RESEND_PHONE_VERIFICATION_CODE'
-      || message.type === 'CHECK_PHONE_RESEND_ERROR'
-      || message.type === 'RETURN_TO_ADD_PHONE'
-    )
-    && (visibleStep === 13 || visibleStep === 16)
-  ) {
-    return 'post-bound-email-phone-verification';
-  }
   if (visibleStep === 8 || visibleStep === 11) return 'fetch-login-code';
   if (visibleStep === 9 || visibleStep === 12) return 'post-login-phone-verification';
   if (visibleStep === 10 || visibleStep === 13) return 'confirm-oauth';

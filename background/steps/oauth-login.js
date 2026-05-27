@@ -238,7 +238,7 @@
             'signup-page',
             {
               type: 'EXECUTE_NODE',
-              nodeId: state?.nodeId || 'oauth-login',
+              nodeId: 'oauth-login',
               step: 7,
               source: 'background',
               payload: {

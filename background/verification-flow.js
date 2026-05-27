@@ -1191,7 +1191,6 @@
       }
 
       await chrome.tabs.update(signupTabId, { active: true });
-      const completionNodeId = await getNodeIdForStep(completionStep);
       const baseResponseTimeoutMs = await getResponseTimeoutMsForStep(
         step,
         step === 8
@@ -1209,7 +1208,6 @@
         source: 'background',
         payload: {
           code,
-          ...(completionNodeId ? { nodeId: completionNodeId } : {}),
           ...(step === 4 && options.signupProfile ? { signupProfile: options.signupProfile } : {}),
         },
       };
@@ -1344,7 +1342,6 @@
     async function resolveVerificationStep(step, state, mail, options = {}) {
       const completionStep = getCompletionStep(step, options);
       activeVerificationLogStep = completionStep;
-      const completionNodeId = await getNodeIdForStep(completionStep);
       const stateKey = getVerificationCodeStateKey(step);
       const rejectedCodes = new Set();
       const hotmailPollConfig = mail.provider === HOTMAIL_PROVIDER
@@ -1496,6 +1493,7 @@
             [stateKey]: result.code,
           });
 
+          const completionNodeId = await getNodeIdForStep(completionStep);
           if (!completionNodeId) {
             throw new Error(`步骤 ${completionStep} 未映射到验证码节点。`);
           }

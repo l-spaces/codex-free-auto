@@ -290,7 +290,7 @@
     }
 
     async function closeConflictingTabsForSource(source, currentUrl, options = {}) {
-      const { excludeTabIds = [], preserveActiveTab = true } = options;
+      const { excludeTabIds = [] } = options;
       const excluded = new Set(excludeTabIds.filter((id) => Number.isInteger(id)));
       const state = await getState();
       const lastUrl = getSourceMapValue(state.sourceLastUrls, source);
@@ -299,12 +299,8 @@
       if (!referenceUrls.length) return;
 
       const tabs = await queryTabsInAutomationWindow({});
-      const activeTabId = preserveActiveTab
-        ? tabs.find((tab) => Boolean(tab?.active) && Number.isInteger(tab?.id))?.id || null
-        : null;
       const matchedIds = tabs
         .filter((tab) => Number.isInteger(tab.id) && !excluded.has(tab.id))
-        .filter((tab) => !(preserveActiveTab && activeTabId !== null && tab.id === activeTabId))
         .filter((tab) => referenceUrls.some((refUrl) => matchesSourceUrlFamily(source, tab.url, refUrl)))
         .map((tab) => tab.id);
 

@@ -259,10 +259,7 @@
         {
           type: 'SUBMIT_ADD_EMAIL',
           source: 'background',
-          payload: {
-            email: resolvedEmail,
-            nodeId: state?.nodeId || activeFetchLoginCodeStepKey || 'fetch-login-code',
-          },
+          payload: { email: resolvedEmail },
         },
         {
           timeoutMs,

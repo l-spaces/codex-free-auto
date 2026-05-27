@@ -1,4 +1,4 @@
-﻿// background.js — Service Worker: orchestration, state, tab management, message routing
+// background.js — Service Worker: orchestration, state, tab management, message routing
 
 importScripts(
   'shared/source-registry.js',
@@ -1706,20 +1706,6 @@ function normalizeCloudflareTempEmailReceiveMailbox(value = '') {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized) ? normalized : '';
 }
 
-function resolveCloudflareTempEmailEffectiveLookupMode(state = {}, lookupMode = '', originalRecipient = '') {
-  const mailProvider = String(state?.mailProvider || '').trim().toLowerCase();
-  const emailGenerator = String(state?.emailGenerator || '').trim().toLowerCase();
-  const normalizedLookupMode = normalizeCloudflareTempEmailLookupMode(lookupMode);
-  const normalizedOriginalRecipient = normalizeCloudflareTempEmailReceiveMailbox(originalRecipient);
-  const canUseRegistrationLookup = mailProvider === CLOUDFLARE_TEMP_EMAIL_PROVIDER
-    && emailGenerator !== CLOUDFLARE_TEMP_EMAIL_GENERATOR
-    && normalizedLookupMode === CLOUDFLARE_TEMP_EMAIL_LOOKUP_MODE_REGISTRATION_EMAIL
-    && Boolean(normalizedOriginalRecipient);
-  return canUseRegistrationLookup
-    ? CLOUDFLARE_TEMP_EMAIL_LOOKUP_MODE_REGISTRATION_EMAIL
-    : CLOUDFLARE_TEMP_EMAIL_LOOKUP_MODE_RECEIVE_MAILBOX;
-}
-
 function resolveCloudflareTempEmailPollTargetEmail(state = {}, pollPayload = {}, config = getCloudflareTempEmailConfig(state)) {
   const configuredReceiveMailbox = normalizeCloudflareTempEmailReceiveMailbox(config.receiveMailbox);
   const mailProvider = String(state?.mailProvider || '').trim().toLowerCase();
@@ -1731,14 +1717,11 @@ function resolveCloudflareTempEmailPollTargetEmail(state = {}, pollPayload = {},
   const shouldPreferConfiguredReceiveMailbox = mailProvider === 'cloudflare-temp-email'
     && emailGenerator !== 'cloudflare-temp-email';
   const requestedTarget = normalizeCloudflareTempEmailReceiveMailbox(pollPayload.targetEmail);
-  const registrationEmail = normalizeCloudflareTempEmailReceiveMailbox(state.email);
-  const effectiveLookupMode = resolveCloudflareTempEmailEffectiveLookupMode(
-    state,
-    config.lookupMode,
-    requestedTarget || registrationEmail
-  );
-  if (effectiveLookupMode === CLOUDFLARE_TEMP_EMAIL_LOOKUP_MODE_REGISTRATION_EMAIL) {
-    return requestedTarget || registrationEmail;
+  if (
+    shouldPreferConfiguredReceiveMailbox
+    && normalizeCloudflareTempEmailLookupMode(config.lookupMode) === CLOUDFLARE_TEMP_EMAIL_LOOKUP_MODE_REGISTRATION_EMAIL
+  ) {
+    return requestedTarget || normalizeCloudflareTempEmailReceiveMailbox(state.email);
   }
 
   if (shouldPreferConfiguredReceiveMailbox && configuredReceiveMailbox) {
@@ -1749,7 +1732,7 @@ function resolveCloudflareTempEmailPollTargetEmail(state = {}, pollPayload = {},
     return requestedTarget;
   }
 
-  return registrationEmail;
+  return normalizeCloudflareTempEmailReceiveMailbox(state.email);
 }
 
 const cloudMailProvider = self.MultiPageBackgroundCloudMailProvider.createCloudMailProvider({
@@ -5279,12 +5262,8 @@ async function deleteCloudflareTempEmailMail(config, mailId) {
 async function listCloudflareTempEmailMessages(state, options = {}) {
   const config = ensureCloudflareTempEmailConfig(state, { requireAdminAuth: true });
   const address = normalizeCloudflareTempEmailAddress(options.address);
+  const lookupMode = normalizeCloudflareTempEmailLookupMode(options.lookupMode || config.lookupMode);
   const originalRecipient = normalizeCloudflareTempEmailReceiveMailbox(options.originalRecipient);
-  const lookupMode = resolveCloudflareTempEmailEffectiveLookupMode(
-    state,
-    options.lookupMode || config.lookupMode,
-    originalRecipient
-  );
   const useRegistrationLookup = lookupMode === CLOUDFLARE_TEMP_EMAIL_LOOKUP_MODE_REGISTRATION_EMAIL
     && Boolean(originalRecipient);
   const queryAddress = useRegistrationLookup ? '' : address;
@@ -5320,15 +5299,15 @@ async function pollCloudflareTempEmailVerificationCode(step, state, pollPayload 
   const config = ensureCloudflareTempEmailConfig(state, { requireAdminAuth: true });
   const targetEmail = resolveCloudflareTempEmailPollTargetEmail(state, pollPayload, config);
   const registrationEmail = normalizeCloudflareTempEmailReceiveMailbox(state.email);
+  const lookupMode = normalizeCloudflareTempEmailLookupMode(config.lookupMode);
+  const mailProvider = String(state?.mailProvider || '').trim().toLowerCase();
+  const emailGenerator = String(state?.emailGenerator || '').trim().toLowerCase();
+  const useRegistrationLookup = mailProvider === 'cloudflare-temp-email'
+    && emailGenerator !== 'cloudflare-temp-email'
+    && lookupMode === CLOUDFLARE_TEMP_EMAIL_LOOKUP_MODE_REGISTRATION_EMAIL;
   const originalRecipient = normalizeCloudflareTempEmailReceiveMailbox(pollPayload.targetEmail)
     || registrationEmail
     || targetEmail;
-  const lookupMode = resolveCloudflareTempEmailEffectiveLookupMode(
-    state,
-    config.lookupMode,
-    originalRecipient
-  );
-  const useRegistrationLookup = lookupMode === CLOUDFLARE_TEMP_EMAIL_LOOKUP_MODE_REGISTRATION_EMAIL;
   if (!targetEmail) {
     throw new Error('Cloudflare Temp Email 轮询前缺少目标邮箱地址，请先填写注册邮箱或“邮件接收”邮箱。');
   }
@@ -11429,7 +11408,6 @@ const step10Executor = self.MultiPageBackgroundStep10?.createStep10Executor({
   ensureContentScriptReadyOnTab,
   getPanelMode,
   getTabId,
-  getStepIdByKeyForState,
   isLocalhostOAuthCallbackUrl,
   isTabAlive,
   normalizeCodex2ApiUrl,
@@ -12794,7 +12772,7 @@ async function prepareStep8DebuggerClick(tabId, options = {}) {
   const result = await sendToContentScriptResilient('signup-page', {
     type: 'STEP8_FIND_AND_CLICK',
     source: 'background',
-    payload: { visibleStep, nodeId: 'confirm-oauth' },
+    payload: { visibleStep },
   }, {
     timeoutMs,
     responseTimeoutMs,
@@ -12825,7 +12803,6 @@ async function triggerStep8ContentStrategy(tabId, strategy, options = {}) {
     type: 'STEP8_TRIGGER_CONTINUE',
     source: 'background',
     payload: {
-      nodeId: 'confirm-oauth',
       visibleStep,
       strategy,
       findTimeoutMs: 4000,
@@ -12862,7 +12839,7 @@ async function recoverAuthRetryPageOnTab(tabId, payload = {}, options = {}) {
   const result = await sendToContentScriptResilient('signup-page', {
     type: 'RECOVER_AUTH_RETRY_PAGE',
     source: 'background',
-    payload: { nodeId: 'confirm-oauth', ...(payload || {}) },
+    payload,
   }, {
     timeoutMs,
     responseTimeoutMs,
@@ -13034,17 +13011,9 @@ async function recoverOAuthLocalhostTimeout(details = {}) {
     return null;
   }
 
-  const defaultAuthLoginStep = typeof getAuthChainStartStepId === 'function'
+  const authLoginStep = typeof getAuthChainStartStepId === 'function'
     ? getAuthChainStartStepId(state || {})
     : FINAL_OAUTH_CHAIN_START_STEP;
-  const reloginBoundEmailStep = typeof getStepIdByKeyForState === 'function'
-    ? Number(getStepIdByKeyForState('relogin-bound-email', state || {}))
-    : 0;
-  const authLoginStep = Number.isFinite(reloginBoundEmailStep)
-    && reloginBoundEmailStep > 0
-    && reloginBoundEmailStep < Number(visibleStep)
-    ? reloginBoundEmailStep
-    : defaultAuthLoginStep;
   const authLoginNodeId = String(getNodeIdByStepForState(authLoginStep, state || {}) || 'oauth-login').trim();
   const confirmNodeId = String(getNodeIdByStepForState(visibleStep, state || {}) || 'confirm-oauth').trim();
 
@@ -13113,16 +13082,6 @@ async function recoverOAuthLocalhostTimeout(details = {}) {
         return step8Executor.executeStep8(payload);
       case 'post-login-phone-verification':
         return step8Executor.executePostLoginPhoneVerification(payload);
-      case 'bind-email':
-        return step8Executor.executeBindEmail(payload);
-      case 'fetch-bind-email-code':
-        return step8Executor.executeFetchBindEmailCode(payload);
-      case 'relogin-bound-email':
-        return executeReloginBoundEmail(payload);
-      case 'fetch-bound-email-login-code':
-        return step8Executor.executeBoundEmailLoginCode(payload);
-      case 'post-bound-email-phone-verification':
-        return step8Executor.executeBoundEmailPostLoginPhoneVerification(payload);
       default:
         throw new Error(`OAuth localhost 恢复不支持节点 ${nodeId}。`);
     }

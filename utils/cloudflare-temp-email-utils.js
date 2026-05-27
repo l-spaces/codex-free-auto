@@ -11,7 +11,6 @@
   function firstNonEmptyString(values) {
     for (const value of values) {
       if (value === undefined || value === null) continue;
-      if (typeof value === 'object') continue;
       const normalized = String(value).trim();
       if (normalized) return normalized;
     }
@@ -88,35 +87,18 @@
     if (Array.isArray(payload)) return payload;
     if (!payload || typeof payload !== 'object') return [];
 
-    const rowKeys = [
-      'data',
-      'items',
-      'messages',
-      'mails',
-      'results',
-      'result',
-      'rows',
-      'list',
-      'hydra:member',
+    const candidates = [
+      payload.data,
+      payload.items,
+      payload.messages,
+      payload.mails,
+      payload.results,
+      payload.rows,
     ];
-    const queue = [payload];
-    const seen = new Set();
 
-    while (queue.length) {
-      const current = queue.shift();
-      if (!current || typeof current !== 'object' || seen.has(current)) {
-        continue;
-      }
-      seen.add(current);
-
-      for (const key of rowKeys) {
-        const candidate = current[key];
-        if (Array.isArray(candidate)) {
-          return candidate;
-        }
-        if (candidate && typeof candidate === 'object') {
-          queue.push(candidate);
-        }
+    for (const candidate of candidates) {
+      if (Array.isArray(candidate)) {
+        return candidate;
       }
     }
 
@@ -124,47 +106,7 @@
   }
 
   function normalizeCloudflareTempEmailAddress(value) {
-    const source = String(value || '').trim();
-    if (!source) return '';
-    const bracketMatch = source.match(/<\s*([^<>\s]+@[^<>\s]+)\s*>/);
-    const directMatch = source.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i);
-    return String(bracketMatch?.[1] || directMatch?.[0] || source).trim().toLowerCase();
-  }
-
-  function collectTextCandidates(value, keys = []) {
-    const results = [];
-    const visit = (entry) => {
-      if (entry === undefined || entry === null) return;
-      if (typeof entry === 'string' || typeof entry === 'number') {
-        const normalized = String(entry).trim();
-        if (normalized) results.push(normalized);
-        return;
-      }
-      if (Array.isArray(entry)) {
-        entry.forEach(visit);
-        return;
-      }
-      if (typeof entry === 'object') {
-        const objectKeys = keys.length ? keys : Object.keys(entry);
-        for (const key of objectKeys) {
-          if (Object.prototype.hasOwnProperty.call(entry, key)) {
-            visit(entry[key]);
-          }
-        }
-      }
-    };
-    visit(value);
-    return results;
-  }
-
-  function firstTextCandidate(values, keys = []) {
-    for (const value of values) {
-      const candidates = collectTextCandidates(value, keys);
-      for (const candidate of candidates) {
-        if (candidate) return candidate;
-      }
-    }
-    return '';
+    return String(value || '').trim().toLowerCase();
   }
 
   function splitRawMessage(raw = '') {
@@ -303,51 +245,17 @@
     return match ? match[1] : '';
   }
 
-  function decodeHtmlEntityCode(value, radix = 10) {
-    const codePoint = parseInt(value, radix);
-    if (!Number.isFinite(codePoint) || codePoint < 0 || codePoint > 0x10FFFF) {
-      return ' ';
-    }
-    return String.fromCodePoint(codePoint);
-  }
-
   function stripHtmlTags(value = '') {
     return String(value || '')
       .replace(/<style[\s\S]*?<\/style>/gi, ' ')
       .replace(/<script[\s\S]*?<\/script>/gi, ' ')
       .replace(/<[^>]+>/g, ' ')
-      .replace(/&#x([0-9a-f]+);/gi, (_match, code) => decodeHtmlEntityCode(code, 16))
-      .replace(/&#(\d+);/g, (_match, code) => decodeHtmlEntityCode(code, 10))
       .replace(/&nbsp;/gi, ' ')
       .replace(/&amp;/gi, '&')
       .replace(/&lt;/gi, '<')
       .replace(/&gt;/gi, '>')
-      .replace(/&quot;/gi, '"')
-      .replace(/&#39;/g, "'")
       .replace(/\s+/g, ' ')
       .trim();
-  }
-
-  function normalizeBodyText(value = '', options = {}) {
-    const { html = false } = options;
-    const source = String(value || '').trim();
-    if (!source) return '';
-    const text = html || /<\/?[a-z][\s\S]*>/i.test(source)
-      ? stripHtmlTags(source)
-      : source;
-    return text.replace(/\s+/g, ' ').trim();
-  }
-
-  function firstBodyTextCandidate(values, options = {}) {
-    const { keys = [], html = false } = options;
-    for (const value of values) {
-      const candidates = collectTextCandidates(value, keys);
-      for (const candidate of candidates) {
-        const normalized = normalizeBodyText(candidate, { html });
-        if (normalized) return normalized;
-      }
-    }
-    return '';
   }
 
   function decodeMimeBody(bodyText = '', headers = {}) {
@@ -413,114 +321,40 @@
   function normalizeCloudflareTempEmailMessage(row = {}) {
     if (!row || typeof row !== 'object') return null;
 
-    const raw = firstTextCandidate([row.raw, row.source, row.mime, row.message], [
-      'raw',
-      'source',
-      'mime',
-      'message',
-      'content',
-      'value',
-    ]);
-    const parsedMime = raw ? extractTextFromMime(raw) : { headers: {}, text: '' };
-    const address = normalizeCloudflareTempEmailAddress(firstTextCandidate([
+    const address = normalizeCloudflareTempEmailAddress(firstNonEmptyString([
       row.address,
       row.mail_address,
-      row.mailAddress,
       row.email,
       row.recipient,
-      row.to,
-      row.mailTo,
-      row.receiver,
-      row.receivers,
-      row.envelope_to,
-      row.envelopeTo,
-      parsedMime.headers.to,
-    ], [
-      'emailAddress',
-      'address',
-      'email',
-      'value',
-      'recipient',
-      'mailbox',
-      'to',
     ]));
-    const originalRecipient = normalizeCloudflareTempEmailAddress(firstTextCandidate([
+    const originalRecipient = normalizeCloudflareTempEmailAddress(firstNonEmptyString([
       row.original_recipient,
       row.originalRecipient,
       row.original_recipient_email,
       row.originalRecipientEmail,
-      row.envelope_to,
-      row.envelopeTo,
-    ], [
-      'emailAddress',
-      'address',
-      'email',
-      'value',
-      'recipient',
-      'mailbox',
-      'to',
     ]));
-    const subject = decodeMimeEncodedWords(firstTextCandidate([
+    const raw = firstNonEmptyString([row.raw, row.source, row.mime, row.message]);
+    const parsedMime = raw ? extractTextFromMime(raw) : { headers: {}, text: '' };
+    const subject = decodeMimeEncodedWords(firstNonEmptyString([
       row.subject,
-      row.title,
       parsedMime.headers.subject,
     ]));
-    const fromAddress = decodeMimeEncodedWords(firstTextCandidate([
+    const fromAddress = decodeMimeEncodedWords(firstNonEmptyString([
       row.from,
       row.sender,
       row.mail_from,
-      row.mailFrom,
-      row.from_email,
-      row.fromEmail,
-      row.sender_email,
-      row.senderEmail,
       parsedMime.headers.from,
-    ], [
-      'emailAddress',
-      'address',
-      'email',
-      'value',
-      'name',
-      'from',
-      'sender',
     ]));
-    const bodyText = firstBodyTextCandidate([
-      row.bodyPreview,
-      row.snippet,
+    const bodyPreview = firstNonEmptyString([
       row.text,
-      row.text_content,
-      row.textContent,
       row.preview,
       row.body,
-      row.content,
-    ], {
-      keys: ['content', 'text', 'plain', 'value', 'body', 'bodyPreview'],
-    });
-    const htmlText = firstBodyTextCandidate([
-      row.html_content,
-      row.htmlContent,
-      row.html_body,
-      row.htmlBody,
-      row.body_html,
-      row.bodyHtml,
-      row.content_html,
-      row.contentHtml,
-      row.raw_html,
-      row.rawHtml,
-      row.html,
-    ], {
-      html: true,
-      keys: ['content', 'html', 'value', 'body'],
-    });
-    const bodyPreview = firstNonEmptyString([
-      bodyText,
-      htmlText,
       parsedMime.text,
       raw,
     ]).replace(/\s+/g, ' ').trim();
 
     return {
-      id: firstNonEmptyString([row.id, row._id, row.mail_id, row.mailId, row.message_id, row.messageId, row.msgid]),
+      id: firstNonEmptyString([row.id, row.mail_id]),
       address,
       originalRecipient,
       addressId: firstNonEmptyString([row.address_id, row.addressId]),
@@ -535,13 +369,10 @@
       receivedDateTime: normalizeReceivedDateTime(firstNonEmptyString([
         row.receivedDateTime,
         row.received_at,
-        row.receivedAt,
         row.created_at,
         row.createdAt,
         row.updated_at,
-        row.updatedAt,
         row.date,
-        row.timestamp,
       ])),
     };
   }
