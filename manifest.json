@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Codex Free 注册机",
-  "version": "0.0",
-  "version_name": "0.0",
+  "version": "1.0",
+  "version_name": "1.0",
   "description": "自动注册GPT账号，并授权Codex",
   "permissions": [
     "sidePanel",
