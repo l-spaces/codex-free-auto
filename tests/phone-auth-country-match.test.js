@@ -282,7 +282,7 @@ test('phone auth keeps explicit international number and auto-selects country by
   }
 });
 
-test('phone auth can auto-select country by dial code even when number has no plus prefix', async () => {
+test('phone auth can auto-select country by dial code even when number has no leading + sign', async () => {
   const originalDocument = global.document;
   const originalEvent = global.Event;
   const originalLocation = global.location;

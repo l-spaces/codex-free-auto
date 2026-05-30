@@ -430,7 +430,6 @@
         failedStep: Number.isInteger(failedStep) && failedStep > 0 ? failedStep : null,
         source,
         autoRunContext: source === 'auto' ? autoRunContext : null,
-        plusModeEnabled: Boolean(record.plusModeEnabled),
         accountContributionEnabled: Boolean(record.accountContributionEnabled),
       };
     }
@@ -525,7 +524,6 @@
         failedStep: statusNodeId ? null : (Number.isInteger(failedStep) && failedStep > 0 ? failedStep : null),
         source,
         autoRunContext,
-        plusModeEnabled: Boolean(state.plusModeEnabled),
         accountContributionEnabled: Boolean(state.accountContributionEnabled),
       };
     }

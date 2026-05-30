@@ -55,17 +55,6 @@ function createRouter(overrides = {}) {
     'confirm-oauth': 9,
     'platform-verify': 10,
   };
-  const plusStepByNode = {
-    'open-chatgpt': 1,
-    'submit-signup-email': 2,
-    'fill-password': 3,
-    'fetch-signup-code': 4,
-    'fill-profile': 5,
-    'oauth-login': 10,
-    'fetch-login-code': 11,
-    'confirm-oauth': 12,
-    'platform-verify': 13,
-  };
   const getStepForNode = (nodeId) => {
     const state = normalizeState(overrides.state || {});
     if (typeof overrides.getStepIdByNodeIdForState === 'function') {
@@ -74,7 +63,7 @@ function createRouter(overrides = {}) {
     if (stepByNode && Object.prototype.hasOwnProperty.call(stepByNode, nodeId)) {
       return stepByNode[nodeId] || 0;
     }
-    return (state.plusModeEnabled ? plusStepByNode : normalStepByNode)[nodeId] || 0;
+    return normalStepByNode[nodeId] || 0;
   };
   const normalizeState = (state = {}) => {
     const next = { ...(state || {}) };
@@ -142,7 +131,7 @@ function createRouter(overrides = {}) {
     getNodeIdsForState: overrides.getNodeIdsForState || (() => ['open-chatgpt', 'submit-signup-email', 'fill-password', 'fetch-signup-code', 'fill-profile', 'wait-registration-success', 'oauth-login', 'fetch-login-code', 'confirm-oauth', 'platform-verify']),
     getStepIdByNodeIdForState: overrides.getStepIdByNodeIdForState || ((nodeId, state = {}) => (stepByNode && Object.prototype.hasOwnProperty.call(stepByNode, nodeId))
       ? stepByNode[nodeId] || 0
-      : (state.plusModeEnabled ? plusStepByNode : normalStepByNode)[nodeId] || 0),
+      : normalStepByNode[nodeId] || 0),
     getStepDefinitionForState: overrides.getStepDefinitionForState,
     getStepIdsForState: overrides.getStepIdsForState,
     getLastStepIdForState: overrides.getLastStepIdForState,
@@ -217,10 +206,6 @@ function createRouter(overrides = {}) {
     testHotmailAccountMailAccess: async () => {},
     upsertHotmailAccount: async () => {},
     verifyHotmailAccount: async () => {},
-    refreshGpcCardBalance: overrides.refreshGpcCardBalance || (async (state, options) => {
-      events.balanceRefreshes.push({ state, options });
-      return { balance: '余额 3', remainingUses: 3, autoModeEnabled: true, apiKeyStatus: 'active' };
-    }),
   });
 
   return { router, events };
@@ -403,28 +388,6 @@ test('message router skips login-code step when oauth login lands on consent pag
 
   assert.deepStrictEqual(events.stepStatuses, [{ step: 8, status: 'skipped' }]);
   assert.equal(events.logs.some(({ message }) => /OAuth 授权页.*步骤 8/.test(message)), true);
-});
-
-test('message router skips Plus login-code step when oauth login lands on consent page', async () => {
-  const stepKeys = {
-    10: 'oauth-login',
-    11: 'fetch-login-code',
-    12: 'confirm-oauth',
-    13: 'platform-verify',
-  };
-  const { router, events } = createRouter({
-    state: { plusModeEnabled: true, stepStatuses: { 10: 'completed', 11: 'pending', 12: 'pending', 13: 'pending' } },
-    getStepDefinitionForState: (step) => ({ id: step, key: stepKeys[step] || '' }),
-    getStepIdsForState: () => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-  });
-
-  await router.handleStepData(10, {
-    skipLoginVerificationStep: true,
-    directOAuthConsentPage: true,
-  });
-
-  assert.deepStrictEqual(events.stepStatuses, [{ step: 11, status: 'skipped' }]);
-  assert.equal(events.logs.some(({ message }) => /OAuth 授权页.*步骤 11/.test(message)), true);
 });
 
 test('message router finalizes step 3 before marking it completed', async () => {
@@ -649,58 +612,6 @@ test('message router delegates OpenAI manual step 4 to the OpenAI node executor'
   assert.deepStrictEqual(events.executedSteps, [4]);
 });
 
-
-test('message router resolves GPC OTP manual confirmation without completing step early', async () => {
-  const state = {
-    plusManualConfirmationPending: true,
-    plusManualConfirmationRequestId: 'otp-request-1',
-    plusManualConfirmationStep: 7,
-    plusManualConfirmationMethod: 'gopay-otp',
-  };
-  const { router, events } = createRouter({ state });
-
-  const response = await router.handleMessage({
-    type: 'RESOLVE_PLUS_MANUAL_CONFIRMATION',
-    source: 'sidepanel',
-    payload: {
-      step: 7,
-      requestId: 'otp-request-1',
-      confirmed: true,
-      otp: ' 12-34 56 ',
-    },
-  }, {});
-
-  assert.deepStrictEqual(response, { ok: true });
-  assert.equal(events.notifyCompletions.length, 0);
-  assert.equal(events.stepStatuses.length, 0);
-  assert.equal(events.stateUpdates[0].gopayHelperResolvedOtp, '123456');
-  assert.equal(events.stateUpdates[0].plusManualConfirmationPending, false);
-  assert.deepStrictEqual(events.broadcasts[0], events.stateUpdates[0]);
-});
-
-test('message router refreshes GPC balance through explicit sidepanel message', async () => {
-  const state = {
-    plusPaymentMethod: 'gpc-helper',
-    gopayHelperApiUrl: 'http://localhost:18473/',
-    gopayHelperApiKey: 'state_api_key',
-  };
-  const { router, events } = createRouter({ state });
-
-  const response = await router.handleMessage({
-    type: 'REFRESH_GPC_CARD_BALANCE',
-    source: 'sidepanel',
-    payload: {
-      gopayHelperApiKey: 'payload_api_key',
-      reason: 'manual',
-    },
-  }, {});
-
-  assert.deepStrictEqual(response, { ok: true, balance: '余额 3', remainingUses: 3, autoModeEnabled: true, apiKeyStatus: 'active' });
-  assert.equal(events.balanceRefreshes.length, 1);
-  assert.equal(events.balanceRefreshes[0].state.gopayHelperApiUrl, 'http://localhost:18473/');
-  assert.equal(events.balanceRefreshes[0].state.gopayHelperApiKey, 'payload_api_key');
-  assert.deepStrictEqual(events.balanceRefreshes[0].options, { reason: 'manual' });
-});
 
 test('message router ignores stale step 2 errors while auto-run is already on a later step', async () => {
   const { router, events } = createRouter({

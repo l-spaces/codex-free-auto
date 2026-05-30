@@ -54,9 +54,6 @@ test('background account history settings are normalized independently from hotm
     extractFunction('normalizeHotmailLocalBaseUrl'),
     extractFunction('normalizeAccountRunHistoryHelperBaseUrl'),
     extractFunction('normalizeVerificationResendCount'),
-    extractFunction('normalizePlusPaymentMethod'),
-    extractFunction('normalizePlusAccountAccessStrategy'),
-    extractFunction('normalizeGpcHelperPhoneMode'),
     extractFunction('normalizePhoneSmsProvider'),
     extractFunction('normalizePhoneSmsProviderOrder'),
     extractFunction('normalizeSignupMethod'),
@@ -81,7 +78,6 @@ test('background account history settings are normalized independently from hotm
     extractFunction('normalizeFiveSimCountryFallback'),
     extractFunction('normalizeSub2ApiGroupNames'),
     extractFunction('normalizeBoundedIntegerSetting'),
-    extractFunction('normalizeLocalHttpBaseUrl'),
     extractFunction('buildPersistentSettingsPayload'),
     extractFunction('normalizePersistentSettingValue'),
   ].join('\n');
@@ -123,13 +119,6 @@ const SIGNUP_METHOD_EMAIL = 'email';
 const SIGNUP_METHOD_PHONE = 'phone';
 const DEFAULT_SIGNUP_METHOD = SIGNUP_METHOD_EMAIL;
 const DEFAULT_ACTIVE_FLOW_ID = 'openai';
-const PLUS_PAYMENT_METHOD_PAYPAL = 'paypal';
-const PLUS_PAYMENT_METHOD_GOPAY = 'gopay';
-const PLUS_PAYMENT_METHOD_GPC_HELPER = 'gpc-helper';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
-const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 const DEFAULT_FIVE_SIM_PRODUCT = 'openai';
 const DEFAULT_NEX_SMS_SERVICE_CODE = 'ot';
 const FIVE_SIM_COUNTRY_ID = 'vietnam';
@@ -150,36 +139,9 @@ const self = {
       return 'cpa';
     },
   },
-  GoPayUtils: {
-    normalizeGoPayCountryCode(value) {
-      const digits = String(value || '').replace(/\\D/g, '');
-      return digits ? \`+\${digits}\` : '+86';
-    },
-    normalizeGoPayPhone(value) {
-      return String(value || '').trim().replace(/[^\\d+]/g, '');
-    },
-    normalizeGoPayOtp(value) {
-      return String(value || '').trim().replace(/[^\\d]/g, '');
-    },
-    normalizeGoPayPin(value) {
-      return String(value || '').trim().replace(/[^\\d]/g, '');
-    },
-    normalizeGpcHelperBaseUrl(value) {
-      return String(value || '')
-        .trim()
-        .replace(/\\/+$/g, '')
-        .replace(/\\/api\\/checkout\\/start$/i, '')
-        .replace(/\\/api\\/gopay\\/(?:otp|pin)$/i, '')
-        .replace(/\\/api\\/gp\\/tasks(?:\\/[^/?#]+)?(?:\\/(?:otp|pin|stop))?(?:\\?.*)?$/i, '')
-        .replace(/\\/api\\/gp\\/balance(?:\\?.*)?$/i, '')
-        .replace(/\\/api\\/card\\/balance(?:\\?.*)?$/i, '')
-        .replace(/\\/api\\/card\\/redeem-api-key(?:\\?.*)?$/i, '');
-    },
-  },
 };
 const PERSISTED_SETTING_DEFAULTS = {
   autoStepDelaySeconds: null,
-  gopayHelperApiUrl: 'https://gpc.qlhazycoder.top',
   mailProvider: '163',
   heroSmsMinPrice: '',
   fiveSimMinPrice: '',
@@ -218,46 +180,6 @@ return {
   assert.equal(api.normalizePersistentSettingValue('phoneVerificationEnabled', 1), true);
   assert.equal(api.normalizePersistentSettingValue('phoneSignupReloginAfterBindEmailEnabled', 1), true);
   assert.equal(api.normalizePersistentSettingValue('phoneSignupReloginAfterBindEmailEnabled', 0), false);
-  assert.equal(api.normalizePersistentSettingValue('plusPaymentMethod', 'gopay'), 'gopay');
-  assert.equal(api.normalizePersistentSettingValue('plusPaymentMethod', 'gpc-helper'), 'gpc-helper');
-  assert.equal(api.normalizePersistentSettingValue('plusPaymentMethod', 'paypal-hosted'), 'paypal-hosted');
-  assert.equal(api.normalizePersistentSettingValue('plusPaymentMethod', 'paypal'), 'paypal');
-  assert.equal(api.normalizePersistentSettingValue('plusPaymentMethod', 'unknown'), 'paypal');
-  assert.equal(api.normalizePersistentSettingValue('plusAccountAccessStrategy', 'sub2api_codex_session'), 'sub2api_codex_session');
-  assert.equal(api.normalizePersistentSettingValue('plusAccountAccessStrategy', 'cpa_codex_session'), 'cpa_codex_session');
-  assert.equal(api.normalizePersistentSettingValue('plusAccountAccessStrategy', 'unknown'), 'oauth');
-  assert.equal(
-    api.normalizePersistentSettingValue('gopayHelperApiUrl', ' https://gpc.qlhazycoder.top/api/checkout/start '),
-    'https://gpc.qlhazycoder.top'
-  );
-  assert.equal(
-    api.normalizePersistentSettingValue('gopayHelperApiUrl', ' https://gpc.qlhazycoder.top/api/gp/tasks/task_1/pin '),
-    'https://gpc.qlhazycoder.top'
-  );
-  assert.equal(
-    api.normalizePersistentSettingValue('gopayHelperApiUrl', ' https://gpc.qlhazycoder.top/api/gp/balance '),
-    'https://gpc.qlhazycoder.top'
-  );
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperApiUrl', ''), 'https://gpc.qlhazycoder.top');
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperApiKey', ' gpc-123 '), 'gpc-123');
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperPhoneMode', 'auto'), 'auto');
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperPhoneMode', 'builtin'), 'auto');
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperPhoneMode', 'unknown'), 'manual');
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperRemainingUses', '998'), 998);
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperAutoModeEnabled', 1), true);
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperApiKeyStatus', ' active '), 'active');
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperCountryCode', ' 86 '), '+86');
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperPhoneNumber', ' +86 138-0013-8000 '), '+8613800138000');
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperPin', ' 12-34-56 '), '123456');
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperOtpChannel', 'SMS'), 'sms');
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperOtpChannel', 'unknown'), 'whatsapp');
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperLocalSmsHelperEnabled', 1), true);
-  assert.equal(
-    api.normalizePersistentSettingValue('gopayHelperLocalSmsHelperUrl', 'http://127.0.0.1:18767/otp?x=1'),
-    'http://127.0.0.1:18767'
-  );
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperLocalSmsTimeoutSeconds', '999'), 300);
-  assert.equal(api.normalizePersistentSettingValue('gopayHelperLocalSmsPollIntervalSeconds', '0'), 1);
   assert.equal(api.normalizePersistentSettingValue('verificationResendCount', '7'), 7);
   assert.equal(api.normalizePersistentSettingValue('verificationResendCount', '-1'), 0);
   assert.equal(api.normalizePersistentSettingValue('phoneVerificationReplacementLimit', '9'), 9);
@@ -320,8 +242,8 @@ return {
     'proxy-a'
   );
   assert.deepStrictEqual(
-    api.normalizePersistentSettingValue('sub2apiGroupNames', [' codex ', 'openai-plus', 'CODEX']),
-    ['codex', 'openai-plus']
+    api.normalizePersistentSettingValue('sub2apiGroupNames', [' codex ', 'CODEX']),
+    ['codex']
   );
   assert.equal(
     api.normalizePersistentSettingValue('codex2apiUrl', 'localhost:8080/admin'),

@@ -101,7 +101,6 @@ test('account run history helper upgrades old records, keeps stopped items and s
       totalRuns: 10,
       attemptRun: 3,
     },
-    plusModeEnabled: false,
     accountContributionEnabled: false,
   });
 
@@ -212,7 +211,6 @@ test('account run history helper accepts phone-only records without forcing emai
     failedStep: null,
     source: 'manual',
     autoRunContext: null,
-    plusModeEnabled: false,
     accountContributionEnabled: false,
   });
 
@@ -411,7 +409,7 @@ test('account run history keeps phone as primary identity when phone signup late
   assert.equal(storedHistory[0].finalStatus, 'success');
 });
 
-test('account run history records preserve Plus and contribution mode flags', () => {
+test('account run history records preserve contribution mode flags', () => {
   const source = fs.readFileSync('background/account-run-history.js', 'utf8');
   const globalScope = {};
   const api = new Function('self', `${source}; return self.MultiPageBackgroundAccountRunHistory;`)(globalScope);
@@ -423,24 +421,20 @@ test('account run history records preserve Plus and contribution mode flags', ()
   });
 
   const record = helpers.buildAccountRunHistoryRecord({
-    email: 'plus@example.com',
+    email: 'contrib@example.com',
     password: 'secret',
-    plusModeEnabled: true,
     accountContributionEnabled: true,
   }, 'success');
 
-  assert.equal(record.plusModeEnabled, true);
   assert.equal(record.accountContributionEnabled, true);
 
   const normalized = helpers.normalizeAccountRunHistoryRecord({
-    email: 'plus@example.com',
+    email: 'contrib@example.com',
     password: 'secret',
     finalStatus: 'success',
-    plusModeEnabled: true,
     accountContributionEnabled: true,
   });
 
-  assert.equal(normalized.plusModeEnabled, true);
   assert.equal(normalized.accountContributionEnabled, true);
 });
 

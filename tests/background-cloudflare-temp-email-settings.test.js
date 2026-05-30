@@ -203,7 +203,6 @@ function normalizeCloudflareTempEmailDomain(value) { return String(value || '').
 function normalizeCloudflareTempEmailDomains(value) { return Array.isArray(value) ? value.map((item) => String(item || '').trim().toLowerCase()).filter(Boolean) : []; }
 function normalizeHotmailAccounts(value) { return Array.isArray(value) ? value : []; }
 function normalizeMail2925Accounts(value) { return Array.isArray(value) ? value : []; }
-function normalizePayPalAccounts(value) { return Array.isArray(value) ? value : []; }
 function normalizeHeroSmsAcquirePriority(value) { return String(value || '').trim() === 'price' ? 'price' : 'country'; }
 function normalizeHeroSmsMaxPrice(value) { return String(value || '').trim(); }
 function normalizeHeroSmsCountryFallback(value) { return Array.isArray(value) ? value : []; }

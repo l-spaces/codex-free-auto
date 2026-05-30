@@ -128,12 +128,12 @@
 - 新代码用固定数组 `[1,2,3...]` 推导当前流程。
 - 新代码只更新 `STEP_IDS / STEP_DEFAULT_STATUSES`，却不更新 `NODE_IDS / NODE_DEFAULT_STATUSES`。
 - 新代码绕过 `getStepDefinitionsForState / getStepRegistryForState / getWorkflowNodesForMode` 自己拼步骤。
-- 新代码把 Plus、手机号注册、绑定后重登等模式写成 sidepanel 局部硬编码列表。
+- 新代码把手机号注册、绑定后重登等模式写成 sidepanel 局部硬编码列表。
 - 新 code path 只按可见步骤号重试，不按当前 `nodeId` 找恢复锚点。
 
 ### 1.5 步骤 key / nodeId 状态原则
 
-- 后台执行必须优先通过当前 state 解析 node registry：`activeFlowId`、`plusModeEnabled`、`plusPaymentMethod`、`signupMethod`、以及影响步骤列表的开关都必须参与解析。
+- 后台执行必须优先通过当前 state 解析 node registry：`activeFlowId`、`signupMethod`、以及影响步骤列表的开关都必须参与解析。
 - 自动运行、手动跳过、节点完成、节点失败、节点等待器必须优先使用 `nodeId`。
 - 可见步骤号只能作为兼容输入；一旦进入后台，必须尽快解析为当前模式下的 `nodeId`。
 - 如果同一个可见步骤号在不同模式下对应不同节点，必须以当前 workflow 为准，不能用普通模式含义推断。
@@ -150,8 +150,6 @@
 项目现在至少有这些会改变流程或步骤含义的维度：
 
 - `activeFlowId`
-- `plusModeEnabled`
-- `plusPaymentMethod`
 - `signupMethod`
 - `phoneVerificationEnabled`
 - `phoneSignupReloginAfterBindEmailEnabled`
@@ -177,7 +175,6 @@
 
 - 步骤相关日志必须通过结构化元数据传递步骤号：`addLog(message, level, { step, stepKey })` 或内容脚本 `log(message, level, { step, stepKey })`。
 - sidepanel 只能读取日志条目的 `entry.step` 渲染步骤标签，禁止再用正则从日志正文解析 `步骤 X` / `Step X`。
-- Plus 模式复用普通执行器时，必须先按当前运行态解析可见步骤号，再传给日志、完成信号、错误信号和内容脚本 payload；禁止在复用执行器里写死普通模式步骤号。
 - 日志正文可以在业务说明里提到“回到步骤 X”这类操作目标，但不能把正文前缀当作当前日志所属步骤。
 - 不做旧日志文本兼容；如果旧日志没有结构化 `step`，sidepanel 不需要补推断步骤标签。
 
@@ -295,24 +292,6 @@
 - iCloud 别名缓存只能作为短暂失败回退，不允许替代线上列表成为最终状态来源；已用和保留状态仍然以 `manualAliasUsage`、`preservedAliases` 与最新线上列表合并后的结果为准。
 - 如果新增 iCloud 相关回退路径，必须补覆盖登录提示、缓存回退、自动运行停止重试和 reserve 异常恢复的测试，并同步更新 [项目完整链路说明.md](./项目完整链路说明.md)。
 
-### 3.4.2 Plus 账号接入策略 / 会话导入规范
-
-- `plusAccountAccessStrategy` 属于 `flows.openai.plus` 下的持久配置，不是新的运行态模式，也不是新的 source。
-- 当前能力边界由 target capability 决定：`CPA` 允许 `oauth / cpa_codex_session`，`SUB2API` 允许 `oauth / sub2api_codex_session`，`Codex2API` 当前仅允许 `oauth`。
-- UI 上不支持的选项必须直接禁用并回落为 `oauth`；不允许出现“看起来能选，执行时再报不支持”的假开关。
-- Plus 模式下会话导入只在 `openai` flow、Plus 已开启、且当前是邮箱注册时可用；Plus 模式不允许手机号注册。
-- 任何设计、文档和代码都不能把 Plus 写成固定步骤号链；只能描述“替换哪一段 workflow 节点”。
-- 当尾链切到 `cpa-session-import` 或 `sub2api-session-import` 时，被替换的是整段 `oauth-login -> fetch-login-code -> confirm-oauth -> platform-verify`，不是只替换其中某一个固定编号步骤。
-- session import 节点必须直接完成目标平台接入，不得再经过 `platform-verify`，也不得混入普通 OAuth callback 状态机。
-- 相关改动必须同步检查：
-  - `data/step-definitions.js`
-  - `core/flow-kernel/flow-capabilities.js`
-  - `core/flow-kernel/settings-schema.js`
-  - `background/message-router.js`
-  - 对应 session import executor 与 `flows/openai/background/steps/platform-verify.js`
-  - `sidepanel/sidepanel.html` 与 `sidepanel/sidepanel.js`
-  - 手动跳过、自动运行、最终完成节点判断、日志 step 映射与测试
-
 ### 3.5 OAuth / 接码 / 注册身份链路规范
 
 OAuth 登录后链路是本项目最容易出现“功能重复、页面冲突、步骤偷跑”的区域。任何改动都必须先区分注册模式、登录身份和当前认证页状态。
@@ -400,7 +379,6 @@ npm test
   - `getSteps` 与 `getNodes` 两套输出。
   - `getWorkflow` 的 `nodeIds` 顺序。
   - 普通模式步骤列表。
-  - Plus 模式步骤列表。
   - 邮箱注册模式步骤列表。
   - 手机号注册模式步骤列表。
   - 新开关打开 / 关闭两种步骤列表。

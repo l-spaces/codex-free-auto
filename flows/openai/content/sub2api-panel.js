@@ -68,8 +68,6 @@ async function handleStep(step, payload = {}) {
     case 1:
       return step1_generateOpenAiAuthUrl(payload);
     case 10:
-    case 12:
-    case 13:
       return step9_submitOpenAiCallback({ ...(payload || {}), visibleStep: step });
     default:
       throw new Error(`sub2api-panel.js 不处理步骤 ${step}`);

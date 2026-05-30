@@ -130,9 +130,6 @@ async function refreshContributionContentHint() {
   events.push({ type: 'refresh' });
   ${refreshImpl ? 'return (' + refreshImpl + ')();' : 'return null;'}
 }
-async function ensureGpcApiKeyReadyForStart() {
-  return true;
-}
 ${bundle}
 return {
   startAutoRunFromCurrentSettings,
@@ -265,7 +262,6 @@ const inputAutoSkipFailuresThreadIntervalMinutes = { value: '5' };
 const btnAutoRun = { disabled: false, innerHTML: '' };
 const inputRunCount = { disabled: false, value: '1' };
 const inputPhoneVerificationEnabled = { checked: true };
-const inputPlusModeEnabled = { checked: false };
 let runCountValue = 1;
 let pendingAutoRunStartTotalRuns = 0;
 let pendingAutoRunStartExpiresAt = 0;
@@ -315,9 +311,6 @@ function setAutoRunFallbackRiskPromptDismissed() {}
 async function refreshContributionContentHint() {
   events.push({ type: 'refresh' });
   return null;
-}
-async function ensureGpcApiKeyReadyForStart() {
-  return true;
 }
 ${bundle}
 return {

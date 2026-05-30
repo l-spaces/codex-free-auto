@@ -11,7 +11,6 @@
     supportsEmailSignup: true,
     supportsPhoneSignup: false,
     supportsPhoneVerificationSettings: false,
-    supportsPlusMode: false,
     supportsContributionMode: false,
     supportsAccountContribution: false,
     supportsOpenAiOAuthContribution: false,

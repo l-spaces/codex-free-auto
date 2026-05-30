@@ -73,16 +73,6 @@ const self = {
 };
 `;
 
-test('background auth chain set does not include Plus session import nodes', () => {
-  const authChainStart = source.indexOf('const AUTH_CHAIN_NODE_IDS = new Set([');
-  const authChainEnd = source.indexOf(']);', authChainStart);
-  const authChainBlock = source.slice(authChainStart, authChainEnd);
-
-  assert.ok(authChainStart >= 0, 'expected AUTH_CHAIN_NODE_IDS block to exist');
-  assert.doesNotMatch(authChainBlock, /sub2api-session-import/);
-  assert.doesNotMatch(authChainBlock, /cpa-session-import/);
-});
-
 test('step 8 recovery rebuilds primary phone login identity before rerunning oauth-login', async () => {
   const events = {
     executePayloads: [],

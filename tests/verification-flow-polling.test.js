@@ -1305,7 +1305,7 @@ test('verification flow uses configured login resend count for step 8', async ()
   assert.equal(pollCalls, 3);
 });
 
-test('verification flow can complete Plus visible login-code step with shared step 8 semantics', async () => {
+test('verification flow can complete custom visible login-code step with shared step 8 semantics', async () => {
   const completed = [];
   const fillMessages = [];
 

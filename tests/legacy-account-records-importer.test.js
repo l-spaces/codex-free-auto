@@ -26,7 +26,6 @@ test('legacy account records importer normalizes old history records into canoni
       password: 'secret',
       status: 'success',
       recordedAt: '2026-04-17T00:12:00.000Z',
-      plusModeEnabled: 1,
     },
     {
       phone: '+6612345',
@@ -56,7 +55,6 @@ test('legacy account records importer normalizes old history records into canoni
     failedStep: null,
     source: 'manual',
     autoRunContext: null,
-    plusModeEnabled: true,
     accountContributionEnabled: false,
   });
   assert.equal(records[1].recordId, 'phone:+6612345');

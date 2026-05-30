@@ -1254,7 +1254,7 @@ test('step 8 does not run add-email email_in_use recovery in email login mode', 
   assert.deepStrictEqual(calls.setStates, []);
 });
 
-test('Plus login-code step reuses step 8 verification logic but completes visible step 11', async () => {
+test('login-code step reuses step 8 verification logic with a custom visible step', async () => {
   let resolvedStep = null;
   let resolvedOptions = null;
   let readyOptions = null;
@@ -1271,7 +1271,7 @@ test('Plus login-code step reuses step 8 verification logic but completes visibl
     confirmCustomVerificationStepBypass: async () => {},
     ensureStep8VerificationPageReady: async (options) => {
       readyOptions = options;
-      return { state: 'verification_page', displayedEmail: 'plus.user@example.com' };
+      return { state: 'verification_page', displayedEmail: 'login.user@example.com' };
     },
     rerunStep7ForStep8Recovery: async () => {},
     getOAuthFlowRemainingMs: async (details) => {
@@ -1289,7 +1289,7 @@ test('Plus login-code step reuses step 8 verification logic but completes visibl
       url: 'https://mail.qq.com',
       navigateOnReuse: false,
     }),
-    getState: async () => ({ email: 'user@example.com', password: 'secret', plusModeEnabled: true }),
+    getState: async () => ({ email: 'user@example.com', password: 'secret' }),
     getTabId: async (sourceName) => (sourceName === 'openai-auth' ? 1 : 2),
     HOTMAIL_PROVIDER: 'hotmail-api',
     isTabAlive: async () => true,
@@ -1310,7 +1310,6 @@ test('Plus login-code step reuses step 8 verification logic but completes visibl
 
   await executor.executeStep8({
     visibleStep: 11,
-    plusModeEnabled: true,
     email: 'user@example.com',
     password: 'secret',
     oauthUrl: 'https://oauth.example/latest',
@@ -1318,7 +1317,7 @@ test('Plus login-code step reuses step 8 verification logic but completes visibl
 
   assert.equal(resolvedStep, 8);
   assert.equal(resolvedOptions.completionStep, 11);
-  assert.equal(resolvedOptions.targetEmail, 'plus.user@example.com');
+  assert.equal(resolvedOptions.targetEmail, 'login.user@example.com');
   assert.deepStrictEqual(readyOptions, {
     visibleStep: 11,
     authLoginStep: 10,
@@ -1329,7 +1328,7 @@ test('Plus login-code step reuses step 8 verification logic but completes visibl
   assert.deepStrictEqual(remainingStepCalls, [11, 11]);
 });
 
-test('bound-email relogin code step points recovery to the relogin step in Plus mode', async () => {
+test('bound-email relogin code step points recovery to the relogin step', async () => {
   let resolvedStep = null;
   let resolvedOptions = null;
   let readyOptions = null;
@@ -1367,7 +1366,6 @@ test('bound-email relogin code step points recovery to the relogin step in Plus 
     getState: async () => ({
       email: 'bound.user@example.com',
       password: 'secret',
-      plusModeEnabled: true,
       signupMethod: 'phone',
       phoneSignupReloginAfterBindEmailEnabled: true,
     }),
@@ -1391,7 +1389,6 @@ test('bound-email relogin code step points recovery to the relogin step in Plus 
 
   await executor.executeBoundEmailLoginCode({
     visibleStep: 14,
-    plusModeEnabled: true,
     signupMethod: 'phone',
     phoneSignupReloginAfterBindEmailEnabled: true,
     email: 'bound.user@example.com',

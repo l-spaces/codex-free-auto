@@ -34,16 +34,13 @@
       executeNodeViaCompletionSignal,
       exportSettingsBundle,
       fetchGeneratedEmail,
-      refreshGpcCardBalance,
       finalizePhoneActivationAfterSuccessfulFlow,
       finalizeStep3Completion,
       finalizeStep5Completion = null,
       finalizeIcloudAliasAfterSuccessfulFlow,
       findHotmailAccount,
-      findPayPalAccount,
       flushCommand,
       getCurrentLuckmailPurchase,
-      getCurrentPayPalAccount,
       getCurrentMail2925Account,
       getPendingAutoRunTimerPlan,
       getSourceLabel,
@@ -64,7 +61,6 @@
           return capabilityRegistry.canUsePhoneSignup(state);
         }
         return Boolean(state?.phoneVerificationEnabled)
-          && !Boolean(state?.plusModeEnabled)
           && !Boolean(state?.accountContributionEnabled);
       },
       resolveSignupMethod = (state = {}) => {
@@ -136,7 +132,6 @@
       markCurrentRegistrationAccountUsed,
       normalizeHotmailAccounts,
       normalizeMail2925Accounts,
-      normalizePayPalAccounts,
       normalizeRunCount,
       notifyNodeComplete,
       notifyNodeError,
@@ -150,7 +145,6 @@
       resetState,
       resumeAutoRun,
       selectLuckmailPurchase,
-      setCurrentPayPalAccount,
       setCurrentMail2925Account,
       setCurrentHotmailAccount,
       setAccountContributionMode,
@@ -175,9 +169,7 @@
       deleteMail2925Account,
       deleteMail2925Accounts,
       syncHotmailAccounts,
-      syncPayPalAccounts,
       testHotmailAccountMailAccess,
-      upsertPayPalAccount,
       upsertMail2925Account,
       upsertHotmailAccount,
       verifyHotmailAccount,
@@ -544,72 +536,6 @@
       }
       await setNodeStatus(nodeId, status);
       return nodeId;
-    }
-
-    function normalizePlusPaymentMethodForDisplay(value = '') {
-      const normalized = String(value || '').trim().toLowerCase();
-      if (normalized === 'none' || normalized === 'no-payment' || normalized === 'skip-payment') {
-        return 'none';
-      }
-      if (normalized === 'paypal-hosted' || normalized === 'paypal_direct' || normalized === 'paypal-direct') {
-        return 'paypal-hosted';
-      }
-      if (normalized === 'gpc-helper') {
-        return 'gpc-helper';
-      }
-      return normalized === 'gopay' ? 'gopay' : 'paypal';
-    }
-
-    function getPlusPaymentMethodLabel(value = '') {
-      const method = normalizePlusPaymentMethodForDisplay(value);
-      if (method === 'none') {
-        return '无需支付';
-      }
-      if (method === 'paypal-hosted') {
-        return 'PayPal 无卡直绑';
-      }
-      if (method === 'gpc-helper') {
-        return 'GPC';
-      }
-      return method === 'gopay' ? 'GoPay' : 'PayPal';
-    }
-
-    function normalizePlusAccountAccessStrategyForDisplay(value = '') {
-      const normalized = String(value || '').trim().toLowerCase();
-      if (normalized === 'sub2api_codex_session') {
-        return 'sub2api_codex_session';
-      }
-      if (normalized === 'cpa_codex_session') {
-        return 'cpa_codex_session';
-      }
-      return 'oauth';
-    }
-
-    function getPlusAccountAccessStrategyLabel(value = '') {
-      return normalizePlusAccountAccessStrategyForDisplay(value) === 'sub2api_codex_session'
-        ? '导入当前 ChatGPT 会话到 SUB2API'
-        : 'OAuth';
-    }
-
-    function getPlusAccountAccessStrategyLabel(value = '', targetId = '') {
-      const strategy = normalizePlusAccountAccessStrategyForDisplay(value);
-      const normalizedTargetId = String(targetId || '').trim().toLowerCase();
-      if (strategy === 'sub2api_codex_session') {
-        return '导入当前 ChatGPT 会话到 SUB2API';
-      }
-      if (strategy === 'cpa_codex_session') {
-        return '导入当前 ChatGPT 会话到 CPA';
-      }
-      if (normalizedTargetId === 'cpa') {
-        return '通过 OAuth 回调创建 CPA 账号';
-      }
-      if (normalizedTargetId === 'sub2api') {
-        return '通过 OAuth 回调创建 SUB2API 账号';
-      }
-      if (normalizedTargetId === 'codex2api') {
-        return '通过 OAuth 回调创建 Codex2API 账号';
-      }
-      return 'OAuth';
     }
 
     async function handlePlatformVerifyStepData(payload) {
@@ -1047,77 +973,6 @@
           return { ok: true };
         }
 
-        case 'RESOLVE_PLUS_MANUAL_CONFIRMATION': {
-          const currentState = await getState();
-          const step = Number(message.payload?.step) || Number(currentState?.plusManualConfirmationStep) || 0;
-          const confirmationNodeId = getStepKeyForState(step, currentState) || String(currentState?.currentNodeId || '').trim();
-          const confirmed = Boolean(message.payload?.confirmed);
-          const requestId = String(message.payload?.requestId || '').trim();
-          const currentRequestId = String(currentState?.plusManualConfirmationRequestId || '').trim();
-          const method = String(currentState?.plusManualConfirmationMethod || '').trim().toLowerCase();
-          const isGpcOtp = method === 'gopay-otp';
-          if (!currentState?.plusManualConfirmationPending) {
-            return { ok: true, ignored: true };
-          }
-          if (requestId && currentRequestId && requestId !== currentRequestId) {
-            return { ok: true, ignored: true };
-          }
-
-          const clearManualConfirmationState = {
-            plusManualConfirmationPending: false,
-            plusManualConfirmationRequestId: '',
-            plusManualConfirmationStep: 0,
-            plusManualConfirmationMethod: '',
-            plusManualConfirmationTitle: '',
-            plusManualConfirmationMessage: '',
-          };
-
-          if (isGpcOtp && confirmed) {
-            const otp = String(message.payload?.otp || message.payload?.code || '').trim().replace(/[^\d]/g, '');
-            if (!otp) {
-              throw new Error('请输入 GPC OTP 验证码。');
-            }
-            const otpUpdates = {
-              ...clearManualConfirmationState,
-              gopayHelperResolvedOtp: otp,
-            };
-            await setState(otpUpdates);
-            if (typeof broadcastDataUpdate === 'function') {
-              broadcastDataUpdate(otpUpdates);
-            }
-            await addLog(`步骤 ${step}：已收到 GPC OTP，准备提交验证。`, 'ok');
-            return { ok: true };
-          }
-
-          await setState(clearManualConfirmationState);
-          if (typeof broadcastDataUpdate === 'function') {
-            broadcastDataUpdate(clearManualConfirmationState);
-          }
-
-          if (confirmed) {
-            const methodLabel = method === 'gopay' ? 'GoPay' : '手动';
-            await addLog(`步骤 ${step}：已确认${methodLabel}订阅完成，准备继续下一步。`, 'ok');
-            await completeNodeFromBackground(confirmationNodeId, {
-              plusManualConfirmationMethod: currentState?.plusManualConfirmationMethod || '',
-              plusManualConfirmedAt: Date.now(),
-            });
-            return { ok: true };
-          }
-
-          const cancelMessage = method === 'gopay'
-            ? '已取消 GoPay 订阅确认'
-            : (isGpcOtp ? '已取消 GPC OTP 输入' : '已取消当前手动确认');
-          await setNodeStatus(confirmationNodeId, 'failed');
-          await addLog(`步骤 ${step}：${cancelMessage}。`, 'warn');
-          await appendManualAccountRunRecordIfNeeded(
-            confirmationNodeId ? `node:${confirmationNodeId}:failed` : 'failed',
-            null,
-            cancelMessage
-          );
-          notifyNodeError(confirmationNodeId, cancelMessage);
-          return { ok: true };
-        }
-
         case 'GET_STATE': {
           return await getState();
         }
@@ -1376,7 +1231,6 @@
           };
           if (
             Object.prototype.hasOwnProperty.call(updates, 'phoneVerificationEnabled')
-            || Object.prototype.hasOwnProperty.call(updates, 'plusModeEnabled')
             || Object.prototype.hasOwnProperty.call(updates, 'signupMethod')
             || Object.prototype.hasOwnProperty.call(updates, 'targetId')
             || Object.prototype.hasOwnProperty.call(updates, 'activeFlowId')
@@ -1390,23 +1244,9 @@
           if (normalizeSignupMethod(nextPersistedSignupMethod) === 'phone') {
             preservePhoneReuseSettingsForPhoneSignup(updates, currentState);
           }
-          const modeChanged = Object.prototype.hasOwnProperty.call(updates, 'plusModeEnabled')
-            && Boolean(currentState?.plusModeEnabled) !== Boolean(updates.plusModeEnabled);
-          const plusPaymentChanged = Object.prototype.hasOwnProperty.call(updates, 'plusPaymentMethod')
-            && normalizePlusPaymentMethodForDisplay(currentState?.plusPaymentMethod || 'paypal')
-              !== normalizePlusPaymentMethodForDisplay(updates.plusPaymentMethod || 'paypal');
-          const plusAccountAccessStrategyChanged = Object.prototype.hasOwnProperty.call(updates, 'plusAccountAccessStrategy')
-            && normalizePlusAccountAccessStrategyForDisplay(currentState?.plusAccountAccessStrategy || 'oauth')
-              !== normalizePlusAccountAccessStrategyForDisplay(updates.plusAccountAccessStrategy || 'oauth');
           const phoneSignupReloginAfterBindEmailChanged = Object.prototype.hasOwnProperty.call(updates, 'phoneSignupReloginAfterBindEmailEnabled')
             && Boolean(currentState?.phoneSignupReloginAfterBindEmailEnabled) !== Boolean(updates.phoneSignupReloginAfterBindEmailEnabled);
-          const nextPlusModeEnabled = Object.prototype.hasOwnProperty.call(updates, 'plusModeEnabled')
-            ? Boolean(updates.plusModeEnabled)
-            : Boolean(currentState?.plusModeEnabled);
-          const stepModeChanged = modeChanged
-            || (nextPlusModeEnabled && plusPaymentChanged)
-            || (nextPlusModeEnabled && plusAccountAccessStrategyChanged)
-            || phoneSignupReloginAfterBindEmailChanged;
+          const stepModeChanged = phoneSignupReloginAfterBindEmailChanged;
           const canonicalSettingsUpdates = await setPersistentSettings(updates);
           const stateUpdates = {
             ...canonicalSettingsUpdates,
@@ -1452,12 +1292,6 @@
               sub2apiProxyId: null,
               codex2apiSessionId: null,
               codex2apiOAuthState: null,
-              plusManualConfirmationPending: false,
-              plusManualConfirmationRequestId: '',
-              plusManualConfirmationStep: 0,
-              plusManualConfirmationMethod: '',
-              plusManualConfirmationTitle: '',
-              plusManualConfirmationMessage: '',
             });
           }
           if (shouldRebuildNodeStatuses && nextNodeIds.length > 0) {
@@ -1474,55 +1308,11 @@
           if (Object.keys(stateUpdates).length > 0 && typeof broadcastDataUpdate === 'function') {
             broadcastDataUpdate(stateUpdates);
           }
-          if (modeChanged) {
-            const selectedPlusPaymentMethod = getPlusPaymentMethodLabel(
-              stateUpdates.plusPaymentMethod ?? currentState?.plusPaymentMethod ?? 'paypal'
-            );
-            const selectedPlusAccountAccessStrategy = getPlusAccountAccessStrategyLabel(
-              stateUpdates.plusAccountAccessStrategy ?? currentState?.plusAccountAccessStrategy ?? 'oauth',
-              stateUpdates.targetId
-                ?? currentState?.targetId
-                ?? 'cpa'
-            );
-            await addLog(
-              Boolean(updates.plusModeEnabled)
-                ? `Plus 模式已开启，已切换为 Plus Checkout 步骤，当前支付方式：${selectedPlusPaymentMethod}，账号接入策略：${selectedPlusAccountAccessStrategy}。`
-                : 'Plus 模式已关闭，已恢复普通注册授权步骤。',
-              'info'
-            );
-          } else if (plusPaymentChanged && nextPlusModeEnabled) {
-            const selectedPlusPaymentMethod = getPlusPaymentMethodLabel(
-              stateUpdates.plusPaymentMethod ?? currentState?.plusPaymentMethod ?? 'paypal'
-            );
-            await addLog(`Plus 支付方式已切换为 ${selectedPlusPaymentMethod}，已更新对应的 Plus 步骤。`, 'info');
-          } else if (plusAccountAccessStrategyChanged && nextPlusModeEnabled) {
-            const selectedPlusAccountAccessStrategy = getPlusAccountAccessStrategyLabel(
-              stateUpdates.plusAccountAccessStrategy ?? currentState?.plusAccountAccessStrategy ?? 'oauth',
-              stateUpdates.targetId
-                ?? currentState?.targetId
-                ?? 'cpa'
-            );
-            await addLog(`Plus 账号接入策略已切换为 ${selectedPlusAccountAccessStrategy}，已更新对应的 Plus 尾链。`, 'info');
-          }
           return {
             ok: true,
             modeValidation,
             state: await getState(),
           };
-        }
-
-        case 'REFRESH_GPC_CARD_BALANCE': {
-          if (typeof refreshGpcCardBalance !== 'function') {
-            throw new Error('GPC API Key 余额查询能力尚未接入。');
-          }
-          const state = await getState();
-          const result = await refreshGpcCardBalance({
-            ...(state || {}),
-            ...(message.payload || {}),
-          }, {
-            reason: message.payload?.reason,
-          });
-          return { ok: true, ...result };
         }
 
         case 'EXPORT_SETTINGS': {
@@ -1536,16 +1326,6 @@
 
         case 'UPSERT_HOTMAIL_ACCOUNT': {
           const account = await upsertHotmailAccount(message.payload || {});
-          return { ok: true, account };
-        }
-
-        case 'UPSERT_PAYPAL_ACCOUNT': {
-          const account = await upsertPayPalAccount(message.payload || {});
-          return { ok: true, account };
-        }
-
-        case 'SELECT_PAYPAL_ACCOUNT': {
-          const account = await setCurrentPayPalAccount(String(message.payload?.accountId || ''));
           return { ok: true, account };
         }
 

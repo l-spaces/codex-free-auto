@@ -835,17 +835,16 @@ test('message router platform verify marks current LuckMail purchase as used and
   assert.equal(result.logs.at(-1).message, '当前 LuckMail 邮箱运行态已清空，下轮将优先复用未用邮箱或重新购买邮箱。');
 });
 
-test('message router marks current LuckMail purchase as used on Plus platform verify step 13', async () => {
+test('message router marks current LuckMail purchase as used on custom platform verify step', async () => {
   const { router, snapshot } = createLuckmailPlatformVerifyRouter({
     state: {
-    plusModeEnabled: true,
     mailProvider: 'luckmail-api',
     currentHotmailAccountId: null,
     currentLuckmailPurchase: {
       id: 456,
-      email_address: 'plus@outlook.com',
+      email_address: 'custom@outlook.com',
     },
-    email: 'plus@outlook.com',
+    email: 'custom@outlook.com',
     },
     stepKeyByStep: {
       10: 'oauth-login',

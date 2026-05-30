@@ -57,7 +57,6 @@ const logs = [];
 let state = {
   signupMethod: 'phone',
   phoneVerificationEnabled: true,
-  plusModeEnabled: false,
   accountContributionEnabled: false,
   resolvedSignupMethod: null,
 };
@@ -79,7 +78,7 @@ return {
 
   assert.equal(api.resolveSignupMethod({ signupMethod: 'phone', phoneVerificationEnabled: true }), 'phone');
   assert.equal(api.resolveSignupMethod({ signupMethod: 'phone', phoneVerificationEnabled: false }), 'email');
-  assert.equal(api.resolveSignupMethod({ signupMethod: 'phone', phoneVerificationEnabled: true, plusModeEnabled: true }), 'email');
+  assert.equal(api.resolveSignupMethod({ signupMethod: 'phone', phoneVerificationEnabled: true, accountContributionEnabled: true }), 'email');
   assert.equal(api.resolveSignupMethod({ signupMethod: 'email', resolvedSignupMethod: 'phone', phoneVerificationEnabled: false }), 'phone');
 
   assert.equal(await api.ensureResolvedSignupMethodForRun(), 'phone');
@@ -143,12 +142,6 @@ return {
 test('background step definitions resolve titles from the frozen signup method', () => {
 const api = new Function(`
 const captured = [];
-const PLUS_PAYMENT_METHOD_PAYPAL = 'paypal';
-const PLUS_PAYMENT_METHOD_GOPAY = 'gopay';
-const PLUS_PAYMENT_METHOD_GPC_HELPER = 'gpc-helper';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
 const DEFAULT_ACTIVE_FLOW_ID = 'openai';
 const self = {
   MultiPageStepDefinitions: {
@@ -162,9 +155,6 @@ const self = {
     },
   },
 };
-${extractFunction('isPlusModeState')}
-${extractFunction('normalizePlusPaymentMethod')}
-${extractFunction('normalizePlusAccountAccessStrategy')}
 ${extractFunction('normalizeSignupMethod')}
 ${extractFunction('getSignupMethodForStepDefinitions')}
 ${extractFunction('buildResolvedStepDefinitionState')}
@@ -176,17 +166,12 @@ return {
 `)();
 
   const steps = api.getStepDefinitionsForState({
-    plusModeEnabled: true,
-    plusPaymentMethod: 'gopay',
     signupMethod: 'email',
     resolvedSignupMethod: 'phone',
   });
 
   assert.deepEqual(api.getCaptured(), [{
     activeFlowId: 'openai',
-    plusModeEnabled: true,
-    plusPaymentMethod: 'gopay',
-    plusAccountAccessStrategy: 'oauth',
     signupMethod: 'phone',
     phoneVerificationEnabled: false,
     phoneSignupReloginAfterBindEmailEnabled: false,

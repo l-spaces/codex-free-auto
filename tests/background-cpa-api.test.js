@@ -40,7 +40,7 @@ test('cpa api imports current ChatGPT session through management auth-files endp
     email: 'jwt@example.com',
     'https://api.openai.com/auth': {
       chatgpt_account_id: 'acct_123',
-      chatgpt_plan_type: 'plus',
+      chatgpt_plan_type: 'free',
       chatgpt_user_id: 'user_123',
     },
     'https://api.openai.com/profile': {
@@ -82,7 +82,7 @@ test('cpa api imports current ChatGPT session through management auth-files endp
       },
       account: {
         id: 'acct_123',
-        planType: 'plus',
+        planType: 'free',
       },
     },
     accessToken,
@@ -91,7 +91,7 @@ test('cpa api imports current ChatGPT session through management auth-files endp
     accountIdentifier: 'identifier@example.com',
   }, {
     logLabel: '步骤 10',
-    logOptions: { step: 10, stepKey: 'cpa-session-import' },
+    logOptions: { step: 10, stepKey: 'platform-verify' },
   });
 
   const importCall = fetchCalls.find((call) => call.path === '/v0/management/auth-files');
@@ -101,14 +101,14 @@ test('cpa api imports current ChatGPT session through management auth-files endp
   assert.equal(importCall.headers['X-Management-Key'], 'management-key');
   assert.equal(
     decodeURIComponent(new URLSearchParams(importCall.search).get('name')),
-    'codex-flow@example.com-plus.json'
+    'codex-flow@example.com-free.json'
   );
   assert.equal(importCall.body.type, 'codex');
   assert.equal(importCall.body.account_id, 'acct_123');
   assert.equal(importCall.body.chatgpt_account_id, 'acct_123');
   assert.equal(importCall.body.email, 'flow@example.com');
-  assert.equal(importCall.body.plan_type, 'plus');
-  assert.equal(importCall.body.chatgpt_plan_type, 'plus');
+  assert.equal(importCall.body.plan_type, 'free');
+  assert.equal(importCall.body.chatgpt_plan_type, 'free');
   assert.equal(importCall.body.access_token, accessToken);
   assert.equal(importCall.body.id_token_synthetic, true);
   assert.match(String(importCall.body.id_token || ''), /\.synthetic$/);
@@ -127,7 +127,7 @@ test('cpa api falls back to registration email when session has no readable emai
     exp: Math.floor(Date.parse('2026-05-20T12:34:56.000Z') / 1000),
     'https://api.openai.com/auth': {
       chatgpt_account_id: 'acct_456',
-      chatgpt_plan_type: 'plus',
+      chatgpt_plan_type: 'free',
       chatgpt_user_id: 'user_456',
     },
   });
@@ -148,7 +148,7 @@ test('cpa api falls back to registration email when session has no readable emai
 
   assert.equal(result.email, 'registration@example.com');
   assert.equal(result.authJson.email, 'registration@example.com');
-  assert.equal(result.fileName, 'codex-registration@example.com-plus.json');
+  assert.equal(result.fileName, 'codex-registration@example.com-free.json');
 });
 
 test('cpa api preserves provided id_token and refresh_token when available', () => {
@@ -157,7 +157,7 @@ test('cpa api preserves provided id_token and refresh_token when available', () 
     exp: Math.floor(Date.parse('2026-05-20T12:34:56.000Z') / 1000),
     'https://api.openai.com/auth': {
       chatgpt_account_id: 'acct_789',
-      chatgpt_plan_type: 'plus',
+      chatgpt_plan_type: 'free',
       chatgpt_user_id: 'user_789',
     },
   });

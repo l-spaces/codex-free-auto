@@ -46,8 +46,4 @@ test('logging/status add-phone detection ignores step 2 phone-entry switch failu
   assert.equal(loggingStatus.getLoginAuthStateLabel('phone_verification_page'), '手机验证码页');
   assert.equal(loggingStatus.getLoginAuthStateLabel('add_email_page'), '添加邮箱页');
   assert.equal(loggingStatus.getLoginAuthStateLabel('oauth_consent_page'), 'OAuth 授权页');
-  assert.equal(
-    loggingStatus.getErrorMessage(new Error('GPC_TASK_ENDED::GPC OTP 超时，请重新创建任务')),
-    'GPC OTP 超时，请重新创建任务'
-  );
 });

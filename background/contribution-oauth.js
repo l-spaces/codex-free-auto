@@ -263,10 +263,6 @@
       return qq;
     }
 
-    function isPlusModeState(state = {}) {
-      return Boolean(state?.plusModeEnabled);
-    }
-
     function normalizeOpenAiContributionSource(value = '') {
       const normalized = normalizeString(value).toLowerCase();
       return normalized === 'sub2api' ? 'sub2api' : 'cpa';
@@ -292,9 +288,7 @@
 
       return {
         source: 'sub2api',
-        targetGroupName: isPlusModeState(state)
-          ? 'openai-plus'
-          : (normalizeString(state?.contributionTargetGroupName) || 'codex号池'),
+        targetGroupName: normalizeString(state?.contributionTargetGroupName) || 'codex号池',
       };
     }
 

@@ -42,15 +42,11 @@ test('flow registry exposes only OpenAI flow and target metadata', () => {
   assert.equal(flowRegistry.normalizeTargetId('openai', 'sub2api'), 'sub2api');
   assert.deepEqual(
     flowRegistry.getVisibleGroupIds('openai', 'cpa'),
-    ['openai-plus', 'openai-phone', 'shared-auto-run', 'openai-oauth', 'openai-step6', 'shared-settings-actions', 'openai-target-cpa', 'service-account', 'service-email']
+    ['openai-phone', 'shared-auto-run', 'openai-oauth', 'openai-step6', 'shared-settings-actions', 'openai-target-cpa', 'service-account', 'service-email']
   );
   assert.deepEqual(
     flowRegistry.getTargetOptions('openai').map((entry) => entry.id),
     ['cpa', 'sub2api', 'codex2api']
-  );
-  assert.deepEqual(
-    flowRegistry.getSettingsGroupDefinition('openai-plus')?.rowIds,
-    ['row-plus-mode', 'row-plus-account-access-strategy', 'row-plus-payment-method']
   );
   assert.deepEqual(
     flowRegistry.getSettingsGroupDefinition('shared-auto-run')?.rowIds,
@@ -76,7 +72,6 @@ test('settings schema normalizes view input into OpenAI canonical namespaces', (
     targetId: 'sub2api',
     mailProvider: 'hotmail',
     customPassword: 'SharedSecret123!',
-    plusAccountAccessStrategy: 'sub2api_codex_session',
     stepExecutionRangeByFlow: {
       openai: { enabled: true, fromStep: 2, toStep: 9 },
     },
@@ -86,7 +81,6 @@ test('settings schema normalizes view input into OpenAI canonical namespaces', (
   assert.equal(normalized.services.email.provider, 'hotmail');
   assert.equal(normalized.services.account.customPassword, 'SharedSecret123!');
   assert.equal(normalized.flows.openai.selectedTargetId, 'sub2api');
-  assert.equal(normalized.flows.openai.plus.plusAccountAccessStrategy, 'sub2api_codex_session');
   assert.deepEqual(Object.keys(normalized.flows), ['openai']);
   assert.deepEqual(normalized.flows.openai.autoRun.stepExecutionRange, {
     enabled: true,
@@ -117,19 +111,6 @@ test('settings schema lets explicit flat step range override stale canonical ran
     fromStep: 3,
     toStep: 6,
   });
-});
-
-
-test('settings schema preserves CPA session strategy in canonical state and read view', () => {
-  const { settingsSchema } = loadApis();
-  const schema = settingsSchema.createSettingsSchema();
-  const normalized = schema.normalizeSettingsState({
-    plusAccountAccessStrategy: 'cpa_codex_session',
-  });
-  const view = schema.buildSettingsView(normalized);
-
-  assert.equal(normalized.flows.openai.plus.plusAccountAccessStrategy, 'cpa_codex_session');
-  assert.equal(view.plusAccountAccessStrategy, 'cpa_codex_session');
 });
 
 test('settings schema preserves registered custom flow settings without OpenAI hardcoding', () => {

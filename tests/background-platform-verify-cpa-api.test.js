@@ -254,7 +254,7 @@ test('platform verify module rejects callback when cpa oauth state mismatches', 
   }
 });
 
-test('platform verify module submits Plus visible step 13 to SUB2API via direct API', async () => {
+test('platform verify module submits SUB2API callback via direct API', async () => {
   const originalFetch = globalThis.fetch;
   const fetchCalls = [];
   const sentMessages = [];
@@ -300,7 +300,7 @@ test('platform verify module submits Plus visible step 13 to SUB2API via direct 
   try {
     await executor.executeStep10({
       panelMode: 'sub2api',
-      visibleStep: 13,
+      visibleStep: 10,
       localhostUrl: 'http://localhost:1455/auth/callback?code=callback-code&state=oauth-state',
       sub2apiUrl: 'https://sub.example/admin/accounts',
       sub2apiEmail: 'admin@example.com',

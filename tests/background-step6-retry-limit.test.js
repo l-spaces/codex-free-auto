@@ -534,7 +534,7 @@ test('step 7 forwards phone login identity payload when account identifier is ph
   ]);
 });
 
-test('step 7 keeps Plus email login even when phone sms runtime exists', async () => {
+test('step 7 keeps forced email login even when phone sms runtime exists', async () => {
   const source = fs.readFileSync('flows/openai/background/steps/oauth-login.js', 'utf8');
   const globalScope = {};
   const api = new Function('self', `${source}; return self.MultiPageBackgroundStep7;`)(globalScope);
@@ -549,10 +549,9 @@ test('step 7 keeps Plus email login even when phone sms runtime exists', async (
     getErrorMessage: (error) => error?.message || String(error || ''),
     getLoginAuthStateLabel: (state) => state || 'unknown',
     getState: async () => ({
-      plusModeEnabled: true,
       phoneVerificationEnabled: true,
       signupMethod: 'phone',
-      email: 'plus.user@example.com',
+      email: 'email.user@example.com',
       password: 'secret',
       signupPhoneNumber: '+441111111111',
     }),
@@ -573,19 +572,19 @@ test('step 7 keeps Plus email login even when phone sms runtime exists', async (
   });
 
   await executor.executeStep7({
-    plusModeEnabled: true,
     phoneVerificationEnabled: true,
-    signupMethod: 'phone',
-    email: 'plus.user@example.com',
+    forceEmailLogin: true,
+    signupMethod: 'email',
+    email: 'email.user@example.com',
     password: 'secret',
     signupPhoneNumber: '+441111111111',
     visibleStep: 10,
   });
 
   assert.equal(events.payloads[0].loginIdentifierType, 'email');
-  assert.equal(events.payloads[0].email, 'plus.user@example.com');
+  assert.equal(events.payloads[0].email, 'email.user@example.com');
   assert.equal(events.payloads[0].phoneNumber, '');
-  assert.equal(events.payloads[0].accountIdentifier, 'plus.user@example.com');
+  assert.equal(events.payloads[0].accountIdentifier, 'email.user@example.com');
 });
 
 test('step 7 keeps relogin-bound-email as the active node id', async () => {
@@ -608,7 +607,6 @@ test('step 7 keeps relogin-bound-email as the active node id', async () => {
     getState: async () => ({
       email: 'bound.user@example.com',
       password: 'secret',
-      plusModeEnabled: true,
       signupMethod: 'phone',
       phoneSignupReloginAfterBindEmailEnabled: true,
     }),

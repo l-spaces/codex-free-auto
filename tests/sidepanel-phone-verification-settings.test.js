@@ -385,7 +385,6 @@ let latestState = {
   targetId: 'cpa',
 };
 const inputPhoneVerificationEnabled = { checked: true };
-const inputPlusModeEnabled = { checked: false };
 function getSelectedFlowId() { return latestState.activeFlowId; }
 function getSelectedPanelMode() { return 'cpa'; }
 function getSelectedTargetId() { return 'cpa'; }
@@ -919,9 +918,6 @@ return {
 test('collectSettingsPayload keeps local helper sync enabled while persisting sms toggle state', () => {
   const api = new Function('normalizeIcloudTargetMailboxType', 'normalizeIcloudForwardMailProvider', `
 const window = {};
-const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
-const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 let latestState = {
   accountContributionEnabled: false,
   mail2925UseAccountPool: false,
@@ -1059,7 +1055,6 @@ function normalizeCloudflareDomainValue(value) { return String(value || '').trim
 function getCloudflareTempEmailDomainsFromState() { return { domains: [], activeDomain: '' }; }
 function normalizeCloudflareTempEmailDomainValue(value) { return String(value || '').trim(); }
 function getSelectedLocalCpaStep9Mode() { return 'submit'; }
-function getSelectedPlusPaymentMethod() { return 'paypal'; }
 function getSelectedMail2925Mode() { return 'provide'; }
 function getSelectedHotmailServiceMode() { return 'local'; }
 function buildManagedAliasBaseEmailPayload() { return { gmailBaseEmail: '', mail2925BaseEmail: '', emailPrefix: '' }; }
@@ -1071,8 +1066,6 @@ function normalizeAccountRunHistoryHelperBaseUrlValue(value) { return String(val
 function normalizeAutoRunThreadIntervalMinutes(value) { return Number(value) || 0; }
 function normalizeAutoStepDelaySeconds(value) { return value === '' ? null : Number(value); }
 function normalizeVerificationResendCount(value, fallback) { return Number(value) || fallback; }
-function normalizePlusAccountAccessStrategy(value = '') { return String(value || '').trim().toLowerCase() === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION ? PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION : PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH; }
-function resolvePlusAccountAccessStrategyForTarget(value = '') { return normalizePlusAccountAccessStrategy(value); }
 ${extractFunction('normalizePhoneSmsProvider')}
 ${extractFunction('normalizePhoneSmsProviderValue')}
 ${extractFunction('normalizeFiveSimCountryCode')}

@@ -40,7 +40,6 @@ test('runtime-state view preserves canonical flow metadata from node state', () 
       'submit-signup-email': 'running',
     },
     oauthUrl: 'https://auth.example.com/start',
-    plusCheckoutTabId: 88,
     currentPhoneActivation: {
       activationId: 'active-1',
       phoneNumber: '+447700900123',
@@ -65,7 +64,13 @@ test('runtime-state view preserves canonical flow metadata from node state', () 
     'oauth-login': 'pending',
   });
   assert.equal(view.runtimeState.flowState.openai.auth.oauthUrl, 'https://auth.example.com/start');
-  assert.equal(view.runtimeState.flowState.openai.plus.plusCheckoutTabId, 88);
+  assert.deepStrictEqual(Object.keys(view.runtimeState.flowState.openai).sort(), [
+    'auth',
+    'identity',
+    'luckmail',
+    'phoneVerification',
+    'platformBinding',
+  ]);
   assert.deepStrictEqual(view.runtimeState.flowState.openai.phoneVerification.currentPhoneActivation, {
     activationId: 'active-1',
     phoneNumber: '+447700900123',
@@ -113,8 +118,8 @@ test('runtime-state patch accepts nested flow and node updates without legacy st
           auth: {
             oauthUrl: 'https://new.example.com/start',
           },
-          plus: {
-            plusCheckoutTabId: 99,
+          platformBinding: {
+            sub2apiSessionId: 'session-001',
           },
         },
       },
@@ -125,7 +130,7 @@ test('runtime-state patch accepts nested flow and node updates without legacy st
   assert.equal(patch.activeRunId, 'run-001');
   assert.equal(patch.currentNodeId, 'oauth-login');
   assert.equal(Object.prototype.hasOwnProperty.call(patch, 'oauthUrl'), false);
-  assert.equal(Object.prototype.hasOwnProperty.call(patch, 'plusCheckoutTabId'), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(patch, 'sub2apiSessionId'), false);
   assert.equal(Object.prototype.hasOwnProperty.call(patch, 'currentStep'), false);
   assert.equal(Object.prototype.hasOwnProperty.call(patch, 'stepStatuses'), false);
   assert.deepStrictEqual(patch.nodeStatuses, {
@@ -134,11 +139,11 @@ test('runtime-state patch accepts nested flow and node updates without legacy st
     'oauth-login': 'running',
   });
   assert.equal(patch.runtimeState.flowState.openai.auth.oauthUrl, 'https://new.example.com/start');
-  assert.equal(patch.runtimeState.flowState.openai.plus.plusCheckoutTabId, 99);
+  assert.equal(patch.runtimeState.flowState.openai.platformBinding.sub2apiSessionId, 'session-001');
 
   const view = helpers.buildStateView(patch);
   assert.equal(view.oauthUrl, 'https://new.example.com/start');
-  assert.equal(view.plusCheckoutTabId, 99);
+  assert.equal(view.sub2apiSessionId, 'session-001');
 });
 
 test('runtime-state normalizes stale flow ids and drops unknown scoped flow state', () => {

@@ -51,7 +51,7 @@ function extractFunction(name) {
   return source.slice(start, end);
 }
 
-test('markCurrentRegistrationAccountUsed uses fresh state when checkout passes stale state', async () => {
+test('markCurrentRegistrationAccountUsed uses fresh state when caller passes stale state', async () => {
   const bundle = extractFunction('markCurrentRegistrationAccountUsed');
   const factory = new Function(`
 const patchCalls = [];
@@ -95,7 +95,7 @@ return { markCurrentRegistrationAccountUsed, patchCalls, logs };
   const api = factory();
 
   const result = await api.markCurrentRegistrationAccountUsed({ email: 'stale@example.com' }, {
-    logPrefix: 'Plus Checkout：当前账号没有免费试用资格',
+    logPrefix: '当前账号不可继续使用',
   });
 
   assert.equal(result.updated, true);

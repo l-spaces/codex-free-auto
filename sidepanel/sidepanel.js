@@ -118,59 +118,6 @@ const inputCodex2ApiUrl = document.getElementById('input-codex2api-url');
 const rowCodex2ApiAdminKey = document.getElementById('row-codex2api-admin-key');
 const inputCodex2ApiAdminKey = document.getElementById('input-codex2api-admin-key');
 const rowCustomPassword = document.getElementById('row-custom-password');
-const rowPlusMode = document.getElementById('row-plus-mode');
-const inputPlusModeEnabled = document.getElementById('input-plus-mode-enabled');
-const rowPlusPaymentMethod = document.getElementById('row-plus-payment-method');
-const selectPlusPaymentMethod = document.getElementById('select-plus-payment-method');
-const btnGpcCardKeyPurchase = document.getElementById('btn-gpc-card-key-purchase');
-const plusPaymentMethodCaption = document.getElementById('plus-payment-method-caption');
-const rowPlusAccountAccessStrategy = document.getElementById('row-plus-account-access-strategy');
-const selectPlusAccountAccessStrategy = document.getElementById('select-plus-account-access-strategy');
-const plusAccountAccessStrategyCaption = document.getElementById('plus-account-access-strategy-caption');
-const rowPayPalAccount = document.getElementById('row-paypal-account');
-const selectPayPalAccount = document.getElementById('select-paypal-account');
-const payPalAccountPickerRoot = document.getElementById('paypal-account-picker');
-const btnPayPalAccountMenu = document.getElementById('btn-paypal-account-menu');
-const payPalAccountCurrent = document.getElementById('paypal-account-current');
-const payPalAccountMenu = document.getElementById('paypal-account-menu');
-const btnAddPayPalAccount = document.getElementById('btn-add-paypal-account');
-const rowHostedCheckoutVerificationUrl = document.getElementById('row-hosted-checkout-verification-url');
-const inputHostedCheckoutVerificationUrl = document.getElementById('input-hosted-checkout-verification-url');
-const rowHostedCheckoutPhone = document.getElementById('row-hosted-checkout-phone');
-const inputHostedCheckoutPhone = document.getElementById('input-hosted-checkout-phone');
-const rowPlusHostedCheckoutOauthDelay = document.getElementById('row-plus-hosted-checkout-oauth-delay');
-const inputPlusHostedCheckoutOauthDelaySeconds = document.getElementById('input-plus-hosted-checkout-oauth-delay-seconds');
-const rowGpcHelperApi = document.getElementById('row-gpc-helper-api');
-const inputGpcHelperApi = document.getElementById('input-gpc-helper-api');
-const btnGpcHelperConvertApiKey = document.getElementById('btn-gpc-helper-convert-api-key');
-const rowGpcHelperCardKey = document.getElementById('row-gpc-helper-card-key');
-const inputGpcHelperCardKey = document.getElementById('input-gpc-helper-card-key');
-const btnToggleGpcHelperCardKey = document.getElementById('btn-toggle-gpc-helper-card-key');
-const btnGpcHelperBalance = document.getElementById('btn-gpc-helper-balance');
-const displayGpcHelperBalance = document.getElementById('display-gpc-helper-balance');
-const rowGpcHelperPhoneMode = document.getElementById('row-gpc-helper-phone-mode');
-const selectGpcHelperPhoneMode = document.getElementById('select-gpc-helper-phone-mode');
-const rowGpcHelperCountryCode = document.getElementById('row-gpc-helper-country-code');
-const selectGpcHelperCountryCode = document.getElementById('select-gpc-helper-country-code');
-const rowGpcHelperPhone = document.getElementById('row-gpc-helper-phone');
-const inputGpcHelperPhone = document.getElementById('input-gpc-helper-phone');
-const rowGpcHelperOtpChannel = document.getElementById('row-gpc-helper-otp-channel');
-const selectGpcHelperOtpChannel = document.getElementById('select-gpc-helper-otp-channel');
-const rowGpcHelperLocalSmsEnabled = document.getElementById('row-gpc-helper-local-sms-enabled');
-const inputGpcHelperLocalSmsEnabled = document.getElementById('input-gpc-helper-local-sms-enabled');
-const rowGpcHelperLocalSmsUrl = document.getElementById('row-gpc-helper-local-sms-url');
-const inputGpcHelperLocalSmsUrl = document.getElementById('input-gpc-helper-local-sms-url');
-const rowGpcHelperPin = document.getElementById('row-gpc-helper-pin');
-const inputGpcHelperPin = document.getElementById('input-gpc-helper-pin');
-const btnToggleGpcHelperPin = document.getElementById('btn-toggle-gpc-helper-pin');
-const rowGoPayCountryCode = document.getElementById('row-gopay-country-code');
-const selectGoPayCountryCode = document.getElementById('select-gopay-country-code');
-const rowGoPayPhone = document.getElementById('row-gopay-phone');
-const inputGoPayPhone = document.getElementById('input-gopay-phone');
-const rowGoPayOtp = document.getElementById('row-gopay-otp');
-const inputGoPayOtp = document.getElementById('input-gopay-otp');
-const rowGoPayPin = document.getElementById('row-gopay-pin');
-const inputGoPayPin = document.getElementById('input-gopay-pin');
 const selectMailProvider = document.getElementById('select-mail-provider');
 const btnMailLogin = document.getElementById('btn-mail-login');
 const rowCustomMailProviderPool = document.getElementById('row-custom-mail-provider-pool');
@@ -472,22 +419,6 @@ const btnAutoStartRestart = document.getElementById('btn-auto-start-restart');
 const btnAutoStartContinue = document.getElementById('btn-auto-start-continue');
 const autoHintText = document.querySelector('.auto-hint');
 const stepsList = document.querySelector('.steps-list');
-const PLUS_PAYMENT_METHOD_PAYPAL = 'paypal';
-const PLUS_PAYMENT_METHOD_PAYPAL_HOSTED = 'paypal-hosted';
-const PLUS_PAYMENT_METHOD_NONE = 'none';
-const PLUS_PAYMENT_METHOD_GOPAY = 'gopay';
-const PLUS_PAYMENT_METHOD_GPC_HELPER = 'gpc-helper';
-const DEFAULT_GPC_HELPER_API_URL = 'https://gpc.qlhazycoder.top';
-const GPC_HELPER_PORTAL_URL = 'https://gpc.qlhazycoder.top/';
-const GPC_HELPER_PHONE_MODE_AUTO = 'auto';
-const GPC_HELPER_PHONE_MODE_MANUAL = 'manual';
-const DEFAULT_PLUS_HOSTED_CHECKOUT_OAUTH_DELAY_SECONDS = 3;
-const DEFAULT_PLUS_PAYMENT_METHOD = PLUS_PAYMENT_METHOD_PAYPAL_HOSTED;
-const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_CODEX_SESSION_UI = 'codex_session';
-const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 const SIGNUP_METHOD_EMAIL = 'email';
 const SIGNUP_METHOD_PHONE = 'phone';
 const DEFAULT_SIGNUP_METHOD = SIGNUP_METHOD_EMAIL;
@@ -495,9 +426,6 @@ const DEFAULT_ACTIVE_FLOW_ID = 'openai';
 const DEFAULT_PHONE_SIGNUP_RELOGIN_AFTER_BIND_EMAIL_ENABLED = false;
 const PHONE_SIGNUP_REUSE_LOCK_TITLE = '手机号注册流程不使用号码复用，切回邮箱注册后会恢复原设置';
 let latestState = null;
-let currentPlusModeEnabled = false;
-let currentPlusPaymentMethod = DEFAULT_PLUS_PAYMENT_METHOD;
-let currentPlusAccountAccessStrategy = DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY;
 let currentSignupMethod = DEFAULT_SIGNUP_METHOD;
 let currentPhoneVerificationEnabled = false;
 let currentPhoneSignupReloginAfterBindEmailEnabled = DEFAULT_PHONE_SIGNUP_RELOGIN_AFTER_BIND_EMAIL_ENABLED;
@@ -518,16 +446,12 @@ const fiveSimCountrySearchTextByCode = new Map();
 let nexSmsCountrySelectionOrder = [];
 let nexSmsCountryMenuSearchKeyword = '';
 const nexSmsCountrySearchTextById = new Map();
-let stepDefinitions = getStepDefinitionsForMode(false, {
-  plusPaymentMethod: currentPlusPaymentMethod,
-  plusAccountAccessStrategy: currentPlusAccountAccessStrategy,
+let stepDefinitions = getStepDefinitionsForMode({
   signupMethod: currentSignupMethod,
   phoneVerificationEnabled: currentPhoneVerificationEnabled,
   phoneSignupReloginAfterBindEmailEnabled: currentPhoneSignupReloginAfterBindEmailEnabled,
 });
-let workflowNodes = getWorkflowNodesForMode(false, {
-  plusPaymentMethod: currentPlusPaymentMethod,
-  plusAccountAccessStrategy: currentPlusAccountAccessStrategy,
+let workflowNodes = getWorkflowNodesForMode({
   signupMethod: currentSignupMethod,
   phoneVerificationEnabled: currentPhoneVerificationEnabled,
   phoneSignupReloginAfterBindEmailEnabled: currentPhoneSignupReloginAfterBindEmailEnabled,
@@ -783,40 +707,17 @@ function initPhoneVerificationSectionExpandedState() {
   }
 }
 
-function getStepDefinitionsForMode(plusModeEnabled = false, options = {}) {
+function getStepDefinitionsForMode(options = {}) {
   const defaultFlowId = typeof DEFAULT_ACTIVE_FLOW_ID !== 'undefined' ? DEFAULT_ACTIVE_FLOW_ID : 'openai';
-  const defaultMethod = typeof DEFAULT_PLUS_PAYMENT_METHOD !== 'undefined' ? DEFAULT_PLUS_PAYMENT_METHOD : 'paypal';
-  const defaultStrategy = typeof DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY !== 'undefined' ? DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY : 'oauth';
-  const rawPaymentMethod = typeof options === 'string'
-    ? options
-    : (options.plusPaymentMethod || currentPlusPaymentMethod || defaultMethod);
-  const rawPlusAccountAccessStrategy = typeof options === 'string'
-    ? currentPlusAccountAccessStrategy
-    : (options.plusAccountAccessStrategy || currentPlusAccountAccessStrategy || defaultStrategy);
-  const rawSignupMethod = typeof options === 'string'
-    ? currentSignupMethod
-    : (options.signupMethod || currentSignupMethod || DEFAULT_SIGNUP_METHOD);
-  const phoneVerificationEnabled = typeof options === 'string'
-    ? (typeof inputPhoneVerificationEnabled !== 'undefined' && inputPhoneVerificationEnabled
-      ? Boolean(inputPhoneVerificationEnabled.checked)
-      : Boolean(typeof latestState !== 'undefined' ? latestState?.phoneVerificationEnabled : false))
-    : Boolean(options.phoneVerificationEnabled ?? (typeof inputPhoneVerificationEnabled !== 'undefined' && inputPhoneVerificationEnabled
-      ? inputPhoneVerificationEnabled.checked
-      : (typeof latestState !== 'undefined' ? latestState?.phoneVerificationEnabled : false)));
-  const phoneSignupReloginAfterBindEmailEnabled = typeof options === 'string'
-    ? currentPhoneSignupReloginAfterBindEmailEnabled
-    : Boolean(options.phoneSignupReloginAfterBindEmailEnabled ?? currentPhoneSignupReloginAfterBindEmailEnabled);
-  const accountContributionEnabled = typeof options === 'string'
-    ? Boolean(typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false)
-    : Boolean(options.accountContributionEnabled ?? (typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false));
-  const activeFlowId = typeof options === 'string'
-    ? ((typeof latestState !== 'undefined' ? latestState?.activeFlowId : '') || defaultFlowId)
-    : (options.activeFlowId || (typeof latestState !== 'undefined' ? latestState?.activeFlowId : '') || defaultFlowId);
+  const rawSignupMethod = options.signupMethod || currentSignupMethod || DEFAULT_SIGNUP_METHOD;
+  const phoneVerificationEnabled = Boolean(options.phoneVerificationEnabled ?? (typeof inputPhoneVerificationEnabled !== 'undefined' && inputPhoneVerificationEnabled
+    ? inputPhoneVerificationEnabled.checked
+    : (typeof latestState !== 'undefined' ? latestState?.phoneVerificationEnabled : false)));
+  const phoneSignupReloginAfterBindEmailEnabled = Boolean(options.phoneSignupReloginAfterBindEmailEnabled ?? currentPhoneSignupReloginAfterBindEmailEnabled);
+  const accountContributionEnabled = Boolean(options.accountContributionEnabled ?? (typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false));
+  const activeFlowId = options.activeFlowId || (typeof latestState !== 'undefined' ? latestState?.activeFlowId : '') || defaultFlowId;
   return (window.MultiPageStepDefinitions?.getSteps?.({
     activeFlowId: String(activeFlowId || '').trim().toLowerCase() || defaultFlowId,
-    plusModeEnabled,
-    plusPaymentMethod: normalizePlusPaymentMethod(rawPaymentMethod),
-    plusAccountAccessStrategy: normalizePlusAccountAccessStrategy(rawPlusAccountAccessStrategy),
     signupMethod: normalizeSignupMethod(rawSignupMethod),
     phoneVerificationEnabled,
     phoneSignupReloginAfterBindEmailEnabled,
@@ -830,40 +731,17 @@ function getStepDefinitionsForMode(plusModeEnabled = false, options = {}) {
     });
 }
 
-function getWorkflowNodesForMode(plusModeEnabled = false, options = {}) {
+function getWorkflowNodesForMode(options = {}) {
   const defaultFlowId = typeof DEFAULT_ACTIVE_FLOW_ID !== 'undefined' ? DEFAULT_ACTIVE_FLOW_ID : 'openai';
-  const defaultMethod = typeof DEFAULT_PLUS_PAYMENT_METHOD !== 'undefined' ? DEFAULT_PLUS_PAYMENT_METHOD : 'paypal';
-  const defaultStrategy = typeof DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY !== 'undefined' ? DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY : 'oauth';
-  const rawPaymentMethod = typeof options === 'string'
-    ? options
-    : (options.plusPaymentMethod || currentPlusPaymentMethod || defaultMethod);
-  const rawPlusAccountAccessStrategy = typeof options === 'string'
-    ? currentPlusAccountAccessStrategy
-    : (options.plusAccountAccessStrategy || currentPlusAccountAccessStrategy || defaultStrategy);
-  const rawSignupMethod = typeof options === 'string'
-    ? currentSignupMethod
-    : (options.signupMethod || currentSignupMethod || DEFAULT_SIGNUP_METHOD);
-  const phoneVerificationEnabled = typeof options === 'string'
-    ? (typeof inputPhoneVerificationEnabled !== 'undefined' && inputPhoneVerificationEnabled
-      ? Boolean(inputPhoneVerificationEnabled.checked)
-      : Boolean(typeof latestState !== 'undefined' ? latestState?.phoneVerificationEnabled : false))
-    : Boolean(options.phoneVerificationEnabled ?? (typeof inputPhoneVerificationEnabled !== 'undefined' && inputPhoneVerificationEnabled
-      ? inputPhoneVerificationEnabled.checked
-      : (typeof latestState !== 'undefined' ? latestState?.phoneVerificationEnabled : false)));
-  const phoneSignupReloginAfterBindEmailEnabled = typeof options === 'string'
-    ? currentPhoneSignupReloginAfterBindEmailEnabled
-    : Boolean(options.phoneSignupReloginAfterBindEmailEnabled ?? currentPhoneSignupReloginAfterBindEmailEnabled);
-  const accountContributionEnabled = typeof options === 'string'
-    ? Boolean(typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false)
-    : Boolean(options.accountContributionEnabled ?? (typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false));
-  const activeFlowId = typeof options === 'string'
-    ? ((typeof latestState !== 'undefined' ? latestState?.activeFlowId : '') || defaultFlowId)
-    : (options.activeFlowId || (typeof latestState !== 'undefined' ? latestState?.activeFlowId : '') || defaultFlowId);
+  const rawSignupMethod = options.signupMethod || currentSignupMethod || DEFAULT_SIGNUP_METHOD;
+  const phoneVerificationEnabled = Boolean(options.phoneVerificationEnabled ?? (typeof inputPhoneVerificationEnabled !== 'undefined' && inputPhoneVerificationEnabled
+    ? inputPhoneVerificationEnabled.checked
+    : (typeof latestState !== 'undefined' ? latestState?.phoneVerificationEnabled : false)));
+  const phoneSignupReloginAfterBindEmailEnabled = Boolean(options.phoneSignupReloginAfterBindEmailEnabled ?? currentPhoneSignupReloginAfterBindEmailEnabled);
+  const accountContributionEnabled = Boolean(options.accountContributionEnabled ?? (typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false));
+  const activeFlowId = options.activeFlowId || (typeof latestState !== 'undefined' ? latestState?.activeFlowId : '') || defaultFlowId;
   const nodes = window.MultiPageStepDefinitions?.getNodes?.({
     activeFlowId: String(activeFlowId || '').trim().toLowerCase() || defaultFlowId,
-    plusModeEnabled,
-    plusPaymentMethod: normalizePlusPaymentMethod(rawPaymentMethod),
-    plusAccountAccessStrategy: normalizePlusAccountAccessStrategy(rawPlusAccountAccessStrategy),
     signupMethod: normalizeSignupMethod(rawSignupMethod),
     phoneVerificationEnabled,
     phoneSignupReloginAfterBindEmailEnabled,
@@ -878,7 +756,7 @@ function getWorkflowNodesForMode(plusModeEnabled = false, options = {}) {
     });
   }
 
-  return getStepDefinitionsForMode(plusModeEnabled, options).map((step) => ({
+  return getStepDefinitionsForMode(options).map((step) => ({
     nodeId: String(step.key || '').trim(),
     title: step.title,
     displayOrder: Number.isFinite(Number(step.id)) ? Number(step.id) : Number(step.order),
@@ -918,36 +796,17 @@ function getStepIdByNodeIdForCurrentMode(nodeId = '') {
   return getStepIdByKeyForCurrentMode(normalizedNodeId);
 }
 
-function rebuildStepDefinitionState(plusModeEnabled = false, options = {}) {
-  currentPlusModeEnabled = Boolean(plusModeEnabled);
+function rebuildStepDefinitionState(options = {}) {
   const defaultFlowId = typeof DEFAULT_ACTIVE_FLOW_ID !== 'undefined' ? DEFAULT_ACTIVE_FLOW_ID : 'openai';
-  const defaultMethod = typeof DEFAULT_PLUS_PAYMENT_METHOD !== 'undefined' ? DEFAULT_PLUS_PAYMENT_METHOD : 'paypal';
-  const defaultStrategy = typeof DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY !== 'undefined' ? DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY : 'oauth';
-  const rawPaymentMethod = typeof options === 'string'
-    ? options
-    : (options.plusPaymentMethod || currentPlusPaymentMethod || defaultMethod);
-  const rawPlusAccountAccessStrategy = typeof options === 'string'
-    ? currentPlusAccountAccessStrategy
-    : (options.plusAccountAccessStrategy || currentPlusAccountAccessStrategy || defaultStrategy);
-  const rawSignupMethod = typeof options === 'string'
-    ? currentSignupMethod
-    : (options.signupMethod || currentSignupMethod || DEFAULT_SIGNUP_METHOD);
-  const phoneVerificationEnabled = typeof options === 'string'
-    ? (typeof inputPhoneVerificationEnabled !== 'undefined' && inputPhoneVerificationEnabled
-      ? Boolean(inputPhoneVerificationEnabled.checked)
-      : Boolean(typeof latestState !== 'undefined' ? latestState?.phoneVerificationEnabled : false))
-    : Boolean(options.phoneVerificationEnabled ?? (typeof inputPhoneVerificationEnabled !== 'undefined' && inputPhoneVerificationEnabled
-      ? inputPhoneVerificationEnabled.checked
-      : (typeof latestState !== 'undefined' ? latestState?.phoneVerificationEnabled : false)));
-  const phoneSignupReloginAfterBindEmailEnabled = typeof options === 'string'
-    ? currentPhoneSignupReloginAfterBindEmailEnabled
-    : Boolean(options.phoneSignupReloginAfterBindEmailEnabled ?? currentPhoneSignupReloginAfterBindEmailEnabled);
+  const rawSignupMethod = options.signupMethod || currentSignupMethod || DEFAULT_SIGNUP_METHOD;
+  const phoneVerificationEnabled = Boolean(options.phoneVerificationEnabled ?? (typeof inputPhoneVerificationEnabled !== 'undefined' && inputPhoneVerificationEnabled
+    ? inputPhoneVerificationEnabled.checked
+    : Boolean(typeof latestState !== 'undefined' ? latestState?.phoneVerificationEnabled : false)));
+  const phoneSignupReloginAfterBindEmailEnabled = Boolean(options.phoneSignupReloginAfterBindEmailEnabled ?? currentPhoneSignupReloginAfterBindEmailEnabled);
   const accountContributionEnabled = Boolean(
     options.accountContributionEnabled
     ?? (typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false)
   );
-  currentPlusPaymentMethod = normalizePlusPaymentMethod(rawPaymentMethod);
-  currentPlusAccountAccessStrategy = normalizePlusAccountAccessStrategy(rawPlusAccountAccessStrategy);
   currentSignupMethod = normalizeSignupMethod(rawSignupMethod);
   currentPhoneVerificationEnabled = Boolean(phoneVerificationEnabled);
   currentPhoneSignupReloginAfterBindEmailEnabled = phoneSignupReloginAfterBindEmailEnabled;
@@ -959,20 +818,16 @@ function rebuildStepDefinitionState(plusModeEnabled = false, options = {}) {
   if (typeof currentStepDefinitionFlowId !== 'undefined') {
     currentStepDefinitionFlowId = nextActiveFlowId;
   }
-  stepDefinitions = getStepDefinitionsForMode(currentPlusModeEnabled, {
+  stepDefinitions = getStepDefinitionsForMode({
     activeFlowId: nextActiveFlowId,
-    plusPaymentMethod: currentPlusPaymentMethod,
-    plusAccountAccessStrategy: currentPlusAccountAccessStrategy,
     signupMethod: currentSignupMethod,
     phoneVerificationEnabled,
     phoneSignupReloginAfterBindEmailEnabled: currentPhoneSignupReloginAfterBindEmailEnabled,
     accountContributionEnabled,
   });
   const nextWorkflowNodes = typeof getWorkflowNodesForMode === 'function'
-    ? getWorkflowNodesForMode(currentPlusModeEnabled, {
+    ? getWorkflowNodesForMode({
       activeFlowId: nextActiveFlowId,
-      plusPaymentMethod: currentPlusPaymentMethod,
-      plusAccountAccessStrategy: currentPlusAccountAccessStrategy,
       signupMethod: currentSignupMethod,
       phoneVerificationEnabled,
       phoneSignupReloginAfterBindEmailEnabled: currentPhoneSignupReloginAfterBindEmailEnabled,
@@ -1306,8 +1161,6 @@ let cloudflareTempEmailDomainEditMode = false;
 let modalChoiceResolver = null;
 let currentModalActions = [];
 let modalResultBuilder = null;
-let activePlusManualConfirmationRequestId = '';
-let plusManualConfirmationDialogInFlight = false;
 let autoRunCountdownTimer = null;
 let configMenuOpen = false;
 let configActionInFlight = false;
@@ -1373,7 +1226,7 @@ async function sendSidepanelMessage(message = {}) {
 
 window.sendSidepanelMessage = sendSidepanelMessage;
 
-const DEFAULT_SUB2API_GROUP_OPTIONS = ['codex', 'openai-plus'];
+const DEFAULT_SUB2API_GROUP_OPTIONS = ['codex'];
 const editableListPickerModule = window.SidepanelEditableListPicker || {};
 const normalizeEditableListValues = editableListPickerModule.normalizeEditableListValues
   || ((...sources) => {
@@ -1499,11 +1352,6 @@ const PRIVACY_MASKED_INPUT_IDS = Object.freeze([
   'input-sub2api-email',
   'input-sub2api-default-proxy',
   'input-codex2api-url',
-  'input-gpc-helper-api',
-  'input-gpc-helper-phone',
-  'input-gpc-helper-local-sms-url',
-  'input-gopay-phone',
-  'input-gopay-otp',
   'input-email-prefix',
   'input-inbucket-host',
   'input-inbucket-mailbox',
@@ -1540,7 +1388,6 @@ const upsertHotmailAccountInList = window.HotmailUtils?.upsertHotmailAccountInLi
 const filterHotmailAccountsByUsage = window.HotmailUtils?.filterHotmailAccountsByUsage;
 const getHotmailBulkActionLabel = window.HotmailUtils?.getHotmailBulkActionLabel;
 const getHotmailListToggleLabel = window.HotmailUtils?.getHotmailListToggleLabel;
-const upsertPayPalAccountInList = window.PayPalUtils?.upsertPayPalAccountInList;
 const normalizeLuckmailTimestampValue = window.LuckMailUtils?.normalizeTimestamp
   || ((value) => {
     const timestamp = Date.parse(String(value || ''));
@@ -1917,181 +1764,6 @@ async function openConfirmModalWithOption({
     confirmed: result?.choice === 'confirm',
     optionChecked: Boolean(result?.optionChecked),
   };
-}
-
-async function openPlusManualConfirmationDialog(options = {}) {
-  const method = String(options.method || '').trim().toLowerCase();
-  const activeFlowId = String(latestState?.activeFlowId || latestState?.flowId || 'openai').trim().toLowerCase();
-  const normalizeTargetIdForFlowSafe = typeof normalizeTargetIdForFlow === 'function'
-    ? normalizeTargetIdForFlow
-    : ((flowId, targetId = '', fallback = '') => {
-      const normalizedFlowId = String(flowId || '').trim().toLowerCase() || 'openai';
-      if (normalizedFlowId === 'openai') {
-        const normalizedTargetId = String(targetId || fallback || '').trim().toLowerCase();
-        return normalizedTargetId === 'sub2api' || normalizedTargetId === 'codex2api' ? normalizedTargetId : 'cpa';
-      }
-      return 'cpa';
-    });
-  const getDefaultTargetIdForFlowSafe = typeof getDefaultTargetIdForFlow === 'function'
-    ? getDefaultTargetIdForFlow
-    : (() => 'cpa');
-  const normalizePlusStrategyTargetIdSafe = typeof normalizePlusStrategyTargetId === 'function'
-    ? normalizePlusStrategyTargetId
-    : ((value = '') => {
-      const normalized = String(value || '').trim().toLowerCase();
-      if (normalized === 'sub2api' || normalized === 'codex2api') {
-        return normalized;
-      }
-      return 'cpa';
-    });
-  const targetId = normalizePlusStrategyTargetIdSafe(
-    typeof getSelectedTargetIdForState === 'function'
-      ? getSelectedTargetIdForState(latestState, activeFlowId)
-      : normalizeTargetIdForFlowSafe(
-        activeFlowId,
-        latestState?.targetId || '',
-        getDefaultTargetIdForFlowSafe(activeFlowId)
-      )
-  );
-  const signupMethod = String(latestState?.resolvedSignupMethod || latestState?.signupMethod || 'email').trim().toLowerCase();
-  const plusModeEnabled = latestState?.plusModeEnabled === undefined ? true : Boolean(latestState.plusModeEnabled);
-  const plusAccountAccessStrategy = String(latestState?.plusAccountAccessStrategy || 'oauth').trim().toLowerCase();
-  const useSub2ApiSessionImport = plusModeEnabled
-    && activeFlowId === 'openai'
-    && targetId === 'sub2api'
-    && signupMethod === 'email'
-    && plusAccountAccessStrategy === 'sub2api_codex_session';
-  const continuationActionLabel = useSub2ApiSessionImport
-    ? '导入当前 ChatGPT 会话到 SUB2API'
-    : 'OAuth 登录';
-  const title = String(options.title || '').trim() || (method === 'gopay' ? 'GoPay 订阅确认' : '手动确认');
-  const message = String(options.message || '').trim()
-    || (method === 'gopay'
-      ? '请在当前订阅页中手动完成 GoPay 订阅，完成后点击“我已完成订阅”继续。'
-      : '请先在页面中完成当前手动操作，完成后点击确认继续。');
-  return openActionModal({
-    title,
-    message,
-    actions: [
-      { id: 'cancel', label: '取消等待', variant: 'btn-ghost' },
-      { id: 'confirm', label: '我已完成订阅', variant: 'btn-primary' },
-    ],
-    alert: method === 'gopay'
-      ? { text: `确认后流程会直接继续到 Plus 模式后续的${continuationActionLabel}。`, tone: 'info' }
-      : null,
-  });
-}
-
-async function syncPlusManualConfirmationDialog() {
-  const requestId = String(latestState?.plusManualConfirmationRequestId || '').trim();
-  const pending = Boolean(latestState?.plusManualConfirmationPending);
-  if (!pending || !requestId || plusManualConfirmationDialogInFlight || activePlusManualConfirmationRequestId === requestId) {
-    return;
-  }
-
-  const step = Number(latestState?.plusManualConfirmationStep) || 0;
-  const method = String(latestState?.plusManualConfirmationMethod || '').trim().toLowerCase();
-  const activeFlowId = String(latestState?.activeFlowId || latestState?.flowId || 'openai').trim().toLowerCase();
-  const normalizeTargetIdForFlowSafe = typeof normalizeTargetIdForFlow === 'function'
-    ? normalizeTargetIdForFlow
-    : ((flowId, targetId = '', fallback = '') => {
-      const normalizedFlowId = String(flowId || '').trim().toLowerCase() || 'openai';
-      if (normalizedFlowId === 'openai') {
-        const normalizedTargetId = String(targetId || fallback || '').trim().toLowerCase();
-        return normalizedTargetId === 'sub2api' || normalizedTargetId === 'codex2api' ? normalizedTargetId : 'cpa';
-      }
-      return 'cpa';
-    });
-  const getDefaultTargetIdForFlowSafe = typeof getDefaultTargetIdForFlow === 'function'
-    ? getDefaultTargetIdForFlow
-    : (() => 'cpa');
-  const normalizePlusStrategyTargetIdSafe = typeof normalizePlusStrategyTargetId === 'function'
-    ? normalizePlusStrategyTargetId
-    : ((value = '') => {
-      const normalized = String(value || '').trim().toLowerCase();
-      if (normalized === 'sub2api' || normalized === 'codex2api') {
-        return normalized;
-      }
-      return 'cpa';
-    });
-  const targetId = normalizePlusStrategyTargetIdSafe(
-    typeof getSelectedTargetIdForState === 'function'
-      ? getSelectedTargetIdForState(latestState, activeFlowId)
-      : normalizeTargetIdForFlowSafe(
-        activeFlowId,
-        latestState?.targetId || '',
-        getDefaultTargetIdForFlowSafe(activeFlowId)
-      )
-  );
-  const signupMethod = String(latestState?.resolvedSignupMethod || latestState?.signupMethod || 'email').trim().toLowerCase();
-  const plusModeEnabled = latestState?.plusModeEnabled === undefined ? true : Boolean(latestState.plusModeEnabled);
-  const plusAccountAccessStrategy = String(latestState?.plusAccountAccessStrategy || 'oauth').trim().toLowerCase();
-  const useSub2ApiSessionImport = plusModeEnabled
-    && activeFlowId === 'openai'
-    && targetId === 'sub2api'
-    && signupMethod === 'email'
-    && plusAccountAccessStrategy === 'sub2api_codex_session';
-  const continuationActionLabel = useSub2ApiSessionImport
-    ? '导入当前 ChatGPT 会话到 SUB2API'
-    : 'OAuth 登录';
-  const title = latestState?.plusManualConfirmationTitle;
-  const message = latestState?.plusManualConfirmationMessage;
-  activePlusManualConfirmationRequestId = requestId;
-  plusManualConfirmationDialogInFlight = true;
-  let shouldReopenDialog = false;
-
-  try {
-    const choice = await openPlusManualConfirmationDialog({
-      method,
-      title,
-      message,
-    });
-    const currentRequestId = String(latestState?.plusManualConfirmationRequestId || '').trim();
-    const stillPending = Boolean(latestState?.plusManualConfirmationPending);
-    if (!stillPending || currentRequestId !== requestId) {
-      return;
-    }
-    if (choice == null) {
-      shouldReopenDialog = true;
-      showToast('当前订阅确认仍在等待中，将重新弹出确认窗口。', 'info', 1800);
-      return;
-    }
-
-    const confirmed = choice === 'confirm';
-    const response = await chrome.runtime.sendMessage({
-      type: 'RESOLVE_PLUS_MANUAL_CONFIRMATION',
-      source: 'sidepanel',
-      payload: {
-        step,
-        requestId,
-        confirmed,
-      },
-    });
-    if (response?.error) {
-      throw new Error(response.error);
-    }
-    if (confirmed) {
-      showToast(method === 'gopay' ? `GoPay 订阅已确认，正在继续${continuationActionLabel}...` : '已确认，流程继续执行中...', 'info', 2200);
-    } else {
-      showToast(method === 'gopay' ? '已取消 GoPay 订阅等待。' : '已取消当前手动确认。', 'warn', 2200);
-    }
-  } catch (error) {
-    showToast(error?.message || String(error || '未知错误'), 'error');
-  } finally {
-    if (activePlusManualConfirmationRequestId === requestId) {
-      activePlusManualConfirmationRequestId = '';
-    }
-    plusManualConfirmationDialogInFlight = false;
-    if (
-      shouldReopenDialog
-      && latestState?.plusManualConfirmationPending
-      && String(latestState?.plusManualConfirmationRequestId || '').trim() === requestId
-    ) {
-      setTimeout(() => {
-        void syncPlusManualConfirmationDialog();
-      }, 0);
-    }
-  }
 }
 
 function isPromptDismissed(storageKey) {
@@ -2936,377 +2608,6 @@ async function persistOperationDelayToggle() {
   }
 }
 
-function normalizePlusPaymentMethod(value = '') {
-  const rootScope = typeof window !== 'undefined' ? window : globalThis;
-  if (rootScope.GoPayUtils?.normalizePlusPaymentMethod) {
-    return rootScope.GoPayUtils.normalizePlusPaymentMethod(value);
-  }
-  const gopayValue = typeof PLUS_PAYMENT_METHOD_GOPAY !== 'undefined' ? PLUS_PAYMENT_METHOD_GOPAY : 'gopay';
-  const gpcValue = typeof PLUS_PAYMENT_METHOD_GPC_HELPER !== 'undefined' ? PLUS_PAYMENT_METHOD_GPC_HELPER : 'gpc-helper';
-  const paypalValue = typeof PLUS_PAYMENT_METHOD_PAYPAL !== 'undefined' ? PLUS_PAYMENT_METHOD_PAYPAL : 'paypal';
-  const paypalHostedValue = typeof PLUS_PAYMENT_METHOD_PAYPAL_HOSTED !== 'undefined' ? PLUS_PAYMENT_METHOD_PAYPAL_HOSTED : 'paypal-hosted';
-  const noneValue = typeof PLUS_PAYMENT_METHOD_NONE !== 'undefined' ? PLUS_PAYMENT_METHOD_NONE : 'none';
-  const normalized = String(value || '').trim().toLowerCase();
-  if (normalized === noneValue || normalized === 'no-payment' || normalized === 'skip-payment') {
-    return noneValue;
-  }
-  if (normalized === paypalHostedValue || normalized === 'paypal_direct' || normalized === 'paypal-direct') {
-    return paypalHostedValue;
-  }
-  if (normalized === gpcValue) {
-    return gpcValue;
-  }
-  return normalized === gopayValue ? gopayValue : paypalValue;
-}
-
-function normalizePlusHostedCheckoutOauthDelaySeconds(value) {
-  const numeric = Number(String(value ?? '').trim());
-  if (!Number.isFinite(numeric)) {
-    return DEFAULT_PLUS_HOSTED_CHECKOUT_OAUTH_DELAY_SECONDS;
-  }
-  return Math.min(120, Math.max(0, Math.floor(numeric)));
-}
-
-function normalizePlusAccountAccessStrategy(value = '') {
-  const normalized = String(value || '').trim().toLowerCase();
-  if (normalized === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION) {
-    return PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION;
-  }
-  if (normalized === PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION) {
-    return PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION;
-  }
-  return PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
-}
-
-function normalizePlusAccountAccessStrategyUiValue(value = '') {
-  const normalized = String(value || '').trim().toLowerCase();
-  if (
-    normalized === PLUS_ACCOUNT_ACCESS_STRATEGY_CODEX_SESSION_UI
-    || normalized === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION
-    || normalized === PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION
-  ) {
-    return PLUS_ACCOUNT_ACCESS_STRATEGY_CODEX_SESSION_UI;
-  }
-  return PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
-}
-
-function getPlusAccountSessionStrategyForTarget(targetId = '') {
-  const normalizedTargetId = normalizePlusStrategyTargetId(targetId);
-  if (normalizedTargetId === 'sub2api') {
-    return PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION;
-  }
-  if (normalizedTargetId === 'cpa') {
-    return PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION;
-  }
-  return PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
-}
-
-function resolvePlusAccountAccessStrategyForTarget(value = '', targetId = '') {
-  const normalizedUiValue = normalizePlusAccountAccessStrategyUiValue(value);
-  if (normalizedUiValue !== PLUS_ACCOUNT_ACCESS_STRATEGY_CODEX_SESSION_UI) {
-    return PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
-  }
-  return getPlusAccountSessionStrategyForTarget(targetId);
-}
-
-function getSelectedPlusPaymentMethod(state = latestState) {
-  const defaultMethod = typeof DEFAULT_PLUS_PAYMENT_METHOD !== 'undefined' ? DEFAULT_PLUS_PAYMENT_METHOD : 'paypal';
-  if (typeof selectPlusPaymentMethod !== 'undefined' && selectPlusPaymentMethod?.value) {
-    return normalizePlusPaymentMethod(selectPlusPaymentMethod.value);
-  }
-  return normalizePlusPaymentMethod(state?.plusPaymentMethod || currentPlusPaymentMethod || defaultMethod);
-}
-
-function getRequestedPlusAccountAccessStrategy(state = latestState) {
-  const defaultStrategy = typeof DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY !== 'undefined'
-    ? DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY
-    : 'oauth';
-  const oauthStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH !== 'undefined'
-    ? PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH
-    : 'oauth';
-  const sub2apiSessionStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION !== 'undefined'
-    ? PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION
-    : 'sub2api_codex_session';
-  const cpaSessionStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION !== 'undefined'
-    ? PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION
-    : 'cpa_codex_session';
-  const sessionUiValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_CODEX_SESSION_UI !== 'undefined'
-    ? PLUS_ACCOUNT_ACCESS_STRATEGY_CODEX_SESSION_UI
-    : 'codex_session';
-  const resolveTargetId = () => {
-    if (typeof getSelectedPanelMode === 'function') {
-      return getSelectedPanelMode();
-    }
-    if (typeof selectPanelMode !== 'undefined' && selectPanelMode?.value) {
-      return selectPanelMode.value;
-    }
-    return getSelectedTargetIdForState({
-      ...(latestState || {}),
-      ...(state || {}),
-      activeFlowId: DEFAULT_ACTIVE_FLOW_ID,
-      flowId: DEFAULT_ACTIVE_FLOW_ID,
-    }, DEFAULT_ACTIVE_FLOW_ID);
-  };
-  const resolveStrategyForTarget = typeof resolvePlusAccountAccessStrategyForTarget === 'function'
-    ? resolvePlusAccountAccessStrategyForTarget
-    : ((value = '', targetId = '') => {
-      const normalizedValue = String(value || '').trim().toLowerCase();
-      const isSessionImport = normalizedValue === sessionUiValue
-        || normalizedValue === sub2apiSessionStrategyValue
-        || normalizedValue === cpaSessionStrategyValue;
-      if (!isSessionImport) {
-        return oauthStrategyValue;
-      }
-      const normalizedTargetId = typeof normalizePlusStrategyTargetId === 'function'
-        ? normalizePlusStrategyTargetId(targetId)
-        : String(targetId || '').trim().toLowerCase();
-      if (normalizedTargetId === 'sub2api') {
-        return sub2apiSessionStrategyValue;
-      }
-      if (normalizedTargetId === 'cpa') {
-        return cpaSessionStrategyValue;
-      }
-      return oauthStrategyValue;
-    });
-  const fallbackStrategy = normalizePlusAccountAccessStrategy(
-    (typeof selectPlusAccountAccessStrategy !== 'undefined' && selectPlusAccountAccessStrategy?.dataset?.requestedValue)
-    || state?.plusAccountAccessStrategy
-    || currentPlusAccountAccessStrategy
-    || defaultStrategy
-  );
-  if (
-    typeof selectPlusAccountAccessStrategy !== 'undefined'
-    && selectPlusAccountAccessStrategy
-    && !selectPlusAccountAccessStrategy.disabled
-  ) {
-    return resolveStrategyForTarget(selectPlusAccountAccessStrategy.value || fallbackStrategy, resolveTargetId());
-  }
-  return fallbackStrategy;
-}
-
-function normalizePlusStrategyTargetId(value = '') {
-  const normalized = String(value || '').trim().toLowerCase();
-  if (normalized === 'sub2api') {
-    return 'sub2api';
-  }
-  if (normalized === 'codex2api') {
-    return 'codex2api';
-  }
-  return 'cpa';
-}
-
-function getPlusAccountAccessStrategyContinuationLabel(strategy = '', targetId = '') {
-  const normalizedStrategy = normalizePlusAccountAccessStrategy(strategy);
-  if (normalizedStrategy === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION) {
-    return '导入当前 ChatGPT 会话到 SUB2API';
-  }
-  if (normalizedStrategy === PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION) {
-    return '导入当前 ChatGPT 会话到 CPA';
-  }
-  return 'OAuth 登录';
-}
-
-function getPlusAccountAccessStrategyDescription(strategy = '', targetId = '') {
-  const normalizedStrategy = normalizePlusAccountAccessStrategy(strategy);
-  const normalizedTargetId = normalizePlusStrategyTargetId(targetId);
-  if (normalizedStrategy === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION) {
-    return '复用当前 Plus 已登录会话，直接导入到 SUB2API';
-  }
-  if (normalizedStrategy === PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION) {
-    return '复用当前 Plus 已登录会话，直接导入到 CPA';
-  }
-  if (normalizedTargetId === 'sub2api') {
-    return '通过 OAuth 回调创建 SUB2API 账号';
-  }
-  if (normalizedTargetId === 'codex2api') {
-    return '通过 OAuth 回调创建 Codex2API 账号';
-  }
-  return '通过 OAuth 回调创建 CPA 账号';
-}
-
-function resolvePlusManualContinuationActionLabelFromState(state = latestState) {
-  const activeFlowId = String(state?.activeFlowId || state?.flowId || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase();
-  const signupMethod = normalizeSignupMethod(state?.resolvedSignupMethod || state?.signupMethod || DEFAULT_SIGNUP_METHOD);
-  const plusModeEnabled = state?.plusModeEnabled === undefined ? true : Boolean(state?.plusModeEnabled);
-  const normalizeTargetIdForFlowSafe = typeof normalizeTargetIdForFlow === 'function'
-    ? normalizeTargetIdForFlow
-    : ((flowId, targetId = '', fallback = '') => {
-      const normalizedFlowId = String(flowId || '').trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID;
-      if (normalizedFlowId === DEFAULT_ACTIVE_FLOW_ID) {
-        const normalizedTargetId = String(targetId || fallback || '').trim().toLowerCase();
-        return normalizedTargetId === 'sub2api' || normalizedTargetId === 'codex2api' ? normalizedTargetId : 'cpa';
-      }
-      return 'cpa';
-    });
-  const getDefaultTargetIdForFlowSafe = typeof getDefaultTargetIdForFlow === 'function'
-    ? getDefaultTargetIdForFlow
-    : (() => 'cpa');
-  const normalizePlusStrategyTargetIdSafe = typeof normalizePlusStrategyTargetId === 'function'
-    ? normalizePlusStrategyTargetId
-    : ((value = '') => {
-      const normalized = String(value || '').trim().toLowerCase();
-      if (normalized === 'sub2api' || normalized === 'codex2api') {
-        return normalized;
-      }
-      return 'cpa';
-    });
-  const targetId = normalizePlusStrategyTargetIdSafe(
-    typeof getSelectedTargetIdForState === 'function'
-      ? getSelectedTargetIdForState(state, activeFlowId)
-      : normalizeTargetIdForFlowSafe(
-        activeFlowId,
-        state?.targetId || '',
-        getDefaultTargetIdForFlowSafe(activeFlowId)
-      )
-  );
-  const strategy = normalizePlusAccountAccessStrategy(state?.plusAccountAccessStrategy || DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY);
-  const effectiveStrategy = plusModeEnabled && activeFlowId === DEFAULT_ACTIVE_FLOW_ID && signupMethod === SIGNUP_METHOD_EMAIL
-    ? strategy
-    : PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
-  return getPlusAccountAccessStrategyContinuationLabel(effectiveStrategy, targetId);
-}
-
-function normalizeGpcHelperPhoneModeValue(value = '') {
-  const rootScope = typeof window !== 'undefined' ? window : globalThis;
-  if (rootScope.GoPayUtils?.normalizeGpcHelperPhoneMode) {
-    return rootScope.GoPayUtils.normalizeGpcHelperPhoneMode(value);
-  }
-  const normalized = String(value || '').trim().toLowerCase();
-  return normalized === GPC_HELPER_PHONE_MODE_AUTO || normalized === 'builtin'
-    ? GPC_HELPER_PHONE_MODE_AUTO
-    : GPC_HELPER_PHONE_MODE_MANUAL;
-}
-
-function getGpcHelperAutoModeEnabled(state = latestState) {
-  return Boolean(state?.gopayHelperAutoModeEnabled);
-}
-
-function normalizeGpcAutoModePermissionValue(value) {
-  if (typeof value === 'boolean') {
-    return value;
-  }
-  if (typeof value === 'number') {
-    if (value === 1) return true;
-    if (value === 0) return false;
-  }
-  const normalized = String(value ?? '').trim().toLowerCase();
-  if (!normalized) {
-    return null;
-  }
-  if (['true', '1', 'yes', 'y', 'on', 'enabled', 'enable'].includes(normalized)) {
-    return true;
-  }
-  if (['false', '0', 'no', 'n', 'off', 'disabled', 'disable'].includes(normalized)) {
-    return false;
-  }
-  return null;
-}
-
-function getGpcAutoModePermissionFromPayload(payload = {}) {
-  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
-    return null;
-  }
-  for (const key of ['auto_mode_enabled', 'autoModeEnabled', 'auto_enabled', 'autoEnabled']) {
-    if (payload[key] !== undefined) {
-      return normalizeGpcAutoModePermissionValue(payload[key]);
-    }
-  }
-  if (payload.data && typeof payload.data === 'object' && !Array.isArray(payload.data)) {
-    return getGpcAutoModePermissionFromPayload(payload.data);
-  }
-  return null;
-}
-
-function shouldPreserveSelectedGpcAutoMode(state = latestState) {
-  const payloadPermission = getGpcAutoModePermissionFromPayload(state?.gopayHelperBalancePayload);
-  return normalizeGpcHelperPhoneModeValue(state?.gopayHelperPhoneMode) === GPC_HELPER_PHONE_MODE_AUTO
-    && (Boolean(state?.gopayHelperAutoModeEnabled) || payloadPermission === true);
-}
-
-function hasGpcAutoModePermissionField(payload = {}) {
-  return getGpcAutoModePermissionFromPayload(payload) !== null;
-}
-
-function isGpcAutoModePermissionDenied(state = latestState) {
-  const payloadPermission = getGpcAutoModePermissionFromPayload(state?.gopayHelperBalancePayload);
-  return payloadPermission === false;
-}
-
-function normalizeGpcRemainingUsesValue(value) {
-  const rootScope = typeof window !== 'undefined' ? window : globalThis;
-  if (rootScope.GoPayUtils?.normalizeGpcRemainingUses) {
-    return rootScope.GoPayUtils.normalizeGpcRemainingUses(value);
-  }
-  if (value === undefined || value === null || String(value).trim() === '') {
-    return null;
-  }
-  const numeric = Number(value);
-  return Number.isFinite(numeric) ? Math.max(0, Math.floor(numeric)) : null;
-}
-
-function getGpcBalanceRemainingUsesFromResponse(response = {}) {
-  const rootScope = typeof window !== 'undefined' ? window : globalThis;
-  if (rootScope.GoPayUtils?.getGpcBalanceRemainingUses) {
-    const remaining = rootScope.GoPayUtils.getGpcBalanceRemainingUses(response?.data || response?.payload || response);
-    if (remaining !== null && remaining !== undefined) {
-      return remaining;
-    }
-  }
-  return normalizeGpcRemainingUsesValue(
-    response?.remainingUses
-    ?? response?.data?.remaining_uses
-    ?? response?.data?.remainingUses
-    ?? response?.payload?.data?.remaining_uses
-    ?? response?.payload?.remaining_uses
-    ?? response?.payload?.remainingUses
-  );
-}
-
-function getGpcAutoModeEnabledFromResponse(response = {}) {
-  if (typeof response?.autoModeEnabled === 'boolean') {
-    return response.autoModeEnabled;
-  }
-  const rootScope = typeof window !== 'undefined' ? window : globalThis;
-  if (rootScope.GoPayUtils?.isGpcAutoModeEnabled) {
-    return rootScope.GoPayUtils.isGpcAutoModeEnabled(response?.data || response?.payload || response);
-  }
-  return Boolean(
-    response?.data?.auto_mode_enabled
-    ?? response?.data?.autoModeEnabled
-    ?? response?.payload?.data?.auto_mode_enabled
-    ?? response?.payload?.auto_mode_enabled
-    ?? response?.payload?.autoModeEnabled
-  );
-}
-
-function normalizeGpcOtpChannelValue(value = '') {
-  const rootScope = typeof window !== 'undefined' ? window : globalThis;
-  if (rootScope.GoPayUtils?.normalizeGpcOtpChannel) {
-    return rootScope.GoPayUtils.normalizeGpcOtpChannel(value);
-  }
-  return String(value || '').trim().toLowerCase() === 'sms' ? 'sms' : 'whatsapp';
-}
-
-function normalizeGpcLocalSmsHelperBaseUrlValue(value = '') {
-  const fallback = 'http://127.0.0.1:18767';
-  const rawValue = String(value || fallback).trim();
-  try {
-    const parsed = new URL(rawValue);
-    if (!['http:', 'https:'].includes(parsed.protocol)) {
-      return fallback;
-    }
-    const endpointPath = parsed.pathname.replace(/\/+$/g, '') || '/';
-    if (['/otp', '/latest-otp', '/health'].includes(endpointPath)) {
-      parsed.pathname = '';
-      parsed.search = '';
-      parsed.hash = '';
-    }
-    return parsed.toString().replace(/\/$/, '');
-  } catch {
-    return fallback;
-  }
-}
-
 function hasOwnStateValue(source, key) {
   return Object.prototype.hasOwnProperty.call(source, key);
 }
@@ -3923,9 +3224,6 @@ function applyYydsMailSettingsState(state = {}) {
 }
 
 function collectSettingsPayload() {
-  const defaultGpcHelperApiUrl = typeof DEFAULT_GPC_HELPER_API_URL !== 'undefined'
-    ? DEFAULT_GPC_HELPER_API_URL
-    : 'https://gpc.qlhazycoder.top';
   const normalizeYydsBaseUrlValue = typeof normalizeYydsMailBaseUrl === 'function'
     ? normalizeYydsMailBaseUrl
     : ((value) => String(value || '').trim() || 'https://maliapi.215.im/v1');
@@ -3974,36 +3272,6 @@ function collectSettingsPayload() {
     : '';
   const normalizedIcloudTargetMailboxType = normalizeIcloudTargetMailboxType(icloudTargetMailboxTypeValue);
   const normalizedIcloudForwardMailProvider = normalizeIcloudForwardMailProvider(icloudForwardMailProviderValue);
-  const normalizeGpcOtpChannelSafe = typeof normalizeGpcOtpChannelValue === 'function'
-    ? normalizeGpcOtpChannelValue
-    : ((value = '') => {
-      const rootScope = typeof window !== 'undefined' ? window : globalThis;
-      if (rootScope.GoPayUtils?.normalizeGpcOtpChannel) {
-        return rootScope.GoPayUtils.normalizeGpcOtpChannel(value);
-      }
-      return String(value || '').trim().toLowerCase() === 'sms' ? 'sms' : 'whatsapp';
-    });
-  const normalizeGpcLocalSmsHelperBaseUrlSafe = typeof normalizeGpcLocalSmsHelperBaseUrlValue === 'function'
-    ? normalizeGpcLocalSmsHelperBaseUrlValue
-    : ((value = '') => {
-      const fallback = 'http://127.0.0.1:18767';
-      const rawValue = String(value || fallback).trim();
-      try {
-        const parsed = new URL(rawValue);
-        if (!['http:', 'https:'].includes(parsed.protocol)) {
-          return fallback;
-        }
-        const endpointPath = parsed.pathname.replace(/\/+$/g, '') || '/';
-        if (['/otp', '/latest-otp', '/health'].includes(endpointPath)) {
-          parsed.pathname = '';
-          parsed.search = '';
-          parsed.hash = '';
-        }
-        return parsed.toString().replace(/\/$/, '');
-      } catch {
-        return fallback;
-      }
-    });
   const mail2925UseAccountPool = typeof inputMail2925UseAccountPool !== 'undefined'
     ? Boolean(inputMail2925UseAccountPool?.checked)
     : Boolean(latestState?.mail2925UseAccountPool);
@@ -4244,12 +3512,6 @@ function collectSettingsPayload() {
   const fiveSimCountryFallback = phoneSmsProviderValue === PHONE_SMS_PROVIDER_FIVE_SIM
     ? selectedPhoneSmsCountryFallback
     : normalizeFiveSimCountryFallbackList(latestState?.fiveSimCountryFallback || []);
-  const payPalAccounts = typeof getPayPalAccounts === 'function'
-    ? getPayPalAccounts(latestState)
-    : (Array.isArray(latestState?.paypalAccounts) ? latestState.paypalAccounts : []);
-  const currentPayPalAccount = typeof getCurrentPayPalAccount === 'function'
-    ? getCurrentPayPalAccount(latestState)
-    : payPalAccounts.find((account) => account?.id === String(latestState?.currentPayPalAccountId || '').trim()) || null;
   const normalizePanelModeSafe = typeof normalizePanelMode === 'function'
     ? normalizePanelMode
     : ((value = '') => {
@@ -4265,39 +3527,6 @@ function collectSettingsPayload() {
       }
       return 'cpa';
     });
-  const resolvePlusAccountAccessStrategyForTargetSafe = typeof resolvePlusAccountAccessStrategyForTarget === 'function'
-    ? resolvePlusAccountAccessStrategyForTarget
-    : ((value = '', targetId = '') => {
-      const oauthStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH !== 'undefined'
-        ? PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH
-        : 'oauth';
-      const sub2apiSessionStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION !== 'undefined'
-        ? PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION
-        : 'sub2api_codex_session';
-      const cpaSessionStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION !== 'undefined'
-        ? PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION
-        : 'cpa_codex_session';
-      const sessionUiValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_CODEX_SESSION_UI !== 'undefined'
-        ? PLUS_ACCOUNT_ACCESS_STRATEGY_CODEX_SESSION_UI
-        : 'codex_session';
-      const normalizedValue = String(value || '').trim().toLowerCase();
-      const isSessionImport = normalizedValue === sessionUiValue
-        || normalizedValue === sub2apiSessionStrategyValue
-        || normalizedValue === cpaSessionStrategyValue;
-      if (!isSessionImport) {
-        return oauthStrategyValue;
-      }
-      const normalizedTargetId = typeof normalizePlusStrategyTargetId === 'function'
-        ? normalizePlusStrategyTargetId(targetId)
-        : normalizePanelModeSafe(targetId || '');
-      if (normalizedTargetId === 'sub2api') {
-        return sub2apiSessionStrategyValue;
-      }
-      if (normalizedTargetId === 'cpa') {
-        return cpaSessionStrategyValue;
-      }
-      return oauthStrategyValue;
-    });
   const selectedTargetId = typeof getSelectedTargetId === 'function'
     ? getSelectedTargetId(activeFlowId)
     : normalizeTargetIdForFlowSafe(
@@ -4312,12 +3541,6 @@ function collectSettingsPayload() {
       ? selectedTargetId
       : getSelectedPanelMode(latestState)
   );
-  const rawPlusModeEnabled = typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
-    ? Boolean(inputPlusModeEnabled.checked)
-    : Boolean(latestState?.plusModeEnabled);
-  const requestedPlusAccountAccessStrategy = typeof getRequestedPlusAccountAccessStrategy === 'function'
-    ? getRequestedPlusAccountAccessStrategy(latestState)
-    : normalizePlusAccountAccessStrategy(latestState?.plusAccountAccessStrategy || DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY);
   const rawPhoneVerificationEnabled = Boolean(inputPhoneVerificationEnabled?.checked);
   const capabilityState = typeof resolveCurrentSidepanelCapabilities === 'function'
     ? resolveCurrentSidepanelCapabilities({
@@ -4329,8 +3552,6 @@ function collectSettingsPayload() {
         activeFlowId,
         flowId: activeFlowId,
         targetId: selectedTargetId,
-        plusModeEnabled: rawPlusModeEnabled,
-        plusAccountAccessStrategy: requestedPlusAccountAccessStrategy,
         phoneVerificationEnabled: rawPhoneVerificationEnabled,
         signupMethod: selectedSignupMethod,
       },
@@ -4350,8 +3571,6 @@ function collectSettingsPayload() {
             activeFlowId,
             flowId: activeFlowId,
             targetId: selectedTargetId,
-            plusModeEnabled: rawPlusModeEnabled,
-            plusAccountAccessStrategy: requestedPlusAccountAccessStrategy,
             phoneVerificationEnabled: rawPhoneVerificationEnabled,
             signupMethod: selectedSignupMethod,
           },
@@ -4364,33 +3583,10 @@ function collectSettingsPayload() {
       ? effectiveTargetId
       : openAiTargetId
   );
-  const effectivePlusModeEnabled = capabilityState
-    ? Boolean(capabilityState.runtimeLocks?.plusModeEnabled)
-    : rawPlusModeEnabled;
   const effectivePhoneVerificationEnabled = capabilityState
     ? Boolean(capabilityState.runtimeLocks?.phoneVerificationEnabled)
     : rawPhoneVerificationEnabled;
   const effectiveSignupMethod = capabilityState?.effectiveSignupMethod || selectedSignupMethod;
-  const plusPaymentMethod = getSelectedPlusPaymentMethod();
-  const normalizeGpcHelperPhoneModeSafe = typeof normalizeGpcHelperPhoneModeValue === 'function'
-    ? normalizeGpcHelperPhoneModeValue
-    : ((value = '') => String(value || '').trim().toLowerCase() === 'auto' || String(value || '').trim().toLowerCase() === 'builtin' ? 'auto' : 'manual');
-  const selectedGpcPhoneMode = normalizeGpcHelperPhoneModeSafe(
-    typeof selectGpcHelperPhoneMode !== 'undefined' && selectGpcHelperPhoneMode
-      ? selectGpcHelperPhoneMode.value
-      : (latestState?.gopayHelperPhoneMode || 'manual')
-  );
-  const effectiveGpcPhoneMode = selectedGpcPhoneMode;
-  const selectedGpcOtpChannel = normalizeGpcOtpChannelSafe(
-    typeof selectGpcHelperOtpChannel !== 'undefined' && selectGpcHelperOtpChannel
-      ? selectGpcHelperOtpChannel.value
-      : (latestState?.gopayHelperOtpChannel || 'whatsapp')
-  );
-  const selectedGpcLocalSmsHelperEnabled = effectiveGpcPhoneMode === 'auto' ? false : Boolean(
-    typeof inputGpcHelperLocalSmsEnabled !== 'undefined' && inputGpcHelperLocalSmsEnabled
-      ? inputGpcHelperLocalSmsEnabled.checked
-      : latestState?.gopayHelperLocalSmsHelperEnabled
-  );
   const selectedSub2ApiGroupName = String(inputSub2ApiGroup.value || '').trim();
   const sub2apiGroupNames = [];
   const seenSub2ApiGroupNames = new Set();
@@ -4418,22 +3614,13 @@ function collectSettingsPayload() {
     selectedSub2ApiGroupName,
   ].forEach(appendSub2ApiGroupNames);
   if (sub2apiGroupNames.length === 0) {
-    appendSub2ApiGroupNames(['codex', 'openai-plus']);
+    appendSub2ApiGroupNames(['codex']);
   }
   const sub2apiAccountPriorityNormalizer = typeof normalizeSub2ApiAccountPriorityValue === 'function'
     ? normalizeSub2ApiAccountPriorityValue
     : ((value) => {
       const numeric = Number(String(value ?? '').trim());
       return Number.isSafeInteger(numeric) && numeric >= 1 ? numeric : 1;
-    });
-  const normalizeHostedCheckoutDelaySecondsSafe = typeof normalizePlusHostedCheckoutOauthDelaySeconds === 'function'
-    ? normalizePlusHostedCheckoutOauthDelaySeconds
-    : ((value) => {
-      const numeric = Number(String(value ?? '').trim());
-      if (!Number.isFinite(numeric)) {
-        return 3;
-      }
-      return Math.min(120, Math.max(0, Math.floor(numeric)));
     });
   return {
     activeFlowId,
@@ -4454,76 +3641,6 @@ function collectSettingsPayload() {
     sub2apiDefaultProxyName: inputSub2ApiDefaultProxy.value.trim(),
     codex2apiUrl: inputCodex2ApiUrl.value.trim(),
     codex2apiAdminKey: inputCodex2ApiAdminKey.value.trim(),
-    plusModeEnabled: effectivePlusModeEnabled,
-    plusPaymentMethod,
-    plusAccountAccessStrategy: activeFlowId === defaultFlowId
-      ? resolvePlusAccountAccessStrategyForTargetSafe(requestedPlusAccountAccessStrategy, effectiveOpenAiTargetId)
-      : requestedPlusAccountAccessStrategy,
-    hostedCheckoutVerificationUrl: typeof inputHostedCheckoutVerificationUrl !== 'undefined' && inputHostedCheckoutVerificationUrl
-      ? String(inputHostedCheckoutVerificationUrl.value || '').trim()
-      : String(latestState?.hostedCheckoutVerificationUrl || '').trim(),
-    hostedCheckoutPhoneNumber: typeof inputHostedCheckoutPhone !== 'undefined' && inputHostedCheckoutPhone
-      ? String(inputHostedCheckoutPhone.value || '').trim()
-      : String(latestState?.hostedCheckoutPhoneNumber || '').trim(),
-    plusHostedCheckoutOauthDelaySeconds: normalizeHostedCheckoutDelaySecondsSafe(
-      typeof inputPlusHostedCheckoutOauthDelaySeconds !== 'undefined' && inputPlusHostedCheckoutOauthDelaySeconds
-        ? inputPlusHostedCheckoutOauthDelaySeconds.value
-        : latestState?.plusHostedCheckoutOauthDelaySeconds
-    ),
-    paypalEmail: String(currentPayPalAccount?.email || latestState?.paypalEmail || '').trim(),
-    paypalPassword: String(currentPayPalAccount?.password || latestState?.paypalPassword || ''),
-    currentPayPalAccountId: String(latestState?.currentPayPalAccountId || '').trim(),
-    paypalAccounts: payPalAccounts,
-    gopayCountryCode: window.GoPayUtils?.normalizeGoPayCountryCode
-      ? window.GoPayUtils.normalizeGoPayCountryCode(typeof selectGoPayCountryCode !== 'undefined' && selectGoPayCountryCode ? selectGoPayCountryCode.value : latestState?.gopayCountryCode)
-      : (typeof selectGoPayCountryCode !== 'undefined' && selectGoPayCountryCode
-        ? String(selectGoPayCountryCode.value || '+86').trim()
-        : String(latestState?.gopayCountryCode || '+86').trim()),
-    gopayPhone: window.GoPayUtils?.normalizeGoPayPhone
-      ? window.GoPayUtils.normalizeGoPayPhone(typeof inputGoPayPhone !== 'undefined' && inputGoPayPhone ? inputGoPayPhone.value : latestState?.gopayPhone)
-      : (typeof inputGoPayPhone !== 'undefined' && inputGoPayPhone
-        ? String(inputGoPayPhone.value || '').trim()
-        : String(latestState?.gopayPhone || '').trim()),
-    gopayOtp: window.GoPayUtils?.normalizeGoPayOtp
-      ? window.GoPayUtils.normalizeGoPayOtp(typeof inputGoPayOtp !== 'undefined' && inputGoPayOtp ? inputGoPayOtp.value : latestState?.gopayOtp)
-      : (typeof inputGoPayOtp !== 'undefined' && inputGoPayOtp
-        ? String(inputGoPayOtp.value || '').trim().replace(/[^\d]/g, '')
-        : String(latestState?.gopayOtp || '').trim().replace(/[^\d]/g, '')),
-    gopayPin: window.GoPayUtils?.normalizeGoPayPin
-      ? window.GoPayUtils.normalizeGoPayPin(typeof inputGoPayPin !== 'undefined' && inputGoPayPin ? inputGoPayPin.value : latestState?.gopayPin)
-      : (typeof inputGoPayPin !== 'undefined' && inputGoPayPin
-        ? String(inputGoPayPin.value || '')
-        : String(latestState?.gopayPin || '')),
-    gopayHelperApiUrl: window.GoPayUtils?.normalizeGpcHelperBaseUrl
-      ? window.GoPayUtils.normalizeGpcHelperBaseUrl(defaultGpcHelperApiUrl)
-      : String(defaultGpcHelperApiUrl).trim().replace(/\/+$/g, ''),
-    gopayHelperApiKey: typeof inputGpcHelperCardKey !== 'undefined' && inputGpcHelperCardKey
-      ? String(inputGpcHelperCardKey.value || '').trim()
-      : String(latestState?.gopayHelperApiKey || latestState?.gopayHelperCardKey || '').trim(),
-    gopayHelperCardKey: '',
-    gopayHelperPhoneMode: effectiveGpcPhoneMode,
-    gopayHelperCountryCode: window.GoPayUtils?.normalizeGoPayCountryCode
-      ? window.GoPayUtils.normalizeGoPayCountryCode(typeof selectGpcHelperCountryCode !== 'undefined' && selectGpcHelperCountryCode ? selectGpcHelperCountryCode.value : latestState?.gopayHelperCountryCode)
-      : (typeof selectGpcHelperCountryCode !== 'undefined' && selectGpcHelperCountryCode
-        ? String(selectGpcHelperCountryCode.value || '+86').trim()
-        : String(latestState?.gopayHelperCountryCode || '+86').trim()),
-    gopayHelperPhoneNumber: window.GoPayUtils?.normalizeGoPayPhone
-      ? window.GoPayUtils.normalizeGoPayPhone(typeof inputGpcHelperPhone !== 'undefined' && inputGpcHelperPhone ? inputGpcHelperPhone.value : latestState?.gopayHelperPhoneNumber)
-      : (typeof inputGpcHelperPhone !== 'undefined' && inputGpcHelperPhone
-        ? String(inputGpcHelperPhone.value || '').trim()
-        : String(latestState?.gopayHelperPhoneNumber || '').trim()),
-    gopayHelperPin: window.GoPayUtils?.normalizeGoPayPin
-      ? window.GoPayUtils.normalizeGoPayPin(typeof inputGpcHelperPin !== 'undefined' && inputGpcHelperPin ? inputGpcHelperPin.value : latestState?.gopayHelperPin)
-      : (typeof inputGpcHelperPin !== 'undefined' && inputGpcHelperPin
-        ? String(inputGpcHelperPin.value || '')
-        : String(latestState?.gopayHelperPin || '')),
-    gopayHelperOtpChannel: selectedGpcOtpChannel,
-    gopayHelperLocalSmsHelperEnabled: selectedGpcLocalSmsHelperEnabled,
-    gopayHelperLocalSmsHelperUrl: normalizeGpcLocalSmsHelperBaseUrlSafe(
-      typeof inputGpcHelperLocalSmsUrl !== 'undefined' && inputGpcHelperLocalSmsUrl
-        ? inputGpcHelperLocalSmsUrl.value
-        : (latestState?.gopayHelperLocalSmsHelperUrl || '')
-    ),
     ...(accountContributionEnabled ? {} : {
       customPassword: inputPassword.value,
     }),
@@ -8651,13 +7768,6 @@ function resolveStepDefinitionCapabilityState(state = latestState, options = {})
   });
   return {
     capabilityState,
-    plusModeEnabled: capabilityState
-      ? Boolean(capabilityState.runtimeLocks?.plusModeEnabled)
-      : Boolean(nextState?.plusModeEnabled),
-    plusAccountAccessStrategy: capabilityState?.effectivePlusAccountAccessStrategy
-      || normalizePlusAccountAccessStrategy(
-        nextState?.plusAccountAccessStrategy || DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY
-      ),
     signupMethod: capabilityState?.effectiveSignupMethod
       || normalizeSignupMethod((options?.signupMethod ?? nextState?.signupMethod) || DEFAULT_SIGNUP_METHOD),
     phoneVerificationEnabled: capabilityState
@@ -8715,9 +7825,6 @@ function setSignupMethod(method) {
 
 function canSelectPhoneSignupMethod() {
   const phoneEnabled = Boolean(inputPhoneVerificationEnabled?.checked);
-  const plusModeEnabled = typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
-    ? Boolean(inputPlusModeEnabled.checked)
-    : Boolean(latestState?.plusModeEnabled);
   const accountContributionEnabled = typeof isContributionModeActiveForFlow === 'function'
     ? isContributionModeActiveForFlow(latestState)
     : Boolean(latestState?.accountContributionEnabled);
@@ -8729,7 +7836,6 @@ function canSelectPhoneSignupMethod() {
       state: {
         ...(typeof latestState !== 'undefined' ? latestState : {}),
         phoneVerificationEnabled: phoneEnabled,
-        plusModeEnabled,
         accountContributionEnabled,
       },
     })
@@ -8747,7 +7853,6 @@ function canSelectPhoneSignupMethod() {
           state: {
             ...(typeof latestState !== 'undefined' ? latestState : {}),
             phoneVerificationEnabled: phoneEnabled,
-            plusModeEnabled,
             accountContributionEnabled,
           },
         })
@@ -8756,7 +7861,7 @@ function canSelectPhoneSignupMethod() {
   if (capabilityState && typeof capabilityState.canSelectPhoneSignup === 'boolean') {
     return capabilityState.canSelectPhoneSignup;
   }
-  return phoneEnabled && !plusModeEnabled && !accountContributionEnabled;
+  return phoneEnabled && !accountContributionEnabled;
 }
 
 function isSignupMethodSwitchLocked() {
@@ -8799,8 +7904,6 @@ function updateSignupMethodUI(options = {}) {
     if (method === SIGNUP_METHOD_PHONE) {
       if (!Boolean(inputPhoneVerificationEnabled?.checked)) {
         button.title = '开启接码后可选择手机号注册';
-      } else if (typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled?.checked) {
-        button.title = 'Plus 模式暂不支持手机号注册';
       } else if (accountContributionEnabled) {
         button.title = '账号贡献开启时不能使用手机号注册';
       } else if (locked) {
@@ -8813,21 +7916,14 @@ function updateSignupMethodUI(options = {}) {
   const stepDefinitionState = typeof resolveStepDefinitionCapabilityState === 'function'
     ? resolveStepDefinitionCapabilityState({
       ...(latestState || {}),
-      plusModeEnabled: typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
-        ? Boolean(inputPlusModeEnabled.checked)
-        : Boolean(latestState?.plusModeEnabled),
       signupMethod: selectedMethod,
     }, {
       signupMethod: selectedMethod,
     })
     : {
-      plusModeEnabled: typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
-        ? Boolean(inputPlusModeEnabled.checked)
-        : Boolean(latestState?.plusModeEnabled),
       signupMethod: selectedMethod,
     };
-  syncStepDefinitionsForMode(stepDefinitionState.plusModeEnabled, {
-    plusPaymentMethod: getSelectedPlusPaymentMethod(latestState),
+  syncStepDefinitionsForMode({
     signupMethod: selectedMethod,
     phoneSignupReloginAfterBindEmailEnabled: typeof inputPhoneSignupReloginAfterBindEmail !== 'undefined' && inputPhoneSignupReloginAfterBindEmail
       ? Boolean(inputPhoneSignupReloginAfterBindEmail.checked)
@@ -8840,9 +7936,6 @@ function updateSignupMethodUI(options = {}) {
 
 function updatePhoneVerificationSettingsUI() {
   const rawEnabled = Boolean(inputPhoneVerificationEnabled?.checked);
-  const rawPlusModeEnabled = typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
-    ? Boolean(inputPlusModeEnabled.checked)
-    : Boolean(latestState?.plusModeEnabled);
   const capabilityState = typeof resolveCurrentSidepanelCapabilities === 'function'
     ? resolveCurrentSidepanelCapabilities({
       targetId: typeof getSelectedTargetId === 'function'
@@ -8852,7 +7945,6 @@ function updatePhoneVerificationSettingsUI() {
       state: {
         ...(latestState || {}),
         phoneVerificationEnabled: rawEnabled,
-        plusModeEnabled: rawPlusModeEnabled,
       },
     })
     : (() => {
@@ -8870,7 +7962,6 @@ function updatePhoneVerificationSettingsUI() {
           state: {
             ...(latestState || {}),
             phoneVerificationEnabled: rawEnabled,
-            plusModeEnabled: rawPlusModeEnabled,
           },
         })
         : null;
@@ -9082,329 +8173,6 @@ function updatePhoneVerificationSettingsUI() {
     rowHeroSmsPriceTiers.style.display = 'none';
   }
   updateHeroSmsPlatformDisplay();
-}
-
-function updatePlusModeUI() {
-  const paypalValue = typeof PLUS_PAYMENT_METHOD_PAYPAL !== 'undefined' ? PLUS_PAYMENT_METHOD_PAYPAL : 'paypal';
-  const paypalHostedValue = typeof PLUS_PAYMENT_METHOD_PAYPAL_HOSTED !== 'undefined' ? PLUS_PAYMENT_METHOD_PAYPAL_HOSTED : 'paypal-hosted';
-  const noneValue = typeof PLUS_PAYMENT_METHOD_NONE !== 'undefined' ? PLUS_PAYMENT_METHOD_NONE : 'none';
-  const gopayValue = typeof PLUS_PAYMENT_METHOD_GOPAY !== 'undefined' ? PLUS_PAYMENT_METHOD_GOPAY : 'gopay';
-  const gpcValue = typeof PLUS_PAYMENT_METHOD_GPC_HELPER !== 'undefined' ? PLUS_PAYMENT_METHOD_GPC_HELPER : 'gpc-helper';
-  const oauthStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH !== 'undefined'
-    ? PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH
-    : 'oauth';
-  const sub2apiSessionStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION !== 'undefined'
-    ? PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION
-    : 'sub2api_codex_session';
-  const cpaSessionStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION !== 'undefined'
-    ? PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION
-    : 'cpa_codex_session';
-  const sessionUiStrategyValue = typeof PLUS_ACCOUNT_ACCESS_STRATEGY_CODEX_SESSION_UI !== 'undefined'
-    ? PLUS_ACCOUNT_ACCESS_STRATEGY_CODEX_SESSION_UI
-    : 'codex_session';
-  const defaultMethod = typeof DEFAULT_PLUS_PAYMENT_METHOD !== 'undefined' ? DEFAULT_PLUS_PAYMENT_METHOD : paypalValue;
-  const resolveStrategyTargetId = typeof normalizePlusStrategyTargetId === 'function'
-    ? normalizePlusStrategyTargetId
-    : ((value = '') => {
-      const normalized = String(value || '').trim().toLowerCase();
-      if (normalized === 'sub2api') {
-        return 'sub2api';
-      }
-      if (normalized === 'codex2api') {
-        return 'codex2api';
-      }
-      return 'cpa';
-    });
-  const describePlusAccountAccessStrategy = typeof getPlusAccountAccessStrategyDescription === 'function'
-    ? getPlusAccountAccessStrategyDescription
-    : ((strategy = '', targetId = '') => {
-      const normalizedStrategy = normalizePlusAccountAccessStrategy(strategy);
-      const normalizedTargetId = resolveStrategyTargetId(targetId);
-      if (normalizedStrategy === sub2apiSessionStrategyValue) {
-        return '复用当前 Plus 已登录会话，直接导入到 SUB2API';
-      }
-      if (normalizedStrategy === cpaSessionStrategyValue) {
-        return '复用当前 Plus 已登录会话，直接导入到 CPA';
-      }
-      if (normalizedTargetId === 'sub2api') {
-        return '通过 OAuth 回调创建 SUB2API 账号';
-      }
-      if (normalizedTargetId === 'codex2api') {
-        return '通过 OAuth 回调创建 Codex2API 账号';
-      }
-      return '通过 OAuth 回调创建 CPA 账号';
-    });
-  const normalizeStrategyUiValue = typeof normalizePlusAccountAccessStrategyUiValue === 'function'
-    ? normalizePlusAccountAccessStrategyUiValue
-    : ((value = '') => {
-      const normalized = String(value || '').trim().toLowerCase();
-      if (
-        normalized === sessionUiStrategyValue
-        || normalized === sub2apiSessionStrategyValue
-        || normalized === cpaSessionStrategyValue
-      ) {
-        return sessionUiStrategyValue;
-      }
-      return oauthStrategyValue;
-    });
-  const requestedPlusAccountAccessStrategy = typeof getRequestedPlusAccountAccessStrategy === 'function'
-    ? getRequestedPlusAccountAccessStrategy(latestState)
-    : normalizePlusAccountAccessStrategy(latestState?.plusAccountAccessStrategy || DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY);
-  const rawEnabled = typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
-    ? Boolean(inputPlusModeEnabled.checked)
-    : false;
-  const capabilityState = typeof resolveCurrentSidepanelCapabilities === 'function'
-    ? resolveCurrentSidepanelCapabilities({
-      targetId: typeof getSelectedTargetId === 'function'
-        ? getSelectedTargetId(getSelectedFlowId(latestState))
-        : latestState?.targetId,
-      state: {
-        ...(latestState || {}),
-        plusModeEnabled: rawEnabled,
-        plusAccountAccessStrategy: requestedPlusAccountAccessStrategy,
-      },
-    })
-    : (() => {
-      const rootScope = typeof window !== 'undefined' ? window : globalThis;
-      const registry = rootScope.MultiPageFlowCapabilities?.createFlowCapabilityRegistry?.({
-        defaultFlowId: typeof DEFAULT_ACTIVE_FLOW_ID === 'string' ? DEFAULT_ACTIVE_FLOW_ID : 'openai',
-      }) || null;
-      return registry?.resolveSidepanelCapabilities
-        ? registry.resolveSidepanelCapabilities({
-          activeFlowId: latestState?.activeFlowId,
-          targetId: typeof getSelectedTargetId === 'function'
-            ? getSelectedTargetId(getSelectedFlowId(latestState))
-            : latestState?.targetId,
-          state: {
-            ...(latestState || {}),
-            plusModeEnabled: rawEnabled,
-            plusAccountAccessStrategy: requestedPlusAccountAccessStrategy,
-          },
-        })
-        : null;
-    })();
-  const supportsPlusMode = capabilityState
-    ? Boolean(capabilityState.canShowPlusSettings)
-    : true;
-  const enabled = supportsPlusMode && rawEnabled;
-  const canEditPlusAccountAccessStrategy = Boolean(capabilityState?.canEditPlusAccountAccessStrategy);
-  const availablePlusAccountAccessStrategies = Array.isArray(capabilityState?.availablePlusAccountAccessStrategies)
-    && capabilityState.availablePlusAccountAccessStrategies.length > 0
-    ? capabilityState.availablePlusAccountAccessStrategies
-    : [oauthStrategyValue];
-  const effectivePlusAccountAccessStrategy = capabilityState?.effectivePlusAccountAccessStrategy
-    || requestedPlusAccountAccessStrategy
-    || oauthStrategyValue;
-  const effectiveTargetId = resolveStrategyTargetId(
-    capabilityState?.effectiveTargetId
-    || (typeof getSelectedPanelMode === 'function' ? getSelectedPanelMode(latestState) : latestState?.targetId)
-    || 'cpa'
-  );
-  const method = enabled ? getSelectedPlusPaymentMethod() : defaultMethod;
-  const gpcPhoneMode = normalizeGpcHelperPhoneModeValue(
-    typeof selectGpcHelperPhoneMode !== 'undefined' && selectGpcHelperPhoneMode
-      ? selectGpcHelperPhoneMode.value
-      : (latestState?.gopayHelperPhoneMode || 'manual')
-  );
-  const gpcAutoModeDenied = isGpcAutoModePermissionDenied(latestState);
-  const isGpcAutoMode = gpcPhoneMode === GPC_HELPER_PHONE_MODE_AUTO;
-  const gpcAutoModeBlocked = isGpcAutoMode && gpcAutoModeDenied;
-  const gpcOtpChannel = normalizeGpcOtpChannelValue(
-    typeof selectGpcHelperOtpChannel !== 'undefined' && selectGpcHelperOtpChannel
-      ? selectGpcHelperOtpChannel.value
-      : (latestState?.gopayHelperOtpChannel || 'whatsapp')
-  );
-  const localSmsEnabled = Boolean(
-    typeof inputGpcHelperLocalSmsEnabled !== 'undefined' && inputGpcHelperLocalSmsEnabled
-      ? inputGpcHelperLocalSmsEnabled.checked
-      : latestState?.gopayHelperLocalSmsHelperEnabled
-  );
-  const selectedMethod = typeof selectPlusPaymentMethod !== 'undefined' && selectPlusPaymentMethod?.value
-    ? normalizePlusPaymentMethod(selectPlusPaymentMethod.value)
-    : method;
-  const hostedRowsVisible = enabled && selectedMethod === paypalHostedValue;
-  const gpcRowsVisible = enabled && selectedMethod === gpcValue;
-  const canShowGpcModeSelector = gpcRowsVisible;
-  const localSmsControlsVisible = gpcRowsVisible && !isGpcAutoMode;
-  const effectiveLocalSmsEnabled = !isGpcAutoMode && localSmsEnabled;
-  if (typeof rowPlusMode !== 'undefined' && rowPlusMode) {
-    rowPlusMode.style.display = supportsPlusMode ? '' : 'none';
-  }
-  if (typeof selectPlusPaymentMethod !== 'undefined' && selectPlusPaymentMethod) {
-    selectPlusPaymentMethod.value = method;
-    if (selectPlusPaymentMethod.style) {
-      selectPlusPaymentMethod.style.display = enabled ? '' : 'none';
-    }
-  }
-  if (typeof plusPaymentMethodCaption !== 'undefined' && plusPaymentMethodCaption) {
-    plusPaymentMethodCaption.textContent = method === gpcValue
-      ? `GPC ${isGpcAutoMode ? '自动' : '手动'}订阅链路`
-      : method === gopayValue
-      ? 'GoPay 印尼订阅链路'
-      : method === noneValue
-      ? '已有 Plus，无需配置支付链路'
-      : method === paypalHostedValue
-      ? 'PayPal 无卡直绑链路'
-      : 'PayPal 订阅链路';
-  }
-  if (typeof plusPaymentMethodCaption !== 'undefined' && plusPaymentMethodCaption && method === gpcValue && gpcAutoModeBlocked) {
-    plusPaymentMethodCaption.textContent = 'GPC 自动订阅链路（需手动切换）';
-  }
-  [
-    typeof rowPlusPaymentMethod !== 'undefined' ? rowPlusPaymentMethod : null,
-  ].forEach((row) => {
-    if (!row) {
-      return;
-    }
-    row.style.display = enabled ? '' : 'none';
-  });
-  [
-    typeof rowPlusAccountAccessStrategy !== 'undefined' ? rowPlusAccountAccessStrategy : null,
-  ].forEach((row) => {
-    if (!row) {
-      return;
-    }
-    row.style.display = enabled ? '' : 'none';
-  });
-  if (typeof selectPlusAccountAccessStrategy !== 'undefined' && selectPlusAccountAccessStrategy) {
-    const availableStrategyUiValueSet = new Set(availablePlusAccountAccessStrategies.map(normalizeStrategyUiValue));
-    Array.from(selectPlusAccountAccessStrategy.options || []).forEach((option) => {
-      const optionValue = normalizeStrategyUiValue(option?.value || '');
-      const optionSupported = availableStrategyUiValueSet.has(optionValue);
-      option.hidden = enabled ? !optionSupported : false;
-      option.disabled = enabled ? !optionSupported : false;
-    });
-    selectPlusAccountAccessStrategy.dataset.requestedValue = capabilityState?.runtimeLocks?.accountContribution
-      ? requestedPlusAccountAccessStrategy
-      : effectivePlusAccountAccessStrategy;
-    selectPlusAccountAccessStrategy.value = normalizeStrategyUiValue(effectivePlusAccountAccessStrategy);
-    selectPlusAccountAccessStrategy.disabled = !enabled || !canEditPlusAccountAccessStrategy;
-    selectPlusAccountAccessStrategy.setAttribute('aria-disabled', String(selectPlusAccountAccessStrategy.disabled));
-  }
-  if (typeof plusAccountAccessStrategyCaption !== 'undefined' && plusAccountAccessStrategyCaption) {
-    if (!enabled) {
-      plusAccountAccessStrategyCaption.textContent = '当前来源仅支持 OAuth';
-    } else if (!canEditPlusAccountAccessStrategy) {
-      plusAccountAccessStrategyCaption.textContent = '当前来源仅支持 OAuth';
-    } else if (effectivePlusAccountAccessStrategy === sub2apiSessionStrategyValue) {
-      plusAccountAccessStrategyCaption.textContent = '复用当前 Plus 已登录会话，直接导入到 SUB2API';
-    } else if (effectivePlusAccountAccessStrategy === oauthStrategyValue) {
-      plusAccountAccessStrategyCaption.textContent = '通过 OAuth 回调创建 SUB2API 账号';
-    } else {
-      plusAccountAccessStrategyCaption.textContent = '当前来源仅支持 OAuth';
-    }
-  }
-  if (typeof plusAccountAccessStrategyCaption !== 'undefined' && plusAccountAccessStrategyCaption) {
-    if (!enabled || !canEditPlusAccountAccessStrategy) {
-      plusAccountAccessStrategyCaption.textContent = '当前来源仅支持 OAuth';
-    } else {
-      plusAccountAccessStrategyCaption.textContent = describePlusAccountAccessStrategy(
-        effectivePlusAccountAccessStrategy,
-        effectiveTargetId
-      );
-    }
-  }
-  if (typeof plusAccountAccessStrategyCaption !== 'undefined' && plusAccountAccessStrategyCaption) {
-    plusAccountAccessStrategyCaption.textContent = !enabled
-      ? '当前来源仅支持 OAuth'
-      : ((effectivePlusAccountAccessStrategy !== oauthStrategyValue || canEditPlusAccountAccessStrategy)
-        ? describePlusAccountAccessStrategy(
-        effectivePlusAccountAccessStrategy,
-        effectiveTargetId
-        )
-        : '当前来源仅支持 OAuth');
-  }
-  if (enabled && effectivePlusAccountAccessStrategy === sub2apiSessionStrategyValue) {
-    [
-      typeof rowSub2ApiUrl !== 'undefined' ? rowSub2ApiUrl : null,
-      typeof rowSub2ApiEmail !== 'undefined' ? rowSub2ApiEmail : null,
-      typeof rowSub2ApiPassword !== 'undefined' ? rowSub2ApiPassword : null,
-      typeof rowSub2ApiGroup !== 'undefined' ? rowSub2ApiGroup : null,
-      typeof rowSub2ApiAccountPriority !== 'undefined' ? rowSub2ApiAccountPriority : null,
-      typeof rowSub2ApiDefaultProxy !== 'undefined' ? rowSub2ApiDefaultProxy : null,
-    ].forEach((row) => {
-      if (row) row.style.display = '';
-    });
-  }
-  if (enabled && effectivePlusAccountAccessStrategy === cpaSessionStrategyValue) {
-    [
-      typeof rowVpsUrl !== 'undefined' ? rowVpsUrl : null,
-      typeof rowVpsPassword !== 'undefined' ? rowVpsPassword : null,
-      typeof rowLocalCpaStep9Mode !== 'undefined' ? rowLocalCpaStep9Mode : null,
-    ].forEach((row) => {
-      if (row) row.style.display = '';
-    });
-  }
-  [
-    typeof rowPayPalAccount !== 'undefined' ? rowPayPalAccount : null,
-  ].forEach((row) => {
-    if (!row) {
-      return;
-    }
-    row.style.display = enabled && selectedMethod === paypalValue ? '' : 'none';
-  });
-  [
-    typeof rowHostedCheckoutVerificationUrl !== 'undefined' ? rowHostedCheckoutVerificationUrl : null,
-    typeof rowHostedCheckoutPhone !== 'undefined' ? rowHostedCheckoutPhone : null,
-    typeof rowPlusHostedCheckoutOauthDelay !== 'undefined' ? rowPlusHostedCheckoutOauthDelay : null,
-  ].forEach((row) => {
-    if (!row) {
-      return;
-    }
-    row.style.display = hostedRowsVisible ? '' : 'none';
-  });
-  [
-    typeof rowGpcHelperApi !== 'undefined' ? rowGpcHelperApi : null,
-    typeof rowGpcHelperCardKey !== 'undefined' ? rowGpcHelperCardKey : null,
-  ].forEach((row) => {
-    if (!row) {
-      return;
-    }
-    row.style.display = gpcRowsVisible ? '' : 'none';
-  });
-  if (typeof rowGpcHelperPhoneMode !== 'undefined' && rowGpcHelperPhoneMode) {
-    rowGpcHelperPhoneMode.style.display = canShowGpcModeSelector ? '' : 'none';
-  }
-  if (typeof selectGpcHelperPhoneMode !== 'undefined' && selectGpcHelperPhoneMode) {
-    selectGpcHelperPhoneMode.value = gpcPhoneMode;
-  }
-  [
-    typeof rowGpcHelperCountryCode !== 'undefined' ? rowGpcHelperCountryCode : null,
-    typeof rowGpcHelperPhone !== 'undefined' ? rowGpcHelperPhone : null,
-    typeof rowGpcHelperOtpChannel !== 'undefined' ? rowGpcHelperOtpChannel : null,
-    typeof rowGpcHelperPin !== 'undefined' ? rowGpcHelperPin : null,
-  ].forEach((row) => {
-    if (!row) {
-      return;
-    }
-    row.style.display = gpcRowsVisible && !isGpcAutoMode ? '' : 'none';
-  });
-  if (typeof selectGpcHelperOtpChannel !== 'undefined' && selectGpcHelperOtpChannel) {
-    selectGpcHelperOtpChannel.value = gpcOtpChannel;
-  }
-  if (typeof inputGpcHelperLocalSmsEnabled !== 'undefined' && inputGpcHelperLocalSmsEnabled) {
-    inputGpcHelperLocalSmsEnabled.checked = effectiveLocalSmsEnabled;
-  }
-  if (typeof rowGpcHelperLocalSmsEnabled !== 'undefined' && rowGpcHelperLocalSmsEnabled) {
-    rowGpcHelperLocalSmsEnabled.style.display = localSmsControlsVisible ? '' : 'none';
-  }
-  if (typeof rowGpcHelperLocalSmsUrl !== 'undefined' && rowGpcHelperLocalSmsUrl) {
-    rowGpcHelperLocalSmsUrl.style.display = localSmsControlsVisible && effectiveLocalSmsEnabled ? '' : 'none';
-  }
-  if (typeof btnGpcCardKeyPurchase !== 'undefined' && btnGpcCardKeyPurchase) {
-    btnGpcCardKeyPurchase.style.display = gpcRowsVisible ? '' : 'none';
-  }
-  [
-    typeof rowGoPayCountryCode !== 'undefined' ? rowGoPayCountryCode : null,
-    typeof rowGoPayPhone !== 'undefined' ? rowGoPayPhone : null,
-    typeof rowGoPayOtp !== 'undefined' ? rowGoPayOtp : null,
-    typeof rowGoPayPin !== 'undefined' ? rowGoPayPin : null,
-  ].forEach((row) => {
-    if (!row) {
-      return;
-    }
-    row.style.display = enabled && selectedMethod === gopayValue ? '' : 'none';
-  });
 }
 
 function setSettingsCardLocked(locked) {
@@ -9633,369 +8401,6 @@ async function persistSignupPhoneInputForAction() {
     return;
   }
   await persistSignupPhoneInputValue({ final: true, silent: true });
-}
-
-function isGpcHelperCheckoutSelected() {
-  const gpcValue = typeof PLUS_PAYMENT_METHOD_GPC_HELPER !== 'undefined' ? PLUS_PAYMENT_METHOD_GPC_HELPER : 'gpc-helper';
-  const plusEnabled = typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
-    ? Boolean(inputPlusModeEnabled.checked)
-    : Boolean(latestState?.plusModeEnabled);
-  return plusEnabled && getSelectedPlusPaymentMethod() === gpcValue;
-}
-
-function getSelectedGpcHelperPhoneMode() {
-  return normalizeGpcHelperPhoneModeValue(
-    typeof selectGpcHelperPhoneMode !== 'undefined' && selectGpcHelperPhoneMode
-      ? selectGpcHelperPhoneMode.value
-      : (latestState?.gopayHelperPhoneMode || GPC_HELPER_PHONE_MODE_MANUAL)
-  );
-}
-
-async function showGpcStartBlockedDialog(message) {
-  await openConfirmModal({
-    title: 'GPC 任务无法开启',
-    message,
-    confirmLabel: '知道了',
-  });
-}
-
-async function refreshGpcBalanceForStart() {
-  const response = await chrome.runtime.sendMessage({
-    type: 'REFRESH_GPC_CARD_BALANCE',
-    source: 'sidepanel',
-    payload: {
-      gopayHelperApiUrl: inputGpcHelperApi?.value || DEFAULT_GPC_HELPER_API_URL,
-      gopayHelperApiKey: inputGpcHelperCardKey?.value || latestState?.gopayHelperApiKey || '',
-      reason: 'before_start',
-    },
-  });
-  if (response?.error) {
-    throw new Error(response.error);
-  }
-  const nextState = {
-    gopayHelperBalance: response?.balance || latestState?.gopayHelperBalance || '',
-    gopayHelperBalancePayload: response?.data || response?.payload?.data || response?.payload || latestState?.gopayHelperBalancePayload || null,
-    gopayHelperBalanceUpdatedAt: response?.updatedAt || Date.now(),
-    gopayHelperBalanceError: '',
-    gopayHelperRemainingUses: getGpcBalanceRemainingUsesFromResponse(response) ?? 0,
-    gopayHelperAutoModeEnabled: getGpcAutoModeEnabledFromResponse(response),
-    gopayHelperApiKeyStatus: response?.apiKeyStatus || response?.data?.status || response?.payload?.data?.status || response?.payload?.status || '',
-  };
-  syncLatestState(nextState);
-  if (displayGpcHelperBalance && nextState.gopayHelperBalance) {
-    displayGpcHelperBalance.textContent = nextState.gopayHelperBalance;
-  }
-  updatePlusModeUI();
-  return nextState;
-}
-
-async function ensureGpcApiKeyReadyForStart(options = {}) {
-  if (!isGpcHelperCheckoutSelected()) {
-    return true;
-  }
-  const selectedMode = getSelectedGpcHelperPhoneMode();
-  let balanceState;
-  try {
-    balanceState = await refreshGpcBalanceForStart();
-  } catch (error) {
-    await showGpcStartBlockedDialog(`API Key 余额校验失败：${error?.message || '未知错误'}。请先确认 API Key 是否正确。`);
-    return false;
-  }
-
-  const remainingUses = normalizeGpcRemainingUsesValue(balanceState.gopayHelperRemainingUses);
-  const apiKeyStatus = String(balanceState.gopayHelperApiKeyStatus || '').trim().toLowerCase();
-  if (apiKeyStatus && apiKeyStatus !== 'active') {
-    await showGpcStartBlockedDialog(`当前 GPC API Key 状态为 ${balanceState.gopayHelperApiKeyStatus}，不能开启任务。`);
-    return false;
-  }
-  if (remainingUses !== null && remainingUses <= 0) {
-    await showGpcStartBlockedDialog('当前 GPC API Key 剩余次数不足，不能开启任务。');
-    return false;
-  }
-
-  if (selectedMode === GPC_HELPER_PHONE_MODE_AUTO && isGpcAutoModePermissionDenied(balanceState)) {
-    await showGpcStartBlockedDialog('当前 GPC API Key 未开通自动模式，已保留你的当前选择。如需继续，请由你手动切换到手动模式后再开启任务。');
-    return false;
-  }
-
-  if (options?.notify) {
-    showToast('GPC API Key 余额和权限校验通过。', 'success', 1800);
-  }
-  return true;
-}
-
-async function openPlusManualConfirmationDialog(options = {}) {
-  const method = String(options.method || '').trim().toLowerCase();
-  const gopayValue = typeof PLUS_PAYMENT_METHOD_GOPAY !== 'undefined' ? PLUS_PAYMENT_METHOD_GOPAY : 'gopay';
-  const activeFlowId = String(latestState?.activeFlowId || latestState?.flowId || 'openai').trim().toLowerCase();
-  const normalizeTargetIdForFlowSafe = typeof normalizeTargetIdForFlow === 'function'
-    ? normalizeTargetIdForFlow
-    : ((flowId, targetId = '', fallback = '') => {
-      const normalizedFlowId = String(flowId || '').trim().toLowerCase() || 'openai';
-      if (normalizedFlowId === 'openai') {
-        const normalizedTargetId = String(targetId || fallback || '').trim().toLowerCase();
-        return normalizedTargetId === 'sub2api' || normalizedTargetId === 'codex2api' ? normalizedTargetId : 'cpa';
-      }
-      return 'cpa';
-    });
-  const getDefaultTargetIdForFlowSafe = typeof getDefaultTargetIdForFlow === 'function'
-    ? getDefaultTargetIdForFlow
-    : (() => 'cpa');
-  const normalizePlusStrategyTargetIdSafe = typeof normalizePlusStrategyTargetId === 'function'
-    ? normalizePlusStrategyTargetId
-    : ((value = '') => {
-      const normalized = String(value || '').trim().toLowerCase();
-      if (normalized === 'sub2api' || normalized === 'codex2api') {
-        return normalized;
-      }
-      return 'cpa';
-    });
-  const targetId = normalizePlusStrategyTargetIdSafe(
-    typeof getSelectedTargetIdForState === 'function'
-      ? getSelectedTargetIdForState(latestState, activeFlowId)
-      : normalizeTargetIdForFlowSafe(
-        activeFlowId,
-        latestState?.targetId || '',
-        getDefaultTargetIdForFlowSafe(activeFlowId)
-      )
-  );
-  const signupMethod = String(latestState?.resolvedSignupMethod || latestState?.signupMethod || 'email').trim().toLowerCase();
-  const plusModeEnabled = latestState?.plusModeEnabled === undefined ? true : Boolean(latestState.plusModeEnabled);
-  const plusAccountAccessStrategy = String(latestState?.plusAccountAccessStrategy || 'oauth').trim().toLowerCase();
-  const useSub2ApiSessionImport = plusModeEnabled
-    && activeFlowId === 'openai'
-    && targetId === 'sub2api'
-    && signupMethod === 'email'
-    && plusAccountAccessStrategy === 'sub2api_codex_session';
-  const continuationActionLabel = useSub2ApiSessionImport
-    ? '导入当前 ChatGPT 会话到 SUB2API'
-    : 'OAuth 登录';
-  if (method === 'gopay-otp') {
-    if (!sharedFormDialog?.open) {
-      return null;
-    }
-    const result = await sharedFormDialog.open({
-      title: String(options.title || '').trim() || 'GPC OTP 验证',
-      message: String(options.message || '').trim() || '请在WhatsApp里面获取验证码（耐心等待三十秒左右）',
-      fields: [
-        {
-          key: 'otp',
-          label: 'OTP',
-          type: 'text',
-          placeholder: '请输入 OTP 验证码',
-          inputMode: 'numeric',
-          autocomplete: 'one-time-code',
-          required: true,
-          requiredMessage: '请输入 OTP 验证码。',
-          normalize: (value) => String(value || '').trim().replace(/[^\d]/g, ''),
-          validate: (value) => {
-            const normalized = String(value || '').trim().replace(/[^\d]/g, '');
-            if (!normalized) return '请输入 OTP 验证码。';
-            if (!/^\d{6}$/.test(normalized)) return 'OTP 必须是 6 位数字，请检查。';
-            return '';
-          },
-        },
-      ],
-      confirmLabel: '提交 OTP',
-    });
-    return result ? { action: 'confirm', otp: String(result.otp || '').trim().replace(/[^\d]/g, '') } : { action: 'cancel' };
-  }
-  const title = String(options.title || '').trim() || (method === gopayValue ? 'GoPay 订阅确认' : '手动确认');
-  const message = String(options.message || '').trim()
-    || (method === gopayValue
-      ? '请在当前订阅页中手动完成 GoPay 订阅，完成后点击“我已完成订阅”继续。'
-      : '请先在页面中完成当前手动操作，完成后点击确认继续。');
-  return openActionModal({
-    title,
-    message,
-    actions: [
-      { id: 'cancel', label: '取消等待', variant: 'btn-ghost' },
-      { id: 'confirm', label: '我已完成订阅', variant: 'btn-primary' },
-    ],
-    alert: method === gopayValue
-      ? { text: `确认后流程会直接继续到 Plus 模式后续的${continuationActionLabel}。`, tone: 'info' }
-      : null,
-  });
-}
-
-async function syncPlusManualConfirmationDialog() {
-  const gopayValue = typeof PLUS_PAYMENT_METHOD_GOPAY !== 'undefined' ? PLUS_PAYMENT_METHOD_GOPAY : 'gopay';
-  const requestId = String(latestState?.plusManualConfirmationRequestId || '').trim();
-  const pending = Boolean(latestState?.plusManualConfirmationPending);
-  if (!pending || !requestId || plusManualConfirmationDialogInFlight || activePlusManualConfirmationRequestId === requestId) {
-    return;
-  }
-
-  const step = Number(latestState?.plusManualConfirmationStep) || 0;
-  const method = String(latestState?.plusManualConfirmationMethod || '').trim().toLowerCase();
-  const activeFlowId = String(latestState?.activeFlowId || latestState?.flowId || 'openai').trim().toLowerCase();
-  const normalizeTargetIdForFlowSafe = typeof normalizeTargetIdForFlow === 'function'
-    ? normalizeTargetIdForFlow
-    : ((flowId, targetId = '', fallback = '') => {
-      const normalizedFlowId = String(flowId || '').trim().toLowerCase() || 'openai';
-      if (normalizedFlowId === 'openai') {
-        const normalizedTargetId = String(targetId || fallback || '').trim().toLowerCase();
-        return normalizedTargetId === 'sub2api' || normalizedTargetId === 'codex2api' ? normalizedTargetId : 'cpa';
-      }
-      return 'cpa';
-    });
-  const getDefaultTargetIdForFlowSafe = typeof getDefaultTargetIdForFlow === 'function'
-    ? getDefaultTargetIdForFlow
-    : (() => 'cpa');
-  const normalizePlusStrategyTargetIdSafe = typeof normalizePlusStrategyTargetId === 'function'
-    ? normalizePlusStrategyTargetId
-    : ((value = '') => {
-      const normalized = String(value || '').trim().toLowerCase();
-      if (normalized === 'sub2api' || normalized === 'codex2api') {
-        return normalized;
-      }
-      return 'cpa';
-    });
-  const targetId = normalizePlusStrategyTargetIdSafe(
-    typeof getSelectedTargetIdForState === 'function'
-      ? getSelectedTargetIdForState(latestState, activeFlowId)
-      : normalizeTargetIdForFlowSafe(
-        activeFlowId,
-        latestState?.targetId || '',
-        getDefaultTargetIdForFlowSafe(activeFlowId)
-      )
-  );
-  const signupMethod = String(latestState?.resolvedSignupMethod || latestState?.signupMethod || 'email').trim().toLowerCase();
-  const plusModeEnabled = latestState?.plusModeEnabled === undefined ? true : Boolean(latestState.plusModeEnabled);
-  const plusAccountAccessStrategy = String(latestState?.plusAccountAccessStrategy || 'oauth').trim().toLowerCase();
-  const useSub2ApiSessionImport = plusModeEnabled
-    && activeFlowId === 'openai'
-    && targetId === 'sub2api'
-    && signupMethod === 'email'
-    && plusAccountAccessStrategy === 'sub2api_codex_session';
-  const continuationActionLabel = useSub2ApiSessionImport
-    ? '导入当前 ChatGPT 会话到 SUB2API'
-    : 'OAuth 登录';
-  const title = latestState?.plusManualConfirmationTitle;
-  const message = latestState?.plusManualConfirmationMessage;
-  activePlusManualConfirmationRequestId = requestId;
-  plusManualConfirmationDialogInFlight = true;
-  let shouldReopenDialog = false;
-
-  try {
-    const choice = await openPlusManualConfirmationDialog({
-      method,
-      title,
-      message,
-    });
-    const currentRequestId = String(latestState?.plusManualConfirmationRequestId || '').trim();
-    const stillPending = Boolean(latestState?.plusManualConfirmationPending);
-    if (!stillPending || currentRequestId !== requestId) {
-      return;
-    }
-    if (choice == null) {
-      shouldReopenDialog = true;
-      showToast('当前订阅确认仍在等待中，将重新弹出确认窗口。', 'info', 1800);
-      return;
-    }
-
-    const confirmed = choice === 'confirm' || choice?.action === 'confirm';
-    const response = await chrome.runtime.sendMessage({
-      type: 'RESOLVE_PLUS_MANUAL_CONFIRMATION',
-      source: 'sidepanel',
-      payload: {
-        step,
-        requestId,
-        confirmed,
-        ...(choice?.otp ? { otp: choice.otp } : {}),
-      },
-    });
-    if (response?.error) {
-      throw new Error(response.error);
-    }
-    if (confirmed) {
-      showToast(
-        method === 'gopay-otp'
-          ? 'GPC OTP 已提交，正在继续验证...'
-          : (method === gopayValue ? `GoPay 订阅已确认，正在继续${continuationActionLabel}...` : '已确认，流程继续执行中...'),
-        'info',
-        2200
-      );
-    } else {
-      showToast(
-        method === 'gopay-otp'
-          ? '已取消 GPC OTP 输入。'
-          : (method === gopayValue ? '已取消 GoPay 订阅等待。' : '已取消当前手动确认。'),
-        'warn',
-        2200
-      );
-    }
-  } catch (error) {
-    showToast(error?.message || String(error || '未知错误'), 'error');
-  } finally {
-    if (activePlusManualConfirmationRequestId === requestId) {
-      activePlusManualConfirmationRequestId = '';
-    }
-    plusManualConfirmationDialogInFlight = false;
-    if (
-      shouldReopenDialog
-      && latestState?.plusManualConfirmationPending
-      && String(latestState?.plusManualConfirmationRequestId || '').trim() === requestId
-    ) {
-      setTimeout(() => {
-        void syncPlusManualConfirmationDialog();
-      }, 0);
-    }
-  }
-}
-async function openPlusManualConfirmationDialog(options = {}) {
-  const method = String(options.method || '').trim().toLowerCase();
-  const gopayValue = typeof PLUS_PAYMENT_METHOD_GOPAY !== 'undefined' ? PLUS_PAYMENT_METHOD_GOPAY : 'gopay';
-  const continuationActionLabel = resolvePlusManualContinuationActionLabelFromState(latestState);
-  if (method === 'gopay-otp') {
-    if (!sharedFormDialog?.open) {
-      return null;
-    }
-    const result = await sharedFormDialog.open({
-      title: String(options.title || '').trim() || 'GPC OTP 验证',
-      message: String(options.message || '').trim() || '请在WhatsApp里面获取验证码（耐心等待三十秒左右）',
-      fields: [
-        {
-          key: 'otp',
-          label: 'OTP',
-          type: 'text',
-          placeholder: '请输入 OTP 验证码',
-          inputMode: 'numeric',
-          autocomplete: 'one-time-code',
-          required: true,
-          requiredMessage: '请输入 OTP 验证码。',
-          normalize: (value) => String(value || '').trim().replace(/[^\d]/g, ''),
-          validate: (value) => {
-            const normalized = String(value || '').trim().replace(/[^\d]/g, '');
-            if (!normalized) return '请输入 OTP 验证码。';
-            if (!/^\d{6}$/.test(normalized)) return 'OTP 必须是 6 位数字，请检查。';
-            return '';
-          },
-        },
-      ],
-      confirmLabel: '提交 OTP',
-    });
-    return result
-      ? { action: 'confirm', otp: String(result.otp || '').trim().replace(/[^\d]/g, '') }
-      : { action: 'cancel' };
-  }
-
-  const title = String(options.title || '').trim() || (method === gopayValue ? 'GoPay subscription confirmation' : 'Manual confirmation');
-  const message = String(options.message || '').trim()
-    || (method === gopayValue
-      ? 'Complete the GoPay subscription on the current page, then continue.'
-      : 'Finish the current manual action on the page, then continue.');
-  return openActionModal({
-    title,
-    message,
-    actions: [
-      { id: 'cancel', label: 'Cancel', variant: 'btn-ghost' },
-      { id: 'confirm', label: 'Continue', variant: 'btn-primary' },
-    ],
-    alert: method === gopayValue
-      ? { text: `After confirmation, the Plus flow will continue with ${continuationActionLabel}.`, tone: 'info' }
-      : null,
-  });
 }
 
 async function clearRegistrationEmail(options = {}) {
@@ -10302,21 +8707,8 @@ function renderStepsList() {
   updateButtonStates();
 }
 
-function syncStepDefinitionsForMode(plusModeEnabled = false, plusPaymentMethodOrOptions = {}, maybeOptions = {}) {
+function syncStepDefinitionsForMode(options = {}) {
   const defaultFlowId = typeof DEFAULT_ACTIVE_FLOW_ID !== 'undefined' ? DEFAULT_ACTIVE_FLOW_ID : 'openai';
-  const defaultStrategy = typeof DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY !== 'undefined' ? DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY : 'oauth';
-  const nextPlusModeEnabled = Boolean(plusModeEnabled);
-  const options = typeof plusPaymentMethodOrOptions === 'string'
-    ? maybeOptions
-    : (plusPaymentMethodOrOptions || {});
-  const rawPaymentMethod = typeof plusPaymentMethodOrOptions === 'string'
-    ? plusPaymentMethodOrOptions
-    : (options.plusPaymentMethod || getSelectedPlusPaymentMethod(latestState));
-  const nextPlusAccountAccessStrategy = normalizePlusAccountAccessStrategy(
-    options.plusAccountAccessStrategy
-      || currentPlusAccountAccessStrategy
-      || defaultStrategy
-  );
   const nextSignupMethod = normalizeSignupMethod(options.signupMethod || currentSignupMethod || DEFAULT_SIGNUP_METHOD);
   const nextPhoneVerificationEnabled = Boolean(options.phoneVerificationEnabled ?? (typeof inputPhoneVerificationEnabled !== 'undefined' && inputPhoneVerificationEnabled
     ? inputPhoneVerificationEnabled.checked
@@ -10331,7 +8723,6 @@ function syncStepDefinitionsForMode(plusModeEnabled = false, plusPaymentMethodOr
     options.accountContributionEnabled
       ?? (typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false)
   );
-  const nextPaymentMethod = normalizePlusPaymentMethod(rawPaymentMethod);
   const nextActiveFlowId = String(
     options.activeFlowId
     || (typeof latestState !== 'undefined' ? latestState?.activeFlowId : '')
@@ -10340,36 +8731,18 @@ function syncStepDefinitionsForMode(plusModeEnabled = false, plusPaymentMethodOr
   const currentFlowId = typeof currentStepDefinitionFlowId !== 'undefined'
     ? currentStepDefinitionFlowId
     : defaultFlowId;
-  const rootScope = typeof window !== 'undefined' ? window : globalThis;
-  const currentPaymentStep = stepDefinitions.find((step) => step.key === 'paypal-approve');
-  const nextPaymentTitle = rootScope.MultiPageStepDefinitions?.getPlusPaymentStepTitle?.({
-    activeFlowId: nextActiveFlowId,
-    plusModeEnabled: nextPlusModeEnabled,
-    plusPaymentMethod: nextPaymentMethod,
-    plusAccountAccessStrategy: nextPlusAccountAccessStrategy,
-    signupMethod: nextSignupMethod,
-    phoneVerificationEnabled: nextPhoneVerificationEnabled,
-    phoneSignupReloginAfterBindEmailEnabled: nextPhoneSignupReloginAfterBindEmailEnabled,
-  });
-  const paymentTitleChanged = Boolean(nextPlusModeEnabled && currentPaymentStep && nextPaymentTitle && currentPaymentStep.title !== nextPaymentTitle);
   const shouldRender = Boolean(options.render)
-    || nextPlusModeEnabled !== currentPlusModeEnabled
-    || nextPaymentMethod !== currentPlusPaymentMethod
-    || nextPlusAccountAccessStrategy !== currentPlusAccountAccessStrategy
     || nextSignupMethod !== currentSignupMethod
     || nextPhoneVerificationEnabled !== currentPhoneVerificationEnabled
     || nextPhoneSignupReloginAfterBindEmailEnabled !== currentPhoneSignupReloginAfterBindEmailEnabled
     || nextAccountContributionEnabled !== Boolean(typeof latestState !== 'undefined' ? latestState?.accountContributionEnabled : false)
-    || nextActiveFlowId !== currentFlowId
-    || paymentTitleChanged;
+    || nextActiveFlowId !== currentFlowId;
   if (!shouldRender) {
     return;
   }
 
-  rebuildStepDefinitionState(nextPlusModeEnabled, {
+  rebuildStepDefinitionState({
     activeFlowId: nextActiveFlowId,
-    plusPaymentMethod: nextPaymentMethod,
-    plusAccountAccessStrategy: nextPlusAccountAccessStrategy,
     signupMethod: nextSignupMethod,
     phoneVerificationEnabled: nextPhoneVerificationEnabled,
     phoneSignupReloginAfterBindEmailEnabled: nextPhoneSignupReloginAfterBindEmailEnabled,
@@ -10391,13 +8764,11 @@ function syncStepDefinitionsFromUiState(stateOverrides = {}) {
       state: nextState,
     })
     : {
-      plusModeEnabled: Boolean(nextState?.plusModeEnabled),
       signupMethod: normalizeSignupMethod(nextState?.signupMethod || DEFAULT_SIGNUP_METHOD),
+      phoneVerificationEnabled: Boolean(nextState?.phoneVerificationEnabled),
     };
-  syncStepDefinitionsForMode(stepDefinitionState.plusModeEnabled, {
+  syncStepDefinitionsForMode({
     activeFlowId: nextState?.activeFlowId || nextState?.flowId || DEFAULT_ACTIVE_FLOW_ID,
-    plusPaymentMethod: getSelectedPlusPaymentMethod(nextState),
-    plusAccountAccessStrategy: stepDefinitionState.plusAccountAccessStrategy,
     signupMethod: stepDefinitionState.signupMethod,
     phoneVerificationEnabled: Boolean(stepDefinitionState.phoneVerificationEnabled),
     phoneSignupReloginAfterBindEmailEnabled: Boolean(nextState?.phoneSignupReloginAfterBindEmailEnabled),
@@ -10417,12 +8788,10 @@ function applySettingsState(state) {
         signupMethod: state?.signupMethod,
       })
       : {
-        plusModeEnabled: Boolean(state?.plusModeEnabled),
         signupMethod: normalizeSignupMethod(state?.signupMethod || DEFAULT_SIGNUP_METHOD),
       };
-    syncStepDefinitionsForMode(stepDefinitionState.plusModeEnabled, {
+    syncStepDefinitionsForMode({
       activeFlowId: state?.activeFlowId || state?.flowId,
-      plusPaymentMethod: state?.plusPaymentMethod,
       signupMethod: stepDefinitionState.signupMethod,
       phoneVerificationEnabled: Boolean(stepDefinitionState.phoneVerificationEnabled),
       phoneSignupReloginAfterBindEmailEnabled: Boolean(state?.phoneSignupReloginAfterBindEmailEnabled),
@@ -10451,102 +8820,6 @@ function applySettingsState(state) {
     syncSignupPhoneInputFromState(state);
   }
   syncPasswordField(state || {});
-  if (typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled) {
-    inputPlusModeEnabled.checked = Boolean(state?.plusModeEnabled);
-  }
-  if (typeof selectPlusPaymentMethod !== 'undefined' && selectPlusPaymentMethod) {
-    selectPlusPaymentMethod.value = normalizePlusPaymentMethod(state?.plusPaymentMethod);
-  }
-  currentPlusAccountAccessStrategy = normalizePlusAccountAccessStrategy(
-    state?.plusAccountAccessStrategy || DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY
-  );
-  if (typeof selectPlusAccountAccessStrategy !== 'undefined' && selectPlusAccountAccessStrategy) {
-    selectPlusAccountAccessStrategy.dataset.requestedValue = currentPlusAccountAccessStrategy;
-    selectPlusAccountAccessStrategy.value = normalizePlusAccountAccessStrategyUiValue(currentPlusAccountAccessStrategy);
-  }
-  if (typeof inputGpcHelperApi !== 'undefined' && inputGpcHelperApi) {
-    const defaultGpcHelperApiUrl = typeof DEFAULT_GPC_HELPER_API_URL !== 'undefined'
-      ? DEFAULT_GPC_HELPER_API_URL
-      : 'https://gpc.qlhazycoder.top';
-    inputGpcHelperApi.value = `${defaultGpcHelperApiUrl.replace(/\/+$/g, '')}/`;
-  }
-  if (typeof inputGpcHelperCardKey !== 'undefined' && inputGpcHelperCardKey) {
-    inputGpcHelperCardKey.value = state?.gopayHelperApiKey || state?.gopayHelperCardKey || '';
-  }
-  if (typeof selectGpcHelperPhoneMode !== 'undefined' && selectGpcHelperPhoneMode) {
-    selectGpcHelperPhoneMode.value = normalizeGpcHelperPhoneModeValue(state?.gopayHelperPhoneMode || 'manual');
-  }
-  if (typeof selectGpcHelperCountryCode !== 'undefined' && selectGpcHelperCountryCode) {
-    const normalizedCountryCode = window.GoPayUtils?.normalizeGoPayCountryCode
-      ? window.GoPayUtils.normalizeGoPayCountryCode(state?.gopayHelperCountryCode)
-      : String(state?.gopayHelperCountryCode || '+86').trim();
-    const hasOption = Array.from(selectGpcHelperCountryCode.options || [])
-      .some((option) => option.value === normalizedCountryCode);
-    if (!hasOption && normalizedCountryCode) {
-      const option = document.createElement('option');
-      option.value = normalizedCountryCode;
-      option.textContent = `自定义 ${normalizedCountryCode}`;
-      selectGpcHelperCountryCode.appendChild(option);
-    }
-    selectGpcHelperCountryCode.value = normalizedCountryCode || '+86';
-  }
-  if (typeof inputGpcHelperPhone !== 'undefined' && inputGpcHelperPhone) {
-    inputGpcHelperPhone.value = state?.gopayHelperPhoneNumber || '';
-  }
-  if (typeof selectGpcHelperOtpChannel !== 'undefined' && selectGpcHelperOtpChannel) {
-    selectGpcHelperOtpChannel.value = normalizeGpcOtpChannelValue(state?.gopayHelperOtpChannel || 'whatsapp');
-  }
-  if (typeof inputGpcHelperLocalSmsEnabled !== 'undefined' && inputGpcHelperLocalSmsEnabled) {
-    inputGpcHelperLocalSmsEnabled.checked = Boolean(state?.gopayHelperLocalSmsHelperEnabled);
-  }
-  if (typeof inputGpcHelperLocalSmsUrl !== 'undefined' && inputGpcHelperLocalSmsUrl) {
-    inputGpcHelperLocalSmsUrl.value = normalizeGpcLocalSmsHelperBaseUrlValue(state?.gopayHelperLocalSmsHelperUrl || '');
-  }
-  if (typeof inputGpcHelperPin !== 'undefined' && inputGpcHelperPin) {
-    inputGpcHelperPin.value = state?.gopayHelperPin || '';
-  }
-  if (typeof displayGpcHelperBalance !== 'undefined' && displayGpcHelperBalance) {
-    const balanceText = String(state?.gopayHelperBalance || '').trim();
-    const balanceError = String(state?.gopayHelperBalanceError || '').trim();
-    const balanceAt = Number(state?.gopayHelperBalanceUpdatedAt) || 0;
-    displayGpcHelperBalance.textContent = balanceError
-      ? `余额查询失败：${balanceError}`
-      : (balanceText || (balanceAt ? '余额已更新' : '余额未获取'));
-  }
-  if (typeof selectGoPayCountryCode !== 'undefined' && selectGoPayCountryCode) {
-    const normalizedGoPayCountryCode = window.GoPayUtils?.normalizeGoPayCountryCode
-      ? window.GoPayUtils.normalizeGoPayCountryCode(state?.gopayCountryCode)
-      : String(state?.gopayCountryCode || '+86').trim();
-    const hasOption = Array.from(selectGoPayCountryCode.options || [])
-      .some((option) => option.value === normalizedGoPayCountryCode);
-    if (!hasOption && normalizedGoPayCountryCode) {
-      const option = document.createElement('option');
-      option.value = normalizedGoPayCountryCode;
-      option.textContent = `自定义 ${normalizedGoPayCountryCode}`;
-      selectGoPayCountryCode.appendChild(option);
-    }
-    selectGoPayCountryCode.value = normalizedGoPayCountryCode || '+86';
-  }
-  if (typeof inputGoPayPhone !== 'undefined' && inputGoPayPhone) {
-    inputGoPayPhone.value = state?.gopayPhone || '';
-  }
-  if (typeof inputGoPayOtp !== 'undefined' && inputGoPayOtp) {
-    inputGoPayOtp.value = state?.gopayOtp || '';
-  }
-  if (typeof inputGoPayPin !== 'undefined' && inputGoPayPin) {
-    inputGoPayPin.value = state?.gopayPin || '';
-  }
-  if (typeof inputHostedCheckoutVerificationUrl !== 'undefined' && inputHostedCheckoutVerificationUrl) {
-    inputHostedCheckoutVerificationUrl.value = String(state?.hostedCheckoutVerificationUrl || '').trim();
-  }
-  if (typeof inputHostedCheckoutPhone !== 'undefined' && inputHostedCheckoutPhone) {
-    inputHostedCheckoutPhone.value = String(state?.hostedCheckoutPhoneNumber || '').trim();
-  }
-  if (typeof inputPlusHostedCheckoutOauthDelaySeconds !== 'undefined' && inputPlusHostedCheckoutOauthDelaySeconds) {
-    inputPlusHostedCheckoutOauthDelaySeconds.value = String(
-      normalizePlusHostedCheckoutOauthDelaySeconds(state?.plusHostedCheckoutOauthDelaySeconds)
-    );
-  }
   inputVpsUrl.value = state?.vpsUrl || '';
   inputVpsPassword.value = state?.vpsPassword || '';
   setLocalCpaStep9Mode(state?.localCpaStep9Mode);
@@ -10844,12 +9117,6 @@ function applySettingsState(state) {
   updateFallbackThreadIntervalInputState();
   updateAccountRunHistorySettingsUI();
   updatePhoneVerificationSettingsUI();
-  if (typeof renderPayPalAccounts === 'function') {
-    renderPayPalAccounts();
-  }
-  if (typeof updatePlusModeUI === 'function') {
-    updatePlusModeUI();
-  }
   updatePanelModeUI();
   updateMailProviderUI();
   if (typeof queueCustomEmailPoolRefresh === 'function') {
@@ -10861,9 +9128,6 @@ function applySettingsState(state) {
     }
   }
   updateButtonStates();
-  if (typeof syncPlusManualConfirmationDialog === 'function') {
-    void syncPlusManualConfirmationDialog();
-  }
 }
 
 async function restoreState() {
@@ -11780,56 +10044,6 @@ function getCustomVerificationPromptCopy(step) {
   };
 }
 
-function normalizeGoPayOtpInputValue(value = '') {
-  return window.GoPayUtils?.normalizeGoPayOtp
-    ? window.GoPayUtils.normalizeGoPayOtp(value)
-    : String(value || '').trim().replace(/[^\d]/g, '');
-}
-
-async function openGoPayOtpInputDialog(payload = {}) {
-  if (!sharedFormDialog?.open) {
-    throw new Error('验证码输入弹窗未加载，请刷新扩展后重试。');
-  }
-
-  const initialCode = normalizeGoPayOtpInputValue(payload.code || inputGoPayOtp?.value || latestState?.gopayOtp || '');
-  const result = await sharedFormDialog.open({
-    title: '输入 GoPay 验证码',
-    message: '请把当前 GoPay 页面收到的验证码填到这里，确认后插件会继续填写验证码并进入 PIN 步骤。',
-    confirmLabel: '提交验证码',
-    confirmVariant: 'btn-primary',
-    fields: [
-      {
-        key: 'code',
-        label: '验证码',
-        type: 'text',
-        required: true,
-        requiredMessage: '请输入 GoPay 验证码。',
-        placeholder: '请输入数字验证码',
-        inputMode: 'numeric',
-        autocomplete: 'one-time-code',
-        value: initialCode,
-        validate: (value) => {
-          const normalized = normalizeGoPayOtpInputValue(value);
-          if (!normalized) return '请输入 GoPay 验证码。';
-          if (normalized.length < 4) return 'GoPay 验证码长度过短，请检查。';
-          return '';
-        },
-      },
-    ],
-  });
-  const code = normalizeGoPayOtpInputValue(result?.code || '');
-  if (!code) {
-    return { cancelled: true, code: '' };
-  }
-  if (inputGoPayOtp) {
-    inputGoPayOtp.value = code;
-  }
-  syncLatestState({ gopayOtp: code });
-  markSettingsDirty(true);
-  saveSettings({ silent: true }).catch(() => {});
-  return { code };
-}
-
 async function openCustomVerificationConfirmDialog(step) {
   const promptCopy = getCustomVerificationPromptCopy(step);
   if (step === 8 || step === 11) {
@@ -11883,15 +10097,6 @@ function getCurrentMail2925Account(state = latestState) {
 
 function getCurrentMail2925Email(state = latestState) {
   return String(getCurrentMail2925Account(state)?.email || '').trim();
-}
-
-function getPayPalAccounts(state = latestState) {
-  return Array.isArray(state?.paypalAccounts) ? state.paypalAccounts : [];
-}
-
-function getCurrentPayPalAccount(state = latestState) {
-  const currentId = String(state?.currentPayPalAccountId || '').trim();
-  return getPayPalAccounts(state).find((account) => account.id === currentId) || null;
 }
 
 function syncMail2925BaseEmailFromCurrentAccount(state = latestState, options = {}) {
@@ -12637,7 +10842,7 @@ async function handleAddSub2ApiGroup() {
         key: 'groupName',
         label: '分组',
         type: 'text',
-        placeholder: '例如 openai-plus',
+        placeholder: '例如 codex',
         autocomplete: 'off',
         required: true,
         requiredMessage: '请先填写 SUB2API 分组名称。',
@@ -12739,9 +10944,6 @@ function updatePanelModeUI() {
     : [];
   if (typeof applyFlowSettingsGroupVisibility === 'function') {
     applyFlowSettingsGroupVisibility(visibleGroupIds);
-  }
-  if (typeof updatePlusModeUI === 'function') {
-    updatePlusModeUI();
   }
   if (typeof updatePhoneVerificationSettingsUI === 'function') {
     updatePhoneVerificationSettingsUI();
@@ -13354,43 +11556,6 @@ const bindHotmailEvents = hotmailManager?.bindHotmailEvents
   || (() => { });
 bindHotmailEvents();
 
-const payPalManager = window.SidepanelPayPalManager?.createPayPalManager({
-  state: {
-    getLatestState: () => latestState,
-    syncLatestState,
-  },
-  dom: {
-    btnAddPayPalAccount,
-    btnPayPalAccountMenu,
-    payPalAccountCurrent,
-    payPalAccountMenu,
-    payPalAccountPickerRoot,
-    selectPayPalAccount,
-  },
-  helpers: {
-    editableListPicker: editableListPickerModule,
-    escapeHtml,
-    getPayPalAccounts,
-    openFormDialog: (options) => {
-      if (!sharedFormDialog?.open) {
-        throw new Error('表单弹窗能力未加载，请刷新扩展后重试。');
-      }
-      return sharedFormDialog.open(options);
-    },
-    showToast,
-  },
-  runtime: {
-    sendMessage: (message) => chrome.runtime.sendMessage(message),
-  },
-  paypalUtils: {
-    upsertPayPalAccountInList,
-  },
-});
-const renderPayPalAccounts = payPalManager?.renderPayPalAccounts
-  || (() => { });
-const bindPayPalEvents = payPalManager?.bindPayPalEvents
-  || (() => { });
-bindPayPalEvents();
 
 const mail2925Manager = window.SidepanelMail2925Manager?.createMail2925Manager({
   state: {
@@ -13916,10 +12081,6 @@ stepsList?.addEventListener('click', async (event) => {
       return;
     }
     await persistCurrentSettingsForAction();
-    const gpcCreateStep = getStepIdByKeyForCurrentMode('plus-checkout-create') || 6;
-    if (step === gpcCreateStep && !(await ensureGpcApiKeyReadyForStart())) {
-      return;
-    }
     const shouldPersistSharedPassword = nodeId === 'fill-password';
     if (shouldPersistSharedPassword && inputPassword.value !== (latestState?.customPassword || '')) {
       await chrome.runtime.sendMessage({
@@ -14171,9 +12332,6 @@ async function startAutoRunFromCurrentSettings() {
       phoneVerificationEnabled: typeof inputPhoneVerificationEnabled !== 'undefined' && inputPhoneVerificationEnabled
         ? Boolean(inputPhoneVerificationEnabled.checked)
         : Boolean(latestState?.phoneVerificationEnabled),
-      plusModeEnabled: typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
-        ? Boolean(inputPlusModeEnabled.checked)
-        : Boolean(latestState?.plusModeEnabled),
       accountContributionEnabled: Boolean(latestState?.accountContributionEnabled),
     };
     return registry.validateAutoRunStart({
@@ -14187,11 +12345,6 @@ async function startAutoRunFromCurrentSettings() {
     clearPendingAutoRunStartRunCount();
     throw new Error(autoRunStartValidation.errors?.[0]?.message || '当前设置不支持启动自动流程。');
   }
-  if (!(await ensureGpcApiKeyReadyForStart())) {
-    clearPendingAutoRunStartRunCount();
-    return false;
-  }
-
   const customEmailPoolEnabled = typeof usesCustomEmailPoolGenerator === 'function'
     && usesCustomEmailPoolGenerator();
   const lockedRunCount = typeof getLockedRunCountFromEmailPool === 'function'
@@ -14450,9 +12603,6 @@ inputVpsPassword.addEventListener('blur', () => {
     scheduleSettingsAutoSave();
   });
   input?.addEventListener('blur', () => {
-    if (input === inputPlusHostedCheckoutOauthDelaySeconds) {
-      input.value = String(normalizePlusHostedCheckoutOauthDelaySeconds(input.value));
-    }
     saveSettings({ silent: true }).catch(() => { });
   });
 });
@@ -14489,142 +12639,6 @@ inputPassword.addEventListener('input', () => {
 });
 inputPassword.addEventListener('blur', () => {
   saveSettings({ silent: true }).catch(() => { });
-});
-
-inputPlusModeEnabled?.addEventListener('change', () => {
-  updatePlusModeUI();
-  updateSignupMethodUI({ notify: true });
-  const stepDefinitionState = typeof resolveStepDefinitionCapabilityState === 'function'
-    ? resolveStepDefinitionCapabilityState({
-      ...(latestState || {}),
-      plusModeEnabled: Boolean(inputPlusModeEnabled.checked),
-      signupMethod: getSelectedSignupMethod(),
-    }, {
-      signupMethod: getSelectedSignupMethod(),
-    })
-    : {
-      plusModeEnabled: Boolean(inputPlusModeEnabled.checked),
-      signupMethod: getSelectedSignupMethod(),
-    };
-  syncStepDefinitionsForMode(stepDefinitionState.plusModeEnabled, getSelectedPlusPaymentMethod(), {
-    render: true,
-    signupMethod: stepDefinitionState.signupMethod,
-  });
-  markSettingsDirty(true);
-  saveSettings({ silent: true }).catch(() => { });
-});
-
-btnGpcCardKeyPurchase?.addEventListener('click', () => {
-  openExternalUrl('https://pay.ldxp.cn/shop/gpc');
-});
-
-btnGpcHelperConvertApiKey?.addEventListener('click', () => {
-  openExternalUrl(GPC_HELPER_PORTAL_URL);
-});
-
-btnGpcHelperBalance?.addEventListener('click', async () => {
-  try {
-    const response = await chrome.runtime.sendMessage({
-      type: 'REFRESH_GPC_CARD_BALANCE',
-      source: 'sidepanel',
-      payload: {
-        gopayHelperApiUrl: inputGpcHelperApi?.value || DEFAULT_GPC_HELPER_API_URL,
-        gopayHelperApiKey: inputGpcHelperCardKey?.value || '',
-        gopayHelperCountryCode: selectGpcHelperCountryCode?.value || '+86',
-        reason: 'manual',
-      },
-    });
-    if (response?.error) {
-      throw new Error(response.error);
-    }
-    if (displayGpcHelperBalance) {
-      displayGpcHelperBalance.textContent = response?.balance || '余额已更新';
-    }
-    const nextState = {
-      gopayHelperBalance: response?.balance || latestState?.gopayHelperBalance || '',
-      gopayHelperBalancePayload: response?.data || response?.payload?.data || response?.payload || latestState?.gopayHelperBalancePayload || null,
-      gopayHelperBalanceUpdatedAt: response?.updatedAt || Date.now(),
-      gopayHelperBalanceError: '',
-      gopayHelperRemainingUses: getGpcBalanceRemainingUsesFromResponse(response) ?? 0,
-      gopayHelperAutoModeEnabled: getGpcAutoModeEnabledFromResponse(response),
-      gopayHelperApiKeyStatus: response?.apiKeyStatus || response?.data?.status || response?.payload?.data?.status || response?.payload?.status || '',
-    };
-    const nextAutoModePermission = getGpcAutoModePermissionFromPayload(nextState.gopayHelperBalancePayload);
-    const nextAutoModeDenied = nextAutoModePermission === false;
-    const nextAutoModeConfirmed = nextAutoModePermission === true || nextState.gopayHelperAutoModeEnabled;
-    const selectedModeBeforeBalanceState = getSelectedGpcHelperPhoneMode();
-    syncLatestState(nextState);
-    if (nextAutoModeDenied && selectedModeBeforeBalanceState === GPC_HELPER_PHONE_MODE_AUTO) {
-      showToast('当前 API Key 未开通自动模式，已保留当前选择；如需继续请手动切换到手动模式。', 'warn');
-    } else if (nextAutoModeDenied) {
-      showToast('GPC 余额已更新，当前 API Key 只能使用手动模式。', 'success');
-    } else if (nextAutoModeConfirmed) {
-      showToast('GPC 余额已更新，自动模式可用。', 'success');
-    } else {
-      showToast('GPC 余额已更新，当前接口未返回自动模式权限，已保留所选模式。', 'success');
-    }
-    updatePlusModeUI();
-  } catch (error) {
-    showToast(error?.message || '查询 GPC 余额失败。', 'error');
-  }
-});
-
-selectPlusPaymentMethod?.addEventListener('change', () => {
-  selectPlusPaymentMethod.value = normalizePlusPaymentMethod(selectPlusPaymentMethod.value);
-  updatePlusModeUI();
-  const stepDefinitionState = typeof resolveStepDefinitionCapabilityState === 'function'
-    ? resolveStepDefinitionCapabilityState({
-      ...(latestState || {}),
-      plusModeEnabled: Boolean(inputPlusModeEnabled?.checked),
-      signupMethod: getSelectedSignupMethod(),
-    }, {
-      signupMethod: getSelectedSignupMethod(),
-    })
-    : {
-      plusModeEnabled: Boolean(inputPlusModeEnabled?.checked),
-      signupMethod: getSelectedSignupMethod(),
-    };
-  syncStepDefinitionsForMode(stepDefinitionState.plusModeEnabled, {
-    render: true,
-    plusPaymentMethod: selectPlusPaymentMethod.value,
-    signupMethod: stepDefinitionState.signupMethod,
-  });
-  markSettingsDirty(true);
-  saveSettings({ silent: true }).catch(() => { });
-});
-
-[
-  inputGpcHelperApi,
-  inputGpcHelperCardKey,
-  selectGpcHelperPhoneMode,
-  selectGpcHelperCountryCode,
-  inputGpcHelperPhone,
-  selectGpcHelperOtpChannel,
-  inputGpcHelperLocalSmsEnabled,
-  inputGpcHelperLocalSmsUrl,
-  inputGpcHelperPin,
-  selectGoPayCountryCode,
-  inputGoPayPhone,
-  inputGoPayOtp,
-  inputGoPayPin,
-  inputHostedCheckoutVerificationUrl,
-  inputHostedCheckoutPhone,
-  inputPlusHostedCheckoutOauthDelaySeconds,
-].forEach((input) => {
-  input?.addEventListener('input', () => {
-    markSettingsDirty(true);
-    scheduleSettingsAutoSave();
-  });
-  input?.addEventListener('change', () => {
-    if (input === selectGpcHelperPhoneMode || input === selectGpcHelperOtpChannel || input === inputGpcHelperLocalSmsEnabled) {
-      updatePlusModeUI();
-    }
-    markSettingsDirty(true);
-    saveSettings({ silent: true }).catch(() => { });
-  });
-  input?.addEventListener('blur', () => {
-    saveSettings({ silent: true }).catch(() => { });
-  });
 });
 
 selectMailProvider.addEventListener('change', async () => {
@@ -14781,24 +12795,6 @@ selectPanelMode.addEventListener('change', async () => {
       flowId: activeFlowId,
       targetId: nextPanelMode,
     });
-    if (
-      typeof selectPlusAccountAccessStrategy !== 'undefined'
-      && selectPlusAccountAccessStrategy
-      && !latestState?.accountContributionEnabled
-    ) {
-      const nextPlusStrategy = resolvePlusAccountAccessStrategyForTarget(
-        selectPlusAccountAccessStrategy.value
-          || selectPlusAccountAccessStrategy.dataset?.requestedValue
-          || currentPlusAccountAccessStrategy,
-        nextPanelMode
-      );
-      currentPlusAccountAccessStrategy = nextPlusStrategy;
-      selectPlusAccountAccessStrategy.dataset.requestedValue = nextPlusStrategy;
-      selectPlusAccountAccessStrategy.value = normalizePlusAccountAccessStrategyUiValue(nextPlusStrategy);
-      syncLatestState({
-        plusAccountAccessStrategy: nextPlusStrategy,
-      });
-    }
   } else {
     syncLatestState({
       activeFlowId,
@@ -14809,9 +12805,6 @@ selectPanelMode.addEventListener('change', async () => {
   updatePanelModeUI();
   if (typeof syncStepDefinitionsFromUiState === 'function') {
     syncStepDefinitionsFromUiState({
-      plusModeEnabled: typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
-        ? Boolean(inputPlusModeEnabled.checked)
-        : Boolean(latestState?.plusModeEnabled),
       signupMethod: getSelectedSignupMethod(),
       phoneSignupReloginAfterBindEmailEnabled: typeof inputPhoneSignupReloginAfterBindEmail !== 'undefined' && inputPhoneSignupReloginAfterBindEmail
         ? Boolean(inputPhoneSignupReloginAfterBindEmail.checked)
@@ -14821,18 +12814,6 @@ selectPanelMode.addEventListener('change', async () => {
   applyStepExecutionRangeState(latestState);
   renderStepStatuses(latestState);
   updateButtonStates();
-  markSettingsDirty(true);
-  saveSettings({ silent: true }).catch(() => { });
-});
-
-selectPlusAccountAccessStrategy?.addEventListener('change', () => {
-  const nextUiValue = normalizePlusAccountAccessStrategyUiValue(selectPlusAccountAccessStrategy.value);
-  selectPlusAccountAccessStrategy.value = nextUiValue;
-  selectPlusAccountAccessStrategy.dataset.requestedValue = resolvePlusAccountAccessStrategyForTarget(
-    nextUiValue,
-    typeof getSelectedPanelMode === 'function' ? getSelectedPanelMode(latestState) : latestState?.targetId
-  );
-  updatePlusModeUI();
   markSettingsDirty(true);
   saveSettings({ silent: true }).catch(() => { });
 });
@@ -15178,9 +13159,6 @@ selectFlow?.addEventListener('change', () => {
   updatePanelModeUI();
   if (typeof syncStepDefinitionsFromUiState === 'function') {
     syncStepDefinitionsFromUiState({
-      plusModeEnabled: typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
-        ? Boolean(inputPlusModeEnabled.checked)
-        : Boolean(latestState?.plusModeEnabled),
       signupMethod: getSelectedSignupMethod(),
       phoneSignupReloginAfterBindEmailEnabled: typeof inputPhoneSignupReloginAfterBindEmail !== 'undefined' && inputPhoneSignupReloginAfterBindEmail
         ? Boolean(inputPhoneSignupReloginAfterBindEmail.checked)
@@ -15391,22 +13369,15 @@ inputPhoneSignupReloginAfterBindEmail?.addEventListener('change', () => {
   const stepDefinitionState = typeof resolveStepDefinitionCapabilityState === 'function'
     ? resolveStepDefinitionCapabilityState({
       ...(latestState || {}),
-      plusModeEnabled: typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
-        ? Boolean(inputPlusModeEnabled.checked)
-        : Boolean(latestState?.plusModeEnabled),
       signupMethod: getSelectedSignupMethod(),
       phoneSignupReloginAfterBindEmailEnabled: Boolean(inputPhoneSignupReloginAfterBindEmail.checked),
     }, {
       signupMethod: getSelectedSignupMethod(),
     })
     : {
-      plusModeEnabled: typeof inputPlusModeEnabled !== 'undefined' && inputPlusModeEnabled
-        ? Boolean(inputPlusModeEnabled.checked)
-        : Boolean(latestState?.plusModeEnabled),
       signupMethod: getSelectedSignupMethod(),
     };
-  syncStepDefinitionsForMode(stepDefinitionState.plusModeEnabled, {
-    plusPaymentMethod: getSelectedPlusPaymentMethod(latestState),
+  syncStepDefinitionsForMode({
     signupMethod: stepDefinitionState.signupMethod,
     phoneSignupReloginAfterBindEmailEnabled: Boolean(inputPhoneSignupReloginAfterBindEmail.checked),
   });
@@ -15944,16 +13915,6 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       return true;
     }
 
-    case 'REQUEST_GOPAY_OTP_INPUT': {
-      (async () => {
-        const result = await openGoPayOtpInputDialog(message.payload || {});
-        sendResponse(result || { cancelled: true, code: '' });
-      })().catch((err) => {
-        sendResponse({ error: err.message });
-      });
-      return true;
-    }
-
     case 'SECURITY_BLOCKED_ALERT': {
       openConfirmModal({
         title: message.payload?.title || '流程已完全停止',
@@ -16047,7 +14008,6 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       applyAutoRunStatus(currentAutoRun);
       updateProgressCounter();
       updateButtonStates();
-      renderPayPalAccounts();
       renderHotmailAccounts();
       renderMail2925Accounts();
       if (isLuckmailProvider()) {
@@ -16069,7 +14029,6 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         }
         updateAccountRunHistorySettingsUI();
         renderContributionMode();
-        void syncPlusManualConfirmationDialog();
         break;
       }
       if (message.payload.operationDelayEnabled !== undefined && typeof applyOperationDelayState === 'function') {
@@ -16172,86 +14131,11 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       if (message.payload.cloudMailDomain !== undefined && inputCloudMailDomain) {
         inputCloudMailDomain.value = message.payload.cloudMailDomain || '';
       }
-      if (message.payload.plusModeEnabled !== undefined && inputPlusModeEnabled) {
-        inputPlusModeEnabled.checked = Boolean(message.payload.plusModeEnabled);
-      }
-      if (message.payload.plusPaymentMethod !== undefined && selectPlusPaymentMethod) {
-        selectPlusPaymentMethod.value = normalizePlusPaymentMethod(message.payload.plusPaymentMethod);
-      }
-      if (message.payload.plusAccountAccessStrategy !== undefined && selectPlusAccountAccessStrategy) {
-        currentPlusAccountAccessStrategy = normalizePlusAccountAccessStrategy(message.payload.plusAccountAccessStrategy);
-        selectPlusAccountAccessStrategy.dataset.requestedValue = currentPlusAccountAccessStrategy;
-        if (!selectPlusAccountAccessStrategy.disabled) {
-          selectPlusAccountAccessStrategy.value = normalizePlusAccountAccessStrategyUiValue(currentPlusAccountAccessStrategy);
-        }
-      }
-      if (message.payload.gopayHelperPhoneMode !== undefined && selectGpcHelperPhoneMode) {
-        selectGpcHelperPhoneMode.value = normalizeGpcHelperPhoneModeValue(message.payload.gopayHelperPhoneMode);
-      }
-      if (message.payload.gopayHelperOtpChannel !== undefined && selectGpcHelperOtpChannel) {
-        selectGpcHelperOtpChannel.value = normalizeGpcOtpChannelValue(message.payload.gopayHelperOtpChannel);
-      }
-      if (message.payload.gopayHelperLocalSmsHelperEnabled !== undefined && inputGpcHelperLocalSmsEnabled) {
-        inputGpcHelperLocalSmsEnabled.checked = Boolean(message.payload.gopayHelperLocalSmsHelperEnabled);
-      }
-      if (message.payload.gopayHelperLocalSmsHelperUrl !== undefined && inputGpcHelperLocalSmsUrl) {
-        inputGpcHelperLocalSmsUrl.value = normalizeGpcLocalSmsHelperBaseUrlValue(message.payload.gopayHelperLocalSmsHelperUrl);
-      }
-      if (message.payload.gopayHelperBalance !== undefined || message.payload.gopayHelperBalanceError !== undefined) {
-        if (typeof displayGpcHelperBalance !== 'undefined' && displayGpcHelperBalance) {
-          const balanceText = String(message.payload.gopayHelperBalance ?? latestState?.gopayHelperBalance ?? '').trim();
-          const balanceError = String(message.payload.gopayHelperBalanceError ?? latestState?.gopayHelperBalanceError ?? '').trim();
-          displayGpcHelperBalance.textContent = balanceError
-            ? `余额查询失败：${balanceError}`
-            : (balanceText || '余额已更新');
-        }
-      }
-      if (
-        message.payload.plusModeEnabled !== undefined
-        || message.payload.plusPaymentMethod !== undefined
-        || message.payload.plusAccountAccessStrategy !== undefined
-        || message.payload.gopayHelperPhoneMode !== undefined
-        || message.payload.gopayHelperAutoModeEnabled !== undefined
-        || message.payload.gopayHelperOtpChannel !== undefined
-        || message.payload.gopayHelperLocalSmsHelperEnabled !== undefined
-      ) {
-        const stepDefinitionState = typeof resolveStepDefinitionCapabilityState === 'function'
-          ? resolveStepDefinitionCapabilityState(latestState, {
-            signupMethod: latestState?.signupMethod,
-          })
-          : {
-            plusModeEnabled: Boolean(latestState?.plusModeEnabled),
-            signupMethod: normalizeSignupMethod(latestState?.signupMethod || DEFAULT_SIGNUP_METHOD),
-          };
-        syncStepDefinitionsForMode(
-          stepDefinitionState.plusModeEnabled,
-          latestState?.plusPaymentMethod,
-          {
-            render: true,
-            signupMethod: stepDefinitionState.signupMethod,
-          }
-        );
-        updatePlusModeUI();
-        updateSignupMethodUI({ notify: true });
-      }
-      if (
-        message.payload.plusManualConfirmationPending !== undefined
-        || message.payload.plusManualConfirmationRequestId !== undefined
-        || message.payload.plusManualConfirmationStep !== undefined
-        || message.payload.plusManualConfirmationMethod !== undefined
-        || message.payload.plusManualConfirmationTitle !== undefined
-        || message.payload.plusManualConfirmationMessage !== undefined
-      ) {
-        void syncPlusManualConfirmationDialog();
-      }
       if (message.payload.currentHotmailAccountId !== undefined || message.payload.hotmailAccounts !== undefined) {
         renderHotmailAccounts();
         if (selectMailProvider.value === 'hotmail-api') {
           inputEmail.value = getCurrentHotmailEmail();
         }
-      }
-      if (message.payload.currentPayPalAccountId !== undefined || message.payload.paypalAccounts !== undefined) {
-        renderPayPalAccounts();
       }
       if (message.payload.currentMail2925AccountId !== undefined || message.payload.mail2925Accounts !== undefined) {
         renderMail2925Accounts();
@@ -16605,7 +14489,6 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       }
       updateAccountRunHistorySettingsUI();
       renderContributionMode();
-      void syncPlusManualConfirmationDialog();
       break;
     }
 

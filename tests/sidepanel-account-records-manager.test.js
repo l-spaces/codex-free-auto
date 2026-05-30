@@ -145,7 +145,6 @@ test('sidepanel html contains account records overlay and manager script', () =>
   assert.match(html, /id="sub2api-group-picker"/);
   assert.match(html, /id="input-sub2api-group" value="codex"/);
   assert.match(html, /id="btn-add-sub2api-group"/);
-  assert.match(html, /id="paypal-account-picker"/);
   assert.match(html, /id="cf-domain-picker"/);
   assert.match(html, /id="temp-email-domain-picker"/);
   assert.notEqual(managerIndex, -1);

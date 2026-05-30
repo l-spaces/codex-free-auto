@@ -9,7 +9,7 @@
 1. 新增步骤时，只改当前 flow 的定义和节点执行器，不再牵动全局 switch。
 2. 新增完全不同的 flow 时，可以拥有完全不同的节点图、页面源、邮件规则、恢复策略和 UI 表达。
 3. 最终版本不保留 `currentStep` / `stepStatuses` 作为核心状态，不保留 `STEP_*` 作为核心协议，不再让数字步骤充当身份、顺序、状态、历史和消息路由的共同主键。
-4. 方案必须同时覆盖 background、content、sidepanel、日志、历史、自动运行、来源注册、邮件规则、手机号接码、Plus 支付这些强关联模块。
+4. 方案必须同时覆盖 background、content、sidepanel、日志、历史、自动运行、来源注册、邮件规则、手机号接码这些强关联模块。
 
 ## 2. 重构前实现的真实形态
 
@@ -222,7 +222,6 @@ flows/<flowId>/
 新 flow 的要求是：
 
 - 可以没有手机号接码
-- 可以没有 Plus
 - 可以没有邮件验证码
 - 可以有完全不同的节点顺序和分支
 - 可以有自己的页面源和 driver
@@ -257,7 +256,7 @@ flows/<flowId>/
 
 自动运行、日志和历史必须记录 `flowId`、`runId`、`nodeId`，而不是继续写 `step7_failed` 这种混合字符串。
 
-### 6.7 手机接码、Plus、OAuth
+### 6.7 手机接码、OAuth
 
 这些都不是“通用步骤”，它们是 OpenAI flow 的私有能力。没有第二个 flow 的真实需求时，不要把它们硬抽成全局共享步骤。
 
@@ -337,7 +336,7 @@ flows/<flowId>/
 4. sidepanel 渲染仍可以展示“第几项”的用户文案，但状态合并、按钮执行、跳过、恢复都以 `nodeId` 为主键。
 5. 邮件规则、source registry、driver command 已跟 node 对齐；验证码节点通过 `mailRuleId` 绑定，而不是通过固定步骤号绑定。
 6. 自动运行主循环使用 `runAutoSequenceFromNodeGraph(startNodeId)` 按当前 workflow 的 node 列表推进，不再通过数字序号、`step++` 或 `runAutoSequenceFromNodeOrder` 驱动。
-7. 自动运行恢复、idle 重开、Plus/GPC/GoPay checkout 重建都以目标 `nodeId` 和实际前置节点为锚点；遇到稀疏节点图时不会再依赖不存在的虚拟数字步骤。
+7. 自动运行恢复与 idle 重开都以目标 `nodeId` 和实际前置节点为锚点；遇到稀疏节点图时不会再依赖不存在的虚拟数字步骤。
 
 阶段 8 自检命令要求核心生产路径不得再命中旧协议和旧状态字段：
 
@@ -373,9 +372,8 @@ flows/<flowId>/
 
 落地前必须自检：
 
-- 新 flow 是否可以不包含 OpenAI 私有节点，例如 Plus、手机号接码、OAuth。
+- 新 flow 是否可以不包含 OpenAI 私有节点，例如手机号接码、OAuth。
 - `sourceId` / `driverId` 是否只服务当前 flow，不污染全局。
 - 邮件规则是否只从当前 flow definition 派生。
 - sidepanel 是否能仅通过 workflow nodes 渲染，不新增全局步骤 switch。
 - 自动运行、历史和日志是否都能用 `flowId/runId/nodeId` 定位。
-

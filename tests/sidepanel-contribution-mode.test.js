@@ -124,10 +124,6 @@ test('sidepanel html contains contribution mode runtime UI and loads the module 
 
 test('sidepanel settings refresh preserves rendered step progress', () => {
   const applySettingsStateSource = extractFunction('applySettingsState');
-  assert.doesNotMatch(
-    applySettingsStateSource,
-    /syncStepDefinitionsForMode\(Boolean\(state\?\.plusModeEnabled\),\s*\{\s*render:\s*true\s*\}\)/
-  );
   assert.match(applySettingsStateSource, /renderStepStatuses\(latestState\)/);
 
   const bundle = [
@@ -195,15 +191,11 @@ test('collectSettingsPayload omits custom password and local sync settings in co
   const api = new Function('normalizeIcloudTargetMailboxType', 'normalizeIcloudForwardMailProvider', `
 let latestState = { accountContributionEnabled: true };
 const window = {};
-const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
-const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 let cloudflareDomainEditMode = false;
 let cloudflareTempEmailDomainEditMode = false;
 const selectCfDomain = { value: 'example.com' };
 const selectTempEmailDomain = { value: 'mail.example.com' };
 const selectPanelMode = { value: 'cpa' };
-function getSelectedPlusPaymentMethod() { return 'paypal'; }
 const inputVpsUrl = { value: 'https://panel.example.com' };
 const inputVpsPassword = { value: 'panel-secret' };
 const inputSub2ApiUrl = { value: 'https://sub.example.com' };
@@ -296,7 +288,6 @@ function normalizeCloudflareTempEmailReceiveMailboxValue(value) { return String(
 function normalizeAutoRunThreadIntervalMinutes(value) { return Number(value) || 0; }
 function normalizeAutoStepDelaySeconds(value) { return value === '' ? null : Number(value); }
 function normalizeVerificationResendCount(value, fallback) { return Number.isFinite(Number(value)) ? Number(value) : fallback; }
-function normalizePlusAccountAccessStrategy(value = '') { return String(value || '').trim().toLowerCase() === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION ? PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION : PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH; }
 function normalizePhoneSmsProvider(value = '') { return String(value || '').trim().toLowerCase() === '5sim' ? '5sim' : 'hero-sms'; }
 function getSelectedPhoneSmsProvider() { return normalizePhoneSmsProvider(selectPhoneSmsProvider?.value || latestState?.phoneSmsProvider); }
 function normalizeFiveSimCountryId(value, fallback = DEFAULT_FIVE_SIM_COUNTRY_ID) { return String(value || '').trim().toLowerCase().replace(/[^a-z0-9_-]+/g, '') || fallback; }

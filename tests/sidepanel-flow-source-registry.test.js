@@ -56,10 +56,9 @@ test('sidepanel html exposes only the OpenAI registration option and shared cont
   assert.doesNotMatch(sidepanelSource, removedFlowPattern);
 });
 
-test('sidepanel step definitions rerender when active flow changes even if plus/signup settings stay the same', () => {
+test('sidepanel step definitions rerender when active flow changes even if signup settings stay the same', () => {
   const bundle = [
     extractFunction(sidepanelSource, 'normalizeSignupMethod'),
-    extractFunction(sidepanelSource, 'normalizePlusPaymentMethod'),
     extractFunction(sidepanelSource, 'getStepDefinitionsForMode'),
     extractFunction(sidepanelSource, 'rebuildStepDefinitionState'),
     extractFunction(sidepanelSource, 'syncStepDefinitionsForMode'),
@@ -76,26 +75,18 @@ const window = {
   },
 };
 let latestState = { activeFlowId: 'openai' };
-let currentPlusModeEnabled = false;
-let currentPlusPaymentMethod = 'paypal';
-let currentPlusAccountAccessStrategy = 'oauth';
 let currentSignupMethod = 'email';
 let currentPhoneVerificationEnabled = false;
 let currentPhoneSignupReloginAfterBindEmailEnabled = false;
 let currentStepDefinitionFlowId = 'openai';
 const DEFAULT_ACTIVE_FLOW_ID = 'openai';
 const DEFAULT_SIGNUP_METHOD = 'email';
-const DEFAULT_PLUS_PAYMENT_METHOD = 'paypal';
-const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = 'oauth';
 let stepDefinitions = [{ id: 6, key: 'openai' }];
 let STEP_IDS = [6];
 let STEP_DEFAULT_STATUSES = { 6: 'pending' };
 let SKIPPABLE_STEPS = new Set([6]);
 function renderStepsList() {
   calls.push({ type: 'render', stepIds: [...STEP_IDS] });
-}
-function normalizePlusAccountAccessStrategy(value = '') {
-  return String(value || DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY).trim().toLowerCase() || DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY;
 }
 ${bundle}
 return {
@@ -106,9 +97,8 @@ return {
 };
 `)();
 
-  api.syncStepDefinitionsForMode(false, {
+  api.syncStepDefinitionsForMode({
     activeFlowId: 'sample',
-    plusPaymentMethod: 'paypal',
     signupMethod: 'email',
     phoneSignupReloginAfterBindEmailEnabled: false,
   });
@@ -119,9 +109,6 @@ return {
     type: 'getSteps',
     options: {
       activeFlowId: 'sample',
-      plusModeEnabled: false,
-      plusPaymentMethod: 'paypal',
-      plusAccountAccessStrategy: 'oauth',
       signupMethod: 'email',
       phoneVerificationEnabled: false,
       phoneSignupReloginAfterBindEmailEnabled: false,
@@ -180,7 +167,7 @@ return {
   assert.equal(api.getCalls()[0].targetId, 'cpa');
 });
 
-test('updatePanelModeUI reapplies dynamic Plus and phone visibility after flow group visibility', () => {
+test('updatePanelModeUI reapplies dynamic phone visibility after flow group visibility', () => {
   const bundle = [
     extractFunction(sidepanelSource, 'updatePanelModeUI'),
   ].join('\n');
@@ -216,15 +203,12 @@ function renderTargetSelectorOptions(flowId, targetId) {
 function applyFlowSettingsGroupVisibility(visibleGroupIds) {
   calls.push({ type: 'groups', visibleGroupIds: [...visibleGroupIds] });
 }
-function updatePlusModeUI() {
-  calls.push({ type: 'plus' });
-}
 function updatePhoneVerificationSettingsUI() {
   calls.push({ type: 'phone' });
 }
 function resolveCurrentSidepanelCapabilities() {
   return {
-    visibleGroupIds: ['service-account', 'openai-plus', 'openai-phone'],
+    visibleGroupIds: ['service-account', 'openai-phone'],
     effectiveTargetId: 'cpa',
   };
 }
@@ -246,7 +230,7 @@ return {
 
   assert.deepEqual(
     api.calls.map((entry) => entry.type),
-    ['render-flow', 'render-target', 'groups', 'plus', 'phone']
+    ['render-flow', 'render-target', 'groups', 'phone']
   );
   assert.equal(api.selectFlow.value, 'openai');
   assert.equal(api.selectPanelMode.value, 'cpa');

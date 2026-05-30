@@ -57,7 +57,7 @@ const self = {};
 ${flowRegistrySource}
 ${settingsSchemaSource}
 const DEFAULT_ACTIVE_FLOW_ID = 'openai';
-const DEFAULT_SUB2API_GROUP_NAMES = ['codex', 'openai-plus'];
+const DEFAULT_SUB2API_GROUP_NAMES = ['codex'];
 const SETTINGS_SCHEMA_VIEW_KEYS = Object.freeze([
   'activeFlowId',
   'targetId',
@@ -77,9 +77,6 @@ const SETTINGS_SCHEMA_VIEW_KEYS = Object.freeze([
   'signupMethod',
   'phoneVerificationEnabled',
   'phoneSignupReloginAfterBindEmailEnabled',
-  'plusModeEnabled',
-  'plusPaymentMethod',
-  'plusAccountAccessStrategy',
   'mailProvider',
   'stepExecutionRangeByFlow',
 ]);
@@ -88,9 +85,6 @@ const PERSISTED_SETTING_DEFAULTS = {
   activeFlowId: DEFAULT_ACTIVE_FLOW_ID,
   targetId: 'cpa',
   signupMethod: 'email',
-  plusModeEnabled: false,
-  plusPaymentMethod: 'paypal',
-  plusAccountAccessStrategy: 'oauth',
   phoneVerificationEnabled: false,
   sub2apiUrl: '',
   sub2apiEmail: '',
@@ -102,10 +96,6 @@ const PERSISTED_SETTING_KEYS = Object.keys(PERSISTED_SETTING_DEFAULTS);
 const PERSISTED_SETTINGS_SCHEMA_KEYS = ['settingsSchemaVersion', 'settingsState'];
 const LEGACY_AUTO_STEP_DELAY_KEYS = [];
 const LEGACY_VERIFICATION_RESEND_COUNT_KEYS = [];
-const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_CPA_CODEX_SESSION = 'cpa_codex_session';
-const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 function isPlainObjectValue(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
@@ -116,11 +106,6 @@ function normalizePanelMode(value = '') {
 function normalizeSignupMethod(value = '') {
   return String(value || '').trim().toLowerCase() === 'phone' ? 'phone' : 'email';
 }
-function normalizePlusPaymentMethod(value = '') {
-  const normalized = String(value || '').trim().toLowerCase();
-  return normalized === 'gopay' || normalized === 'gpc-helper' ? normalized : 'paypal';
-}
-${extractFunction('normalizePlusAccountAccessStrategy')}
 function normalizeSub2ApiGroupNames(value) {
   return Array.isArray(value) ? value.map((entry) => String(entry || '').trim()).filter(Boolean) : [];
 }
@@ -202,7 +187,7 @@ test('buildPersistentSettingsPayload accepts OpenAI schema-only input when requi
               sub2apiEmail: 'admin@example.com',
               sub2apiPassword: 'schema-only-password',
               sub2apiGroupName: 'codex',
-              sub2apiGroupNames: ['codex', 'openai-plus'],
+              sub2apiGroupNames: ['codex'],
               sub2apiAccountPriority: 1,
               sub2apiDefaultProxyName: '',
             },
@@ -215,11 +200,6 @@ test('buildPersistentSettingsPayload accepts OpenAI schema-only input when requi
             signupMethod: 'email',
             phoneVerificationEnabled: false,
             phoneSignupReloginAfterBindEmailEnabled: false,
-          },
-          plus: {
-            plusModeEnabled: false,
-            plusPaymentMethod: 'paypal',
-            plusAccountAccessStrategy: 'oauth',
           },
           autoRun: {
             stepExecutionRange: { enabled: false, fromStep: 1, toStep: 11 },
@@ -234,7 +214,6 @@ test('buildPersistentSettingsPayload accepts OpenAI schema-only input when requi
   assert.equal(payload.sub2apiUrl, 'https://sub2api.example.com');
   assert.equal(payload.sub2apiPassword, 'schema-only-password');
   assert.equal(payload.settingsSchemaVersion, 5);
-  assert.equal(payload.settingsState.flows.openai.plus.plusAccountAccessStrategy, 'oauth');
 });
 
 test('getPersistedSettings reads schema keys alongside legacy flat settings keys', async () => {
@@ -259,7 +238,6 @@ function getRequestedKeys() {
 
   assert.ok(api.getRequestedKeys().includes('settingsSchemaVersion'));
   assert.ok(api.getRequestedKeys().includes('settingsState'));
-  assert.ok(api.getRequestedKeys().includes('plusAccountAccessStrategy'));
   assert.equal(state.settingsSchemaVersion, 5);
   assert.equal(state.settingsState.activeFlowId, 'openai');
 });

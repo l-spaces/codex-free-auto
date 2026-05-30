@@ -18,7 +18,6 @@ test('flow capability registry keeps OpenAI phone signup available only when run
       activeFlowId: 'openai',
       targetId: 'cpa',
       phoneVerificationEnabled: true,
-      plusModeEnabled: false,
       accountContributionEnabled: false,
       signupMethod: 'phone',
     },
@@ -31,23 +30,22 @@ test('flow capability registry keeps OpenAI phone signup available only when run
   assert.equal(enabledState.stepDefinitionOptions.phoneVerificationEnabled, true);
   assert.deepEqual(enabledState.effectiveSignupMethods, ['email', 'phone']);
 
-  const plusLockedState = registry.resolveSidepanelCapabilities({
+  const contributionLockedState = registry.resolveSidepanelCapabilities({
     state: {
       activeFlowId: 'openai',
       targetId: 'sub2api',
       phoneVerificationEnabled: true,
-      plusModeEnabled: true,
-      accountContributionEnabled: false,
+      accountContributionEnabled: true,
       signupMethod: 'phone',
     },
   });
 
-  assert.equal(plusLockedState.canUsePhoneSignup, false);
-  assert.equal(plusLockedState.effectiveSignupMethod, 'email');
-  assert.equal(plusLockedState.stepDefinitionOptions.phoneVerificationEnabled, true);
-  assert.equal(plusLockedState.shouldWarnCpaPhoneSignup, false);
-  assert.equal(plusLockedState.targetCapabilities.usesOauthTimeoutBudget, false);
-  assert.deepEqual(plusLockedState.effectiveSignupMethods, ['email']);
+  assert.equal(contributionLockedState.canUsePhoneSignup, false);
+  assert.equal(contributionLockedState.effectiveSignupMethod, 'email');
+  assert.equal(contributionLockedState.stepDefinitionOptions.phoneVerificationEnabled, true);
+  assert.equal(contributionLockedState.shouldWarnCpaPhoneSignup, false);
+  assert.equal(contributionLockedState.targetCapabilities.usesOauthTimeoutBudget, false);
+  assert.deepEqual(contributionLockedState.effectiveSignupMethods, ['email']);
 });
 
 test('flow capability registry normalizes unknown flows to OpenAI capabilities', () => {
@@ -59,7 +57,6 @@ test('flow capability registry normalizes unknown flows to OpenAI capabilities',
       activeFlowId: 'legacy-flow',
       targetId: 'codex2api',
       phoneVerificationEnabled: true,
-      plusModeEnabled: true,
       accountContributionEnabled: true,
       signupMethod: 'phone',
     },
@@ -67,7 +64,6 @@ test('flow capability registry normalizes unknown flows to OpenAI capabilities',
 
   assert.equal(capabilityState.activeFlowId, 'openai');
   assert.equal(capabilityState.canShowPhoneSettings, true);
-  assert.equal(capabilityState.canShowPlusSettings, true);
   assert.equal(capabilityState.canShowLuckmail, true);
   assert.equal(capabilityState.canUsePhoneSignup, false);
   assert.equal(capabilityState.effectiveSignupMethod, 'email');
@@ -86,20 +82,6 @@ test('flow capability registry exposes shared auto-run validation for phone lock
       },
     },
   });
-
-  const plusLockedResult = registry.validateAutoRunStart({
-    state: {
-      activeFlowId: 'openai',
-      targetId: 'cpa',
-      signupMethod: 'phone',
-      phoneVerificationEnabled: true,
-      plusModeEnabled: true,
-      accountContributionEnabled: false,
-    },
-  });
-
-  assert.equal(plusLockedResult.ok, false);
-  assert.equal(plusLockedResult.errors[0].code, 'phone_signup_plus_mode_locked');
 
   const unsupportedPanelResult = registry.validateAutoRunStart({
     state: {
@@ -130,13 +112,11 @@ test('flow capability registry normalizes unsupported mode switches back to the 
       targetId: 'sub2api',
       signupMethod: 'phone',
       phoneVerificationEnabled: true,
-      plusModeEnabled: true,
     },
     changedKeys: [
       'targetId',
       'signupMethod',
       'phoneVerificationEnabled',
-      'plusModeEnabled',
     ],
   });
 
@@ -145,132 +125,13 @@ test('flow capability registry normalizes unsupported mode switches back to the 
     targetId: 'cpa',
     signupMethod: 'email',
     phoneVerificationEnabled: false,
-    plusModeEnabled: false,
   });
   assert.deepEqual(
     validation.errors.map((entry) => entry.code),
     [
       'panel_mode_unsupported',
-      'plus_mode_unsupported',
       'phone_verification_unsupported',
       'phone_signup_flow_unsupported',
     ]
   );
-});
-
-test('flow capability registry exposes editable Plus account access strategies for SUB2API', () => {
-  const api = loadApi();
-  const registry = api.createFlowCapabilityRegistry();
-
-  const capabilityState = registry.resolveSidepanelCapabilities({
-    state: {
-      activeFlowId: 'openai',
-      targetId: 'sub2api',
-      signupMethod: 'email',
-      plusModeEnabled: true,
-      plusAccountAccessStrategy: 'sub2api_codex_session',
-    },
-  });
-
-  assert.deepEqual(
-    capabilityState.availablePlusAccountAccessStrategies,
-    ['oauth', 'sub2api_codex_session']
-  );
-  assert.equal(capabilityState.requestedPlusAccountAccessStrategy, 'sub2api_codex_session');
-  assert.equal(capabilityState.effectivePlusAccountAccessStrategy, 'sub2api_codex_session');
-  assert.equal(capabilityState.canEditPlusAccountAccessStrategy, true);
-  assert.equal(capabilityState.stepDefinitionOptions.plusAccountAccessStrategy, 'sub2api_codex_session');
-});
-
-test('flow capability registry maps session import to the current source target', () => {
-  const api = loadApi();
-  const registry = api.createFlowCapabilityRegistry();
-
-  const capabilityState = registry.resolveSidepanelCapabilities({
-    state: {
-      activeFlowId: 'openai',
-      targetId: 'sub2api',
-      signupMethod: 'email',
-      plusModeEnabled: true,
-      plusAccountAccessStrategy: 'cpa_codex_session',
-    },
-  });
-
-  assert.deepEqual(
-    capabilityState.availablePlusAccountAccessStrategies,
-    ['oauth', 'sub2api_codex_session']
-  );
-  assert.equal(capabilityState.requestedPlusAccountAccessStrategy, 'sub2api_codex_session');
-  assert.equal(capabilityState.effectivePlusAccountAccessStrategy, 'sub2api_codex_session');
-  assert.equal(capabilityState.stepDefinitionOptions.plusAccountAccessStrategy, 'sub2api_codex_session');
-});
-
-test('flow capability registry exposes editable Plus account access strategies for CPA', () => {
-  const api = loadApi();
-  const registry = api.createFlowCapabilityRegistry();
-
-  const capabilityState = registry.resolveSidepanelCapabilities({
-    state: {
-      activeFlowId: 'openai',
-      targetId: 'cpa',
-      signupMethod: 'email',
-      plusModeEnabled: true,
-      plusAccountAccessStrategy: 'cpa_codex_session',
-    },
-  });
-
-  assert.deepEqual(
-    capabilityState.availablePlusAccountAccessStrategies,
-    ['oauth', 'cpa_codex_session']
-  );
-  assert.equal(capabilityState.requestedPlusAccountAccessStrategy, 'cpa_codex_session');
-  assert.equal(capabilityState.effectivePlusAccountAccessStrategy, 'cpa_codex_session');
-  assert.equal(capabilityState.canEditPlusAccountAccessStrategy, true);
-  assert.equal(capabilityState.stepDefinitionOptions.plusAccountAccessStrategy, 'cpa_codex_session');
-});
-
-test('flow capability registry falls back to OAuth when the current source cannot import sessions', () => {
-  const api = loadApi();
-  const registry = api.createFlowCapabilityRegistry();
-
-  const capabilityState = registry.resolveSidepanelCapabilities({
-    state: {
-      activeFlowId: 'openai',
-      targetId: 'codex2api',
-      signupMethod: 'email',
-      plusModeEnabled: true,
-      plusAccountAccessStrategy: 'cpa_codex_session',
-    },
-  });
-
-  assert.deepEqual(
-    capabilityState.availablePlusAccountAccessStrategies,
-    ['oauth']
-  );
-  assert.equal(capabilityState.requestedPlusAccountAccessStrategy, 'oauth');
-  assert.equal(capabilityState.effectivePlusAccountAccessStrategy, 'oauth');
-  assert.equal(capabilityState.canEditPlusAccountAccessStrategy, false);
-  assert.equal(capabilityState.stepDefinitionOptions.plusAccountAccessStrategy, 'oauth');
-});
-
-test('flow capability registry forces SUB2API session import only for contribution mode Plus runs', () => {
-  const api = loadApi();
-  const registry = api.createFlowCapabilityRegistry();
-
-  const capabilityState = registry.resolveSidepanelCapabilities({
-    state: {
-      activeFlowId: 'openai',
-      targetId: 'cpa',
-      signupMethod: 'email',
-      plusModeEnabled: true,
-      accountContributionEnabled: true,
-      plusAccountAccessStrategy: 'cpa_codex_session',
-    },
-  });
-
-  assert.deepEqual(capabilityState.availablePlusAccountAccessStrategies, ['sub2api_codex_session']);
-  assert.equal(capabilityState.requestedPlusAccountAccessStrategy, 'cpa_codex_session');
-  assert.equal(capabilityState.effectivePlusAccountAccessStrategy, 'sub2api_codex_session');
-  assert.equal(capabilityState.canEditPlusAccountAccessStrategy, false);
-  assert.equal(capabilityState.stepDefinitionOptions.plusAccountAccessStrategy, 'sub2api_codex_session');
 });

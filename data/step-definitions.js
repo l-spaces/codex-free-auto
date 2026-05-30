@@ -154,14 +154,6 @@
       });
   }
 
-  function getPlusPaymentStepTitle(options = {}) {
-    const { builder } = getFlowDefinitionBuilder(options);
-    if (!builder?.getPlusPaymentStepTitle) {
-      return '';
-    }
-    return builder.getPlusPaymentStepTitle(options);
-  }
-
   function getStepIds(options = {}) {
     return getSteps(options)
       .map((step) => Number(step.id))
@@ -224,18 +216,10 @@
     DEFAULT_ACTIVE_FLOW_ID
   );
   const NORMAL_STEP_DEFINITIONS = STEP_DEFINITIONS;
-  const PLUS_STEP_DEFINITIONS = cloneSteps(
-    defaultWorkflowBuilder?.getModeStepDefinitions
-      ? defaultWorkflowBuilder.getModeStepDefinitions({ plusModeEnabled: true })
-      : [],
-    { plusModeEnabled: true },
-    DEFAULT_ACTIVE_FLOW_ID
-  );
 
   return {
     DEFAULT_ACTIVE_FLOW_ID,
     NORMAL_STEP_DEFINITIONS,
-    PLUS_STEP_DEFINITIONS,
     SIGNUP_METHOD_EMAIL,
     SIGNUP_METHOD_PHONE,
     STEP_DEFINITIONS,
@@ -246,7 +230,6 @@
     getNodeById,
     getNodeIds,
     getNodes,
-    getPlusPaymentStepTitle,
     getRegisteredFlowIds,
     getStepById,
     getStepIds,

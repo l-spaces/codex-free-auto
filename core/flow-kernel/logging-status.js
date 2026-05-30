@@ -34,9 +34,6 @@
         'luckmail-api': 'LuckMail（API 购邮）',
         'cloudflare-temp-email': 'Cloudflare Temp Email',
         'cloudmail': 'Cloud Mail',
-        'plus-checkout': 'Plus Checkout',
-        'paypal-flow': 'PayPal 授权页',
-        'gopay-flow': 'GoPay 授权页',
         'unknown-source': '未知来源',
       };
       return labels[source] || source || '未知来源';
@@ -92,7 +89,6 @@
 
     function getErrorMessage(error) {
       return String(typeof error === 'string' ? error : error?.message || '')
-        .replace(/^GPC_TASK_ENDED::/i, '')
         .replace(/^AUTO_RUN_STEP_IDLE_RESTART::/i, '');
     }
 

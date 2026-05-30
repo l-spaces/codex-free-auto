@@ -79,17 +79,6 @@
       ? flowRegistry.getTargetDefinitions
       : (() => ({}));
 
-    const normalizePlusAccountAccessStrategy = (value = '') => {
-      const normalized = String(value || '').trim().toLowerCase();
-      if (normalized === 'sub2api_codex_session') {
-        return 'sub2api_codex_session';
-      }
-      if (normalized === 'cpa_codex_session') {
-        return 'cpa_codex_session';
-      }
-      return 'oauth';
-    };
-
     function getCanonicalFlowIds() {
       const ids = Array.isArray(getRegisteredFlowIds())
         ? getRegisteredFlowIds()
@@ -219,7 +208,7 @@
           sub2apiGroupName: String(targetState.sub2apiGroupName ?? 'codex').trim() || 'codex',
           sub2apiGroupNames: Array.isArray(targetState.sub2apiGroupNames)
             ? targetState.sub2apiGroupNames.map((entry) => String(entry || '').trim()).filter(Boolean)
-            : ['codex', 'openai-plus'],
+            : ['codex'],
           sub2apiAccountPriority: Math.max(1, Number(targetState.sub2apiAccountPriority) || 1),
           sub2apiDefaultProxyName: String(targetState.sub2apiDefaultProxyName ?? '').trim(),
         };
@@ -302,9 +291,6 @@
       const defaultOpenAiSignup = isPlainObject(defaultOpenAiFlow.signup)
         ? defaultOpenAiFlow.signup
         : {};
-      const defaultOpenAiPlus = isPlainObject(defaultOpenAiFlow.plus)
-        ? defaultOpenAiFlow.plus
-        : {};
       const cpaSource = {
         ...currentFlow.targets.cpa,
         ...getTargetValue(
@@ -371,48 +357,6 @@
             ?? defaultOpenAiSignup.phoneSignupReloginAfterBindEmailEnabled
             ?? false
           ),
-        },
-        plus: {
-          plusModeEnabled: Boolean(
-            input?.plusModeEnabled
-            ?? currentFlow.plus?.plusModeEnabled
-            ?? defaultOpenAiPlus.plusModeEnabled
-            ?? false
-          ),
-          plusPaymentMethod: String(
-            input?.plusPaymentMethod
-            ?? currentFlow.plus?.plusPaymentMethod
-            ?? defaultOpenAiPlus.plusPaymentMethod
-            ?? 'paypal-hosted'
-          ).trim() || defaultOpenAiPlus.plusPaymentMethod || 'paypal-hosted',
-          plusAccountAccessStrategy: normalizePlusAccountAccessStrategy(
-            input?.plusAccountAccessStrategy
-            ?? currentFlow.plus?.plusAccountAccessStrategy
-            ?? defaultOpenAiPlus.plusAccountAccessStrategy
-            ?? 'oauth'
-          ),
-          hostedCheckoutVerificationUrl: String(
-            input?.hostedCheckoutVerificationUrl
-            ?? currentFlow.plus?.hostedCheckoutVerificationUrl
-            ?? defaultOpenAiPlus.hostedCheckoutVerificationUrl
-            ?? ''
-          ).trim(),
-          hostedCheckoutPhoneNumber: String(
-            input?.hostedCheckoutPhoneNumber
-            ?? currentFlow.plus?.hostedCheckoutPhoneNumber
-            ?? defaultOpenAiPlus.hostedCheckoutPhoneNumber
-            ?? ''
-          ).trim(),
-          plusHostedCheckoutOauthDelaySeconds: (() => {
-            const numeric = Number(
-              input?.plusHostedCheckoutOauthDelaySeconds
-              ?? currentFlow.plus?.plusHostedCheckoutOauthDelaySeconds
-              ?? defaultOpenAiPlus.plusHostedCheckoutOauthDelaySeconds
-              ?? 3
-            );
-            const fallback = Number(defaultOpenAiPlus.plusHostedCheckoutOauthDelaySeconds ?? 3) || 3;
-            return Math.min(120, Math.max(0, Math.floor(Number.isFinite(numeric) ? numeric : fallback)));
-          })(),
         },
       };
     }
@@ -532,7 +476,7 @@
       next.sub2apiEmail = openaiState.targets.sub2api?.sub2apiEmail || '';
       next.sub2apiPassword = openaiState.targets.sub2api?.sub2apiPassword || '';
       next.sub2apiGroupName = openaiState.targets.sub2api?.sub2apiGroupName || 'codex';
-      next.sub2apiGroupNames = cloneValue(openaiState.targets.sub2api?.sub2apiGroupNames || ['codex', 'openai-plus']);
+      next.sub2apiGroupNames = cloneValue(openaiState.targets.sub2api?.sub2apiGroupNames || ['codex']);
       next.sub2apiAccountPriority = openaiState.targets.sub2api?.sub2apiAccountPriority || 1;
       next.sub2apiDefaultProxyName = openaiState.targets.sub2api?.sub2apiDefaultProxyName || '';
       next.codex2apiUrl = openaiState.targets.codex2api?.codex2apiUrl || '';
@@ -541,12 +485,6 @@
       next.signupMethod = openaiState.signup?.signupMethod || 'email';
       next.phoneVerificationEnabled = Boolean(openaiState.signup?.phoneVerificationEnabled);
       next.phoneSignupReloginAfterBindEmailEnabled = Boolean(openaiState.signup?.phoneSignupReloginAfterBindEmailEnabled);
-      next.plusModeEnabled = Boolean(openaiState.plus?.plusModeEnabled);
-      next.plusPaymentMethod = openaiState.plus?.plusPaymentMethod || 'paypal-hosted';
-      next.plusAccountAccessStrategy = openaiState.plus?.plusAccountAccessStrategy || 'oauth';
-      next.hostedCheckoutVerificationUrl = openaiState.plus?.hostedCheckoutVerificationUrl || '';
-      next.hostedCheckoutPhoneNumber = openaiState.plus?.hostedCheckoutPhoneNumber || '';
-      next.plusHostedCheckoutOauthDelaySeconds = openaiState.plus?.plusHostedCheckoutOauthDelaySeconds ?? 3;
       next.mailProvider = normalizedState.services.email.provider;
       next.stepExecutionRangeByFlow = buildStepExecutionRangeByFlow(normalizedState);
       next.settingsSchemaVersion = normalizedState.schemaVersion;

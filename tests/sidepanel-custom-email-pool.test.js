@@ -229,7 +229,7 @@ return {
   assert.equal(modalPayload.actions[1].label, '出现手机号验证');
 });
 
-test('sidepanel custom verification dialog exposes add-phone action for Plus login code step', async () => {
+test('sidepanel custom verification dialog exposes add-phone action for alternate login code step', async () => {
   const bundle = [
     extractFunction('getCustomVerificationPromptCopy'),
     extractFunction('openCustomVerificationConfirmDialog'),
@@ -244,7 +244,7 @@ async function openActionModal(options) {
 }
 
 async function openConfirmModal() {
-  throw new Error('Plus login code step should use action modal');
+  throw new Error('alternate login code step should use action modal');
 }
 
 ${bundle}

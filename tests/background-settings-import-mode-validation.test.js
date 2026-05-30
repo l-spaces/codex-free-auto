@@ -71,7 +71,6 @@ let currentState = {
   activeFlowId: 'site-a',
   targetId: 'sub2api',
   signupMethod: 'phone',
-  plusModeEnabled: false,
   phoneVerificationEnabled: false,
   stepStatuses: {},
 };
@@ -87,7 +86,6 @@ function validateModeSwitchState() {
     errors: [{ code: 'panel_mode_unsupported', message: '当前 flow 不支持 SUB2API 面板模式。' }],
     normalizedUpdates: {
       targetId: 'cpa',
-      plusModeEnabled: false,
       phoneVerificationEnabled: false,
       signupMethod: 'email',
     },
@@ -125,7 +123,6 @@ return {
     schemaVersion: 1,
     settings: {
       targetId: 'sub2api',
-      plusModeEnabled: true,
       phoneVerificationEnabled: true,
       signupMethod: 'phone',
     },
@@ -133,12 +130,10 @@ return {
 
   assert.deepEqual(api.getPersistedUpdates(), {
     targetId: 'cpa',
-    plusModeEnabled: false,
     phoneVerificationEnabled: false,
     signupMethod: 'email',
   });
   assert.equal(api.getStateUpdates().targetId, 'cpa');
-  assert.equal(api.getStateUpdates().plusModeEnabled, false);
   assert.equal(api.getStateUpdates().phoneVerificationEnabled, false);
   assert.equal(api.getStateUpdates().signupMethod, 'email');
   assert.equal(api.getBroadcastPayload().targetId, 'cpa');
@@ -185,7 +180,7 @@ const self = {
                       sub2apiEmail: 'admin@example.com',
                       sub2apiPassword: 'secret',
                       sub2apiGroupName: 'codex',
-                      sub2apiGroupNames: ['codex', 'openai-plus'],
+                      sub2apiGroupNames: ['codex'],
                       sub2apiAccountPriority: 1,
                       sub2apiDefaultProxyName: '',
                     },
@@ -195,11 +190,6 @@ const self = {
                     signupMethod: 'email',
                     phoneVerificationEnabled: false,
                     phoneSignupReloginAfterBindEmailEnabled: false,
-                  },
-                  plus: {
-                    plusModeEnabled: false,
-                    plusPaymentMethod: 'paypal',
-                    plusAccountAccessStrategy: 'oauth',
                   },
                   autoRun: {
                     stepExecutionRange: { enabled: false, fromStep: 1, toStep: 11 },

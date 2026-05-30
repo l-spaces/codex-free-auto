@@ -1787,10 +1787,6 @@ header {
   cursor: default;
 }
 
-.gpc-helper-api-input {
-  font-family: 'JetBrains Mono', monospace;
-}
-
 .editable-list-picker {
   position: relative;
   flex: 1;
@@ -1957,11 +1953,6 @@ header {
 
 .setting-caption-left {
   text-align: left;
-}
-
-.plus-payment-method-select {
-  flex: 0 0 156px;
-  min-width: 156px;
 }
 
 .setting-caption {

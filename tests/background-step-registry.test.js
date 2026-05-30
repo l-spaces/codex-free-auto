@@ -23,9 +23,3 @@ test('background imports node registry and wires OpenAI executors only', () => {
   assert.match(source, /'fetch-signup-code': \(state\) => step4Executor\.executeStep4\(state\)/);
   assert.match(source, /'platform-verify': \(state\) => executeStep10\(state\)/);
 });
-
-test('GoPay approve executor receives debugger click and manual OTP helpers', () => {
-  const source = fs.readFileSync('background.js', 'utf8');
-  assert.match(source, /createGoPayApproveExecutor\(\{[\s\S]*clickWithDebugger[\s\S]*requestGoPayOtpInput[\s\S]*\}\)/);
-  assert.match(source, /REQUEST_GOPAY_OTP_INPUT/);
-});

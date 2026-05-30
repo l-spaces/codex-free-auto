@@ -113,16 +113,16 @@ return { detectScriptSource };
   );
 });
 
-test('shouldReportReadyForFrame suppresses noisy plus checkout child frame ready logs', () => {
+test('shouldReportReadyForFrame suppresses noisy known child frame ready logs', () => {
   const bundle = [extractFunction('shouldReportReadyForFrame')].join('\n');
   const api = new Function(`
 ${bundle}
 return { shouldReportReadyForFrame };
 `)();
 
-  assert.equal(api.shouldReportReadyForFrame('plus-checkout', true), false);
-  assert.equal(api.shouldReportReadyForFrame('plus-checkout', false), true);
-  assert.equal(api.shouldReportReadyForFrame('paypal-flow', true), true);
+  assert.equal(api.shouldReportReadyForFrame('mail-163', true), false);
+  assert.equal(api.shouldReportReadyForFrame('mail-163', false), true);
+  assert.equal(api.shouldReportReadyForFrame('openai-auth', true), true);
   assert.equal(api.shouldReportReadyForFrame('unknown-source', false), true);
   assert.equal(api.shouldReportReadyForFrame('unknown-source', true), false);
 });
@@ -137,7 +137,7 @@ const LOG_PREFIX = '[test]';
 function log(message) { logs.push(message); }
 ${bundle}
 return { simulateClick };
-`)(logs, { log: (...args) => consoleMessages.push(args.join(' ')) }, { pathname: '/checkout' });
+`)(logs, { log: (...args) => consoleMessages.push(args.join(' ')) }, { pathname: '/auth' });
 
   const button = {
     tagName: 'BUTTON',
@@ -165,6 +165,6 @@ return { getRuntimeScriptSource };
 
   const windowRef = {};
   assert.equal(api(windowRef, 'chatgpt').getRuntimeScriptSource(), 'chatgpt');
-  windowRef.__MULTIPAGE_SOURCE = 'plus-checkout';
-  assert.equal(api(windowRef, 'chatgpt').getRuntimeScriptSource(), 'plus-checkout');
+  windowRef.__MULTIPAGE_SOURCE = 'openai-auth';
+  assert.equal(api(windowRef, 'chatgpt').getRuntimeScriptSource(), 'openai-auth');
 });

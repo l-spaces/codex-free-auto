@@ -86,15 +86,11 @@ test('collectSettingsPayload persists icloud target mailbox settings', () => {
   const api = new Function(`
 let latestState = { accountContributionEnabled: false };
 const window = {};
-const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
-const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 let cloudflareDomainEditMode = false;
 let cloudflareTempEmailDomainEditMode = false;
 const selectCfDomain = { value: '' };
 const selectTempEmailDomain = { value: '' };
 const selectPanelMode = { value: 'cpa' };
-function getSelectedPlusPaymentMethod() { return 'paypal'; }
 const inputVpsUrl = { value: '' };
 const inputVpsPassword = { value: '' };
 const inputSub2ApiUrl = { value: '' };
@@ -201,8 +197,6 @@ function normalizePhoneCodePollMaxRoundsValue(value, fallback = 12) {
 }
 function getSelectedHeroSmsCountryOption() { return { id: 52, label: 'Thailand' }; }
 function syncHeroSmsFallbackSelectionOrderFromSelect() { return [{ id: 52, label: 'Thailand' }]; }
-function getPayPalAccounts() { return []; }
-function getCurrentPayPalAccount() { return null; }
 function getCloudflareDomainsFromState() { return { domains: [], activeDomain: '' }; }
 function normalizeCloudflareDomainValue(value) { return String(value || '').trim(); }
 function getCloudflareTempEmailDomainsFromState() { return { domains: [], activeDomain: '' }; }
@@ -219,7 +213,6 @@ function normalizeAccountRunHistoryHelperBaseUrlValue(value) { return String(val
 function normalizeAutoRunThreadIntervalMinutes(value) { return Number(value) || 0; }
 function normalizeAutoStepDelaySeconds(value) { return value === '' ? null : Number(value); }
 function normalizeVerificationResendCount(value, fallback) { return Number(value) || fallback; }
-function normalizePlusAccountAccessStrategy(value = '') { return String(value || '').trim().toLowerCase() === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION ? PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION : PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH; }
 function normalizePhoneSmsProvider(value = '') { return String(value || '').trim().toLowerCase() === '5sim' ? '5sim' : 'hero-sms'; }
 function setPhoneSmsProviderSelectValue(provider) {
   const normalizedProvider = normalizePhoneSmsProvider(provider);
@@ -363,9 +356,6 @@ test('applySettingsState restores icloud forward mailbox settings before UI refr
 
   const api = new Function('calls', `
 let latestState = {};
-const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
-const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
-const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
 const DEFAULT_SIGNUP_METHOD = 'email';
 const inputEmail = { value: '' };
 const inputVpsUrl = { value: '' };
@@ -458,9 +448,6 @@ function syncPasswordField() {}
 function renderStepStatuses() {}
 function setLocalCpaStep9Mode() {}
 function normalizeSignupMethod(value = '') { return String(value || '').trim().toLowerCase() === 'phone' ? 'phone' : 'email'; }
-function normalizePlusPaymentMethod(value = '') { return String(value || '').trim().toLowerCase() || 'paypal'; }
-function normalizePlusAccountAccessStrategy(value = '') { return String(value || '').trim().toLowerCase() === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION ? PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION : PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH; }
-function normalizePlusAccountAccessStrategyUiValue(value = '') { return normalizePlusAccountAccessStrategy(value); }
 function isCustomMailProvider() { return false; }
 function setMail2925Mode() {}
 function normalizeIcloudFetchMode(value) { return String(value || '') === 'always_new' ? 'always_new' : 'reuse_existing'; }

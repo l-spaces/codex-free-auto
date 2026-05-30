@@ -100,7 +100,6 @@ const DEFAULT_ACTIVE_FLOW_ID = 'openai';
 const CONTRIBUTION_SOURCE_CPA = 'cpa';
 const CONTRIBUTION_SOURCE_SUB2API = 'sub2api';
 const CONTRIBUTION_SUB2API_DEFAULT_GROUP_NAME = 'codex号池';
-const CONTRIBUTION_SUB2API_PLUS_GROUP_NAME = 'openai-plus';
 const self = {
   MultiPageFlowRegistry: {
     normalizeFlowId(value = '', fallback = 'openai') {
@@ -143,7 +142,6 @@ const CONTRIBUTION_RUNTIME_DEFAULTS = {
   contributionAuthTabId: 0,
 };
 const CONTRIBUTION_RUNTIME_KEYS = Object.keys(CONTRIBUTION_RUNTIME_DEFAULTS);
-function isPlusModeState(state = {}) { return Boolean(state?.plusModeEnabled); }
 ${helperBundle}
 ${bundle}
 return { buildAccountContributionState };
@@ -186,15 +184,6 @@ return { buildAccountContributionState };
   assert.equal(disabledState.contributionSessionId, '');
   assert.equal(disabledState.targetId, 'sub2api');
   assert.equal(disabledState.customPassword, 'Secret123!');
-
-  const plusContributionState = api.buildAccountContributionState(true, {
-    targetId: 'cpa',
-    plusModeEnabled: true,
-    customPassword: 'Secret123!',
-    accountRunHistoryTextEnabled: true,
-  }, {});
-  assert.equal(plusContributionState.contributionTargetGroupName, 'openai-plus');
-  assert.equal(plusContributionState.targetId, 'sub2api');
 });
 
 test('resetState preserves contribution runtime across reset', () => {
@@ -752,78 +741,6 @@ test('contribution oauth manager accepts localhost callback urls that contain er
     ),
     true
   );
-});
-
-test('contribution oauth manager switches Plus contribution traffic to sub2api openai-plus', async () => {
-  const source = fs.readFileSync('background/contribution-oauth.js', 'utf8');
-  const globalScope = {};
-  const fetchCalls = [];
-  let currentState = {
-    accountContributionEnabled: true,
-    plusModeEnabled: true,
-    contributionSource: 'sub2api',
-    contributionTargetGroupName: 'openai-plus',
-    contributionSessionId: '',
-    contributionStatus: '',
-    contributionCallbackStatus: 'idle',
-  };
-
-  const api = new Function('self', 'fetch', `${source}; return self.MultiPageBackgroundContributionOAuth;`)(
-    globalScope,
-    async (url, options = {}) => {
-      fetchCalls.push({ url, options });
-      if (String(url).endsWith('/start')) {
-        return createMockResponse(true, 200, {
-          ok: true,
-          session_id: 'session-plus-001',
-          state: 'oauth-state-plus-001',
-          source: 'sub2api',
-          target_group_name: 'openai-plus',
-          auth_url: 'https://auth.example.com/oauth?state=oauth-state-plus-001',
-        });
-      }
-      if (String(url).includes('/status?')) {
-        return createMockResponse(true, 200, {
-          ok: true,
-          session_id: 'session-plus-001',
-          status: 'waiting',
-          source: 'sub2api',
-          target_group_name: 'openai-plus',
-        });
-      }
-      return createMockResponse(true, 200, { ok: true });
-    }
-  );
-
-  const manager = api.createContributionOAuthManager({
-    chrome: {
-      tabs: {
-        async create(payload) {
-          return { id: 91, url: payload.url };
-        },
-        async update() {
-          return null;
-        },
-        onUpdated: { addListener() {} },
-      },
-      webNavigation: {
-        onCommitted: { addListener() {} },
-        onHistoryStateUpdated: { addListener() {} },
-      },
-    },
-    getState: async () => currentState,
-    setState: async (updates) => {
-      currentState = { ...currentState, ...updates };
-    },
-    broadcastDataUpdate: (updates) => {
-      currentState = { ...currentState, ...updates };
-    },
-  });
-
-  await manager.startFlowContribution();
-
-  assert.match(String(fetchCalls[0].options.body || ''), /"source":"sub2api"/);
-  assert.match(String(fetchCalls[0].options.body || ''), /"target_group_name":"openai-plus"/);
 });
 
 test('refreshOAuthUrlBeforeStep6 uses contribution oauth session instead of panel bridge in contribution mode', async () => {
