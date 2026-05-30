@@ -170,21 +170,20 @@ const self = {
             settingsSchemaVersion: 5,
             settingsState: {
               schemaVersion: 5,
-              activeFlowId: 'kiro',
+              activeFlowId: 'openai',
               services: {
                 account: { customPassword: '' },
                 email: { provider: '163' },
-                proxy: { enabled: false, provider: '711proxy', mode: 'account' },
               },
               flows: {
                 openai: {
-                  selectedTargetId: 'cpa',
+                  selectedTargetId: 'sub2api',
                   targets: {
                     cpa: { vpsUrl: '', vpsPassword: '', localCpaStep9Mode: 'submit' },
                     sub2api: {
-                      sub2apiUrl: '',
-                      sub2apiEmail: '',
-                      sub2apiPassword: '',
+                      sub2apiUrl: 'https://sub2api.example.com',
+                      sub2apiEmail: 'admin@example.com',
+                      sub2apiPassword: 'secret',
                       sub2apiGroupName: 'codex',
                       sub2apiGroupNames: ['codex', 'openai-plus'],
                       sub2apiAccountPriority: 1,
@@ -206,18 +205,6 @@ const self = {
                     stepExecutionRange: { enabled: false, fromStep: 1, toStep: 11 },
                   },
                 },
-                kiro: {
-                  selectedTargetId: 'kiro-rs',
-                  targets: {
-                    'kiro-rs': {
-                      baseUrl: 'https://kiro.example.com/admin',
-                      apiKey: 'imported-key',
-                    },
-                  },
-                  autoRun: {
-                    stepExecutionRange: { enabled: false, fromStep: 1, toStep: 9 },
-                  },
-                },
               },
             },
           };
@@ -232,11 +219,11 @@ async function ensureManualInteractionAllowed() {
 function buildPersistentSettingsPayload(settings = {}) {
   return {
     activeFlowId: settings.settingsState.activeFlowId,
-    targetId: 'cpa',
+    targetId: settings.settingsState.flows.openai.selectedTargetId,
     signupMethod: 'email',
-    targetId: 'kiro-rs',
-    kiroRsUrl: settings.settingsState.flows.kiro.targets['kiro-rs'].baseUrl,
-    kiroRsKey: settings.settingsState.flows.kiro.targets['kiro-rs'].apiKey,
+    sub2apiUrl: settings.settingsState.flows.openai.targets.sub2api.sub2apiUrl,
+    sub2apiEmail: settings.settingsState.flows.openai.targets.sub2api.sub2apiEmail,
+    sub2apiPassword: settings.settingsState.flows.openai.targets.sub2api.sub2apiPassword,
     settingsSchemaVersion: settings.settingsSchemaVersion,
     settingsState: settings.settingsState,
   };
@@ -273,23 +260,16 @@ return {
     schemaVersion: 1,
     settings: {
       targetId: 'sub2api',
-      kiroRuntime: {
-        upload: {
-          status: 'uploaded',
-        },
-      },
+      sub2apiUrl: 'https://legacy.example.com',
     },
   });
 
   assert.deepEqual(api.getImporterInput(), {
     targetId: 'sub2api',
-    kiroRuntime: {
-      upload: {
-        status: 'uploaded',
-      },
-    },
+    sub2apiUrl: 'https://legacy.example.com',
   });
-  assert.equal(api.getPersistedUpdates().activeFlowId, 'kiro');
+  assert.equal(api.getPersistedUpdates().activeFlowId, 'openai');
+  assert.equal(api.getPersistedUpdates().targetId, 'sub2api');
   assert.equal(api.getPersistedUpdates().settingsSchemaVersion, 5);
-  assert.equal(api.getPersistedUpdates().settingsState.flows.kiro.targets['kiro-rs'].apiKey, 'imported-key');
+  assert.equal(api.getPersistedUpdates().settingsState.flows.openai.targets.sub2api.sub2apiUrl, 'https://sub2api.example.com');
 });

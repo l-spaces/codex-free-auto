@@ -3,7 +3,6 @@
 })(typeof self !== 'undefined' ? self : globalThis, function createContributionRegistryModule(root) {
   const flowRegistryApi = root?.MultiPageFlowRegistry || {};
   const DEFAULT_FLOW_ID = flowRegistryApi.DEFAULT_FLOW_ID || 'openai';
-  const DEFAULT_KIRO_TARGET_ID = flowRegistryApi.DEFAULT_KIRO_TARGET_ID || 'kiro-rs';
   const DEFAULT_OPENAI_TARGET_ID = flowRegistryApi.DEFAULT_OPENAI_TARGET_ID || 'cpa';
 
   const ADAPTER_DEFINITIONS = Object.freeze({
@@ -46,24 +45,10 @@
         'credentials.accounts[].credentials.id_token',
       ]),
     }),
-    'kiro-builder-id': Object.freeze({
-      id: 'kiro-builder-id',
-      flowId: 'kiro',
-      artifactKind: 'kiro-builder-id',
-      trigger: 'after-desktop-authorize',
-      label: 'Kiro Builder ID 贡献',
-      defaultTargetId: DEFAULT_KIRO_TARGET_ID,
-      sensitiveFieldPaths: Object.freeze([
-        'credentials.refreshToken',
-        'credentials.clientSecret',
-        'metadata.proxyPassword',
-      ]),
-    }),
   });
 
   const FLOW_ADAPTER_IDS = Object.freeze({
     openai: Object.freeze(['openai-oauth', 'openai-codex-file', 'openai-sub2api-file']),
-    kiro: Object.freeze(['kiro-builder-id']),
   });
 
   const CONTRIBUTION_TUTORIAL_ENTRIES = Object.freeze({
@@ -74,15 +59,6 @@
       portalPath: '/tutorial',
       defaultTargetId: DEFAULT_OPENAI_TARGET_ID,
       contributionAdapterId: 'openai-oauth',
-      action: 'open-portal-and-enable-contribution',
-    }),
-    kiro: Object.freeze({
-      id: 'kiro-contribution-tutorial',
-      flowId: 'kiro',
-      label: '贡献/使用教程',
-      portalPath: '/tutorial',
-      defaultTargetId: DEFAULT_KIRO_TARGET_ID,
-      contributionAdapterId: 'kiro-builder-id',
       action: 'open-portal-and-enable-contribution',
     }),
   });
@@ -96,10 +72,14 @@
     if (normalized && Object.prototype.hasOwnProperty.call(FLOW_ADAPTER_IDS, normalized)) {
       return normalized;
     }
-    if (!normalized && typeof flowRegistryApi.normalizeFlowId === 'function') {
+    if (typeof flowRegistryApi.normalizeFlowId === 'function') {
       return flowRegistryApi.normalizeFlowId(value, fallback);
     }
-    return normalized || normalizeString(fallback).toLowerCase() || DEFAULT_FLOW_ID;
+    const fallbackValue = normalizeString(fallback).toLowerCase();
+    if (fallbackValue && Object.prototype.hasOwnProperty.call(FLOW_ADAPTER_IDS, fallbackValue)) {
+      return fallbackValue;
+    }
+    return DEFAULT_FLOW_ID;
   }
 
   function normalizeAdapterId(value = '') {
@@ -115,7 +95,7 @@
     if (normalizedTargetId) {
       return normalizedTargetId;
     }
-    return normalizedFlowId === 'kiro' ? DEFAULT_KIRO_TARGET_ID : DEFAULT_OPENAI_TARGET_ID;
+    return DEFAULT_OPENAI_TARGET_ID;
   }
 
   function cloneAdapter(adapter) {
@@ -218,15 +198,22 @@
       : (typeof flowRegistryApi.getRegisteredFlowIds === 'function'
         ? flowRegistryApi.getRegisteredFlowIds()
         : Object.keys(FLOW_ADAPTER_IDS));
+    const seen = new Set();
     return ids
-      .map((flowId) => normalizeString(flowId).toLowerCase())
-      .filter(Boolean)
+      .map((flowId) => normalizeFlowId(flowId, DEFAULT_FLOW_ID))
+      .filter((flowId) => {
+        if (!flowId || seen.has(flowId)) {
+          return false;
+        }
+        seen.add(flowId);
+        return true;
+      })
       .filter((flowId) => expectsContributionAdapter(flowId));
   }
 
   function assertPublishedFlowsHaveContributionAdapters(flowIds = undefined) {
     const ids = Array.isArray(flowIds)
-      ? flowIds.map((flowId) => normalizeString(flowId).toLowerCase()).filter(Boolean)
+      ? Array.from(new Set(flowIds.map((flowId) => normalizeFlowId(flowId, DEFAULT_FLOW_ID)).filter(Boolean)))
       : getPublishedContributionFlowIds();
     const missing = ids
       .filter((flowId) => getContributionAdapterIds(flowId).length === 0);

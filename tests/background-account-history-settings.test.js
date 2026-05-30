@@ -139,24 +139,15 @@ const FIVE_SIM_SUPPORTED_COUNTRY_ID_SET = new Set(['indonesia', 'thailand', 'vie
 const HERO_SMS_SUPPORTED_COUNTRY_ID_SET = new Set(['6', '52', '10']);
 const self = {
   MultiPageFlowRegistry: {
-    DEFAULT_KIRO_RS_URL: '',
     normalizeFlowId(value, fallback = 'openai') {
       const normalized = String(value || '').trim().toLowerCase();
-      if (normalized === 'kiro') {
-        return 'kiro';
-      }
       if (normalized === 'codex' || normalized === 'openai') {
         return 'openai';
       }
-      return String(fallback || 'openai').trim().toLowerCase() === 'kiro' ? 'kiro' : 'openai';
+      return String(fallback || 'openai').trim().toLowerCase() === 'openai' ? 'openai' : 'openai';
     },
-    normalizeTargetId(flowId, targetId, fallback = 'kiro-rs') {
-      const normalizedFlowId = this.normalizeFlowId(flowId);
-      if (normalizedFlowId !== 'kiro') {
-        return 'cpa';
-      }
-      const normalizedTargetId = String(targetId || '').trim().toLowerCase();
-      return normalizedTargetId === 'kiro-rs' ? normalizedTargetId : fallback;
+    normalizeTargetId() {
+      return 'cpa';
     },
   },
   GoPayUtils: {
@@ -283,10 +274,7 @@ return {
   assert.equal(api.normalizePersistentSettingValue('signupMethod', 'phone'), 'phone');
   assert.equal(api.normalizePersistentSettingValue('signupMethod', 'unknown'), 'email');
   assert.equal(api.normalizePersistentSettingValue('activeFlowId', 'codex'), 'openai');
-  assert.equal(api.normalizePersistentSettingValue('activeFlowId', 'kiro'), 'kiro');
   assert.equal(api.normalizePersistentSettingValue('targetId', 'sub2api'), 'sub2api');
-  assert.equal(api.normalizePersistentSettingValue('kiroRsUrl', ''), '');
-  assert.equal(api.normalizePersistentSettingValue('kiroRsKey', ' key-1 '), 'key-1');
   assert.equal(api.normalizePersistentSettingValue('phoneSmsProvider', '5SIM'), '5sim');
   assert.equal(api.normalizePersistentSettingValue('phoneSmsProvider', 'NEXSMS'), 'nexsms');
   assert.equal(api.normalizePersistentSettingValue('phoneSmsProvider', 'unknown'), 'hero-sms');

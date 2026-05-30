@@ -590,255 +590,6 @@ test('SAVE_SETTING rebuilds Plus node statuses when panel mode forces the effect
   });
 });
 
-test('SAVE_SETTING mirrors activeFlowId into flowId when switching to kiro flow', async () => {
-  const source = fs.readFileSync('background/message-router.js', 'utf8');
-  const globalScope = { console };
-  const api = new Function('self', `${source}; return self.MultiPageBackgroundMessageRouter;`)(globalScope);
-  const broadcasts = [];
-  let state = { activeFlowId: 'openai', flowId: 'openai', targetId: 'cpa', plusModeEnabled: false, plusPaymentMethod: 'paypal' };
-
-  const router = api.createMessageRouter({
-    addLog: async () => {},
-    buildLuckmailSessionSettingsPayload: () => ({}),
-    buildPersistentSettingsPayload: (input = {}) => Object.prototype.hasOwnProperty.call(input, 'activeFlowId')
-      ? { activeFlowId: input.activeFlowId }
-      : {},
-    broadcastDataUpdate: (payload) => broadcasts.push(payload),
-    getState: async () => ({ ...state }),
-    setPersistentSettings: async (updates) => ({ ...updates }),
-    setState: async (updates) => { state = { ...state, ...updates }; },
-  });
-
-  const response = await router.handleMessage({
-    type: 'SAVE_SETTING',
-    source: 'sidepanel',
-    payload: { activeFlowId: 'kiro' },
-  });
-
-  assert.equal(response.ok, true);
-  assert.equal(state.activeFlowId, 'kiro');
-  assert.equal(state.flowId, 'kiro');
-  assert.deepStrictEqual(broadcasts.at(-1), {
-    activeFlowId: 'kiro',
-    flowId: 'kiro',
-    signupMethod: 'email',
-  });
-});
-
-test('CLEAR_GROK_SSO_COOKIES delegates canonical runtime cleanup to background', async () => {
-  const source = fs.readFileSync('background/message-router.js', 'utf8');
-  const globalScope = { console };
-  const api = new Function('self', `${source}; return self.MultiPageBackgroundMessageRouter;`)(globalScope);
-  let called = false;
-  const router = api.createMessageRouter({
-    clearGrokSsoCookies: async () => {
-      called = true;
-      return {
-        ok: true,
-        state: {
-          grokSsoCookie: '',
-          grokSsoCookies: [],
-          runtimeState: {
-            flowState: {
-              grok: {
-                sso: {
-                  currentCookie: '',
-                  cookies: [],
-                  extractedAt: 0,
-                },
-              },
-            },
-          },
-        },
-      };
-    },
-  });
-
-  const response = await router.handleMessage({
-    type: 'CLEAR_GROK_SSO_COOKIES',
-    source: 'sidepanel',
-    payload: {},
-  });
-
-  assert.equal(called, true);
-  assert.equal(response.ok, true);
-  assert.deepStrictEqual(response.state.grokSsoCookies, []);
-  assert.equal(response.state.runtimeState.flowState.grok.sso.currentCookie, '');
-});
-
-test('SAVE_SETTING syncs canonical kiro settingsState back into session state', async () => {
-  const source = fs.readFileSync('background/message-router.js', 'utf8');
-  const globalScope = { console };
-  const api = new Function('self', `${source}; return self.MultiPageBackgroundMessageRouter;`)(globalScope);
-  const canonicalSettingsState = {
-    schemaVersion: 4,
-    activeFlowId: 'kiro',
-    services: {
-      account: { customPassword: '' },
-      email: { provider: 'duck' },
-      proxy: { enabled: false, provider: '711proxy', mode: 'account' },
-    },
-    flows: {
-      openai: {
-        integrationTargetId: 'cpa',
-        integrationTargets: {
-          cpa: { vpsUrl: '', vpsPassword: '', localCpaStep9Mode: 'submit' },
-          sub2api: {
-            sub2apiUrl: '',
-            sub2apiEmail: '',
-            sub2apiPassword: '',
-            sub2apiGroupName: 'codex',
-            sub2apiGroupNames: ['codex', 'openai-plus'],
-            sub2apiAccountPriority: 1,
-            sub2apiDefaultProxyName: '',
-          },
-          codex2api: { codex2apiUrl: '', codex2apiAdminKey: '' },
-        },
-        signup: {
-          signupMethod: 'email',
-          phoneVerificationEnabled: false,
-          phoneSignupReloginAfterBindEmailEnabled: false,
-        },
-        plus: {
-          plusModeEnabled: false,
-          plusPaymentMethod: 'paypal',
-        },
-        autoRun: {
-          stepExecutionRange: { enabled: false, fromStep: 1, toStep: 11 },
-        },
-      },
-      kiro: {
-        targetId: 'kiro-rs',
-        targets: {
-          'kiro-rs': {
-            baseUrl: 'https://kiro.example.com/admin',
-            apiKey: 'live-key',
-          },
-        },
-        autoRun: {
-          stepExecutionRange: { enabled: false, fromStep: 1, toStep: 9 },
-        },
-      },
-    },
-  };
-  let state = {
-    activeFlowId: 'kiro',
-    flowId: 'kiro',
-    targetId: 'kiro-rs',
-    kiroRsUrl: 'https://kiro.example.com/admin',
-    kiroRsKey: '',
-    settingsSchemaVersion: 4,
-    settingsState: {
-      ...canonicalSettingsState,
-      flows: {
-        ...canonicalSettingsState.flows,
-        kiro: {
-          ...canonicalSettingsState.flows.kiro,
-          targets: {
-            'kiro-rs': {
-              baseUrl: 'https://kiro.example.com/admin',
-              apiKey: '',
-            },
-          },
-        },
-      },
-    },
-    plusModeEnabled: false,
-    plusPaymentMethod: 'paypal',
-  };
-
-  const router = api.createMessageRouter({
-    addLog: async () => {},
-    buildLuckmailSessionSettingsPayload: () => ({}),
-    buildPersistentSettingsPayload: (input = {}) => ({
-      activeFlowId: String(input.activeFlowId || 'kiro'),
-      kiroRsKey: String(input.kiroRsKey || ''),
-    }),
-    broadcastDataUpdate: () => {},
-    getState: async () => ({ ...state }),
-    setPersistentSettings: async () => ({
-      activeFlowId: 'kiro',
-      flowId: 'kiro',
-      targetId: 'kiro-rs',
-      kiroRsUrl: 'https://kiro.example.com/admin',
-      kiroRsKey: 'live-key',
-      settingsSchemaVersion: 4,
-      settingsState: canonicalSettingsState,
-    }),
-    setState: async (updates) => {
-      state = { ...state, ...updates };
-    },
-  });
-
-  const response = await router.handleMessage({
-    type: 'SAVE_SETTING',
-    payload: {
-      activeFlowId: 'kiro',
-      kiroRsKey: 'live-key',
-    },
-  });
-
-  assert.equal(response.ok, true);
-  assert.equal(state.kiroRsKey, 'live-key');
-  assert.equal(state.settingsState.flows.kiro.targets['kiro-rs'].apiKey, 'live-key');
-});
-
-test('CHECK_KIRO_RS_CONNECTION prefers current sidepanel payload over stale saved kiro.rs config', async () => {
-  const source = fs.readFileSync('background/message-router.js', 'utf8');
-  const globalScope = { console };
-  const api = new Function('self', `${source}; return self.MultiPageBackgroundMessageRouter;`)(globalScope);
-  const calls = [];
-  const router = api.createMessageRouter({
-    getState: async () => ({
-      activeFlowId: 'kiro',
-      flowId: 'kiro',
-      targetId: 'kiro-rs',
-      kiroRsUrl: 'https://old.example.com/admin',
-      kiroRsKey: 'old-key',
-      settingsState: {
-        flows: {
-          kiro: {
-            targetId: 'kiro-rs',
-            targets: {
-              'kiro-rs': {
-                baseUrl: 'https://old.example.com/admin',
-                apiKey: 'old-key',
-              },
-            },
-          },
-        },
-      },
-    }),
-    testKiroRsConnection: async (baseUrl, apiKey) => {
-      calls.push({ baseUrl, apiKey });
-      return {
-        ok: false,
-        status: 401,
-        message: 'kiro.rs API Key 被拒绝（HTTP 401：Invalid or missing admin API key）',
-      };
-    },
-  });
-
-  const response = await router.handleMessage({
-    type: 'CHECK_KIRO_RS_CONNECTION',
-    payload: {
-      activeFlowId: 'kiro',
-      targetId: 'kiro-rs',
-      baseUrl: ' https://new.example.com/admin/ ',
-      apiKey: ' new-key ',
-    },
-  });
-
-  assert.equal(response.ok, false);
-  assert.equal(response.status, 401);
-  assert.equal(response.message, 'kiro.rs API Key 被拒绝（HTTP 401：Invalid or missing admin API key）');
-  assert.deepStrictEqual(calls, [
-    {
-      baseUrl: 'https://new.example.com/admin/',
-      apiKey: ' new-key ',
-    },
-  ]);
-});
 
 test('AUTO_RUN applies current flow selection from payload before starting loop', async () => {
   const source = fs.readFileSync('background/message-router.js', 'utf8');
@@ -881,22 +632,22 @@ test('AUTO_RUN applies current flow selection from payload before starting loop'
     type: 'AUTO_RUN',
     payload: {
       totalRuns: 1,
-      activeFlowId: 'kiro',
-      targetId: 'kiro-rs',
+      activeFlowId: 'openai',
+      targetId: 'sub2api',
     },
   });
 
   assert.equal(response.ok, true);
-  assert.equal(state.activeFlowId, 'kiro');
-  assert.equal(state.flowId, 'kiro');
-  assert.equal(state.targetId, 'kiro-rs');
+  assert.equal(state.activeFlowId, 'openai');
+  assert.equal(state.flowId, 'openai');
+  assert.equal(state.targetId, 'sub2api');
   assert.deepStrictEqual(calls, [
     {
       type: 'setState',
       updates: {
-        activeFlowId: 'kiro',
-        flowId: 'kiro',
-        targetId: 'kiro-rs',
+        activeFlowId: 'openai',
+        flowId: 'openai',
+        targetId: 'sub2api',
       },
     },
     {
@@ -916,10 +667,10 @@ test('AUTO_RUN applies current flow selection from payload before starting loop'
   ]);
   assert.deepStrictEqual(validations, [
     {
-      activeFlowId: 'kiro',
-      flowId: 'kiro',
-      targetId: 'kiro-rs',
-      optionActiveFlowId: 'kiro',
+      activeFlowId: 'openai',
+      flowId: 'openai',
+      targetId: 'sub2api',
+      optionActiveFlowId: 'openai',
     },
   ]);
 });

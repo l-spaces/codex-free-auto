@@ -33,11 +33,11 @@
 - 支持普通注册授权链路，既可以单步执行，也可以整套 `Auto` 执行。
 - 支持 Plus 模式，覆盖 `PayPal`、`GoPay`、`GPC` 三种支付链路。
 - 支持 `账号接入策略`，可以在 Plus 模式下按来源选择继续走 `OAuth`，或直接导入当前 ChatGPT 已登录会话。
-- 支持 `CPA`、`SUB2API`、`Codex2API` 三种 OpenAI 来源，以及独立的 `Kiro` flow。
+- 支持 `CPA`、`SUB2API`、`Codex2API` 三种 OpenAI 来源。
 - 支持邮箱注册、验证码收取、登录验证码处理、OAuth 同意页确认和平台侧账号创建。
 - 支持 `Hotmail`、`2925`、`QQ Mail`、`163 Mail`、`163 VIP Mail`、`126 Mail`、`Inbucket`、`Cloud Mail`、`YYDS Mail`、`iCloud` 等收码方式。
 - 支持 `DuckDuckGo`、`Cloudflare`、`自定义邮箱池`、`自定义邮箱服务号池`、`Gmail / 2925 别名邮箱` 等注册邮箱生成方式。
-- 支持接码平台、手机号验证、自动重试、执行范围限制、IP 代理、贡献模式和账号记录面板。
+- 支持接码平台、手机号验证、自动重试、执行范围限制、贡献模式和账号记录面板。
 - 支持 `Stop`、暂停后继续、失败后重试，以及本地 helper 快照同步。
 
 ## 支持的来源
@@ -50,9 +50,6 @@
 
 - `Codex2API`
   当前保持 OAuth 接入，不支持 Plus 会话直导。
-
-- `Kiro`
-  独立的 Builder ID 注册、桌面授权和 `kiro.rs` 上传链路，不复用 OpenAI 的 Plus 和平台接入逻辑。
 
 ## Plus 模式
 

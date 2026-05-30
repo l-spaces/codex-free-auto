@@ -141,83 +141,39 @@ test('runtime-state patch accepts nested flow and node updates without legacy st
   assert.equal(view.plusCheckoutTabId, 99);
 });
 
-test('runtime-state patch prefers explicit activeFlowId over stale legacy flowId', () => {
+test('runtime-state normalizes stale flow ids and drops unknown scoped flow state', () => {
   const api = loadRuntimeStateApi();
   const helpers = api.createRuntimeStateHelpers({
     DEFAULT_ACTIVE_FLOW_ID: 'openai',
-    defaultNodeStatuses: {
-      'open-chatgpt': 'pending',
-      'kiro-open-register-page': 'pending',
+    defaultNodeStatuses: {},
+    normalizeFlowId(value = '', fallback = 'openai') {
+      const normalized = String(value || '').trim().toLowerCase();
+      return normalized === 'openai' ? normalized : fallback;
     },
   });
 
-  const patch = helpers.buildSessionStatePatch({
-    flowId: 'openai',
-    activeFlowId: 'openai',
-    nodeStatuses: {
-      'open-chatgpt': 'completed',
-    },
-  }, {
-    activeFlowId: 'kiro',
-    nodeStatuses: {
-      'kiro-open-register-page': 'running',
-    },
-  });
-
-  assert.equal(patch.activeFlowId, 'kiro');
-  assert.equal(patch.flowId, 'kiro');
-  assert.deepStrictEqual(patch.nodeStatuses, {
-    'open-chatgpt': 'pending',
-    'kiro-open-register-page': 'running',
-  });
-});
-
-test('runtime-state patch preserves canonical nested kiro flow state without projecting a top-level alias', () => {
-  const api = loadRuntimeStateApi();
-  const helpers = api.createRuntimeStateHelpers({
-    DEFAULT_ACTIVE_FLOW_ID: 'openai',
-    defaultNodeStatuses: {
-      'open-chatgpt': 'pending',
-      'kiro-open-register-page': 'pending',
-    },
-  });
-
-  const patch = helpers.buildSessionStatePatch({
+  const view = helpers.buildStateView({
+    activeFlowId: 'legacy-flow',
+    flowId: 'legacy-flow',
     runtimeState: {
-      activeFlowId: 'kiro',
+      activeFlowId: 'legacy-flow',
       flowState: {
-        kiro: {
-          session: {
-            currentStage: 'register',
-          },
-          register: {
-            email: 'old-user@example.com',
+        openai: {
+          auth: {
+            oauthUrl: 'https://auth.example.com/start',
           },
         },
-      },
-    },
-  }, {
-    runtimeState: {
-      flowState: {
-        kiro: {
-          register: {
-            email: 'aws-user@example.com',
-          },
-          upload: {
-            status: 'uploaded',
+        'legacy-flow': {
+          auth: {
+            oauthUrl: 'https://legacy.example.com/start',
           },
         },
       },
     },
   });
 
-  assert.equal(Object.prototype.hasOwnProperty.call(patch, 'kiroRuntime'), false);
-  assert.equal(patch.runtimeState.flowState.kiro.session.currentStage, 'register');
-  assert.equal(patch.runtimeState.flowState.kiro.register.email, 'aws-user@example.com');
-  assert.equal(patch.runtimeState.flowState.kiro.upload.status, 'uploaded');
-
-  const view = helpers.buildStateView(patch);
-  assert.equal(Object.prototype.hasOwnProperty.call(view, 'kiroRuntime'), false);
-  assert.equal(view.flowState.kiro.register.email, 'aws-user@example.com');
-  assert.equal(view.flowState.kiro.upload.status, 'uploaded');
+  assert.equal(view.activeFlowId, 'openai');
+  assert.equal(view.flowId, 'openai');
+  assert.deepStrictEqual(Object.keys(view.runtimeState.flowState), ['openai']);
+  assert.equal(view.oauthUrl, 'https://auth.example.com/start');
 });

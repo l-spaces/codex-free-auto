@@ -224,18 +224,17 @@ const self = {
       return String(value || '').trim().toLowerCase();
     },
     hasContributionAdapter(flowId, adapterId) {
-      return (flowId === 'openai' && adapterId === 'openai-oauth')
-        || (flowId === 'kiro' && adapterId === 'kiro-builder-id');
+      return flowId === 'openai' && adapterId === 'openai-oauth';
     },
     getDefaultContributionAdapterId(flowId) {
-      return flowId === 'kiro' ? 'kiro-builder-id' : 'openai-oauth';
+      return flowId === 'openai' ? 'openai-oauth' : '';
     },
   },
 };
 const sessionStore = {
   contributionMode: true,
   contributionModeExpected: true,
-  activeFlowId: 'kiro',
+  activeFlowId: 'openai',
 };
 const removed = [];
 const chrome = {
@@ -259,9 +258,9 @@ return { migrateLegacyAccountContributionState, sessionStore, removed };
 
   assert.equal(api.sessionStore.accountContributionEnabled, true);
   assert.equal(api.sessionStore.accountContributionExpected, true);
-  assert.equal(api.sessionStore.contributionAdapterId, 'kiro-builder-id');
+  assert.equal(api.sessionStore.contributionAdapterId, 'openai-oauth');
   assert.deepStrictEqual(api.sessionStore.flowContributionRuntime, {
-    kiro: { enabled: true, adapterId: 'kiro-builder-id' },
+    openai: { enabled: true, adapterId: 'openai-oauth' },
   });
   assert.equal(Object.prototype.hasOwnProperty.call(api.sessionStore, 'contributionMode'), false);
   assert.deepStrictEqual(api.removed, [

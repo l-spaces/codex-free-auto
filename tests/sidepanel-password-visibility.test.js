@@ -11,9 +11,6 @@ test('sidepanel password inputs expose visibility toggles', () => {
   const legacyToggleIds = new Map([
     ['input-vps-url', 'btn-toggle-vps-url'],
     ['input-vps-password', 'btn-toggle-vps-password'],
-    ['input-ip-proxy-username', 'btn-toggle-ip-proxy-username'],
-    ['input-ip-proxy-password', 'btn-toggle-ip-proxy-password'],
-    ['input-ip-proxy-api-url', 'btn-toggle-ip-proxy-api-url'],
     ['input-password', 'btn-toggle-password'],
   ]);
 
@@ -46,11 +43,9 @@ test('sidepanel masks video-sensitive settings with reusable visibility controls
     'input-sub2api-url',
     'input-sub2api-email',
     'input-codex2api-url',
-    'input-kiro-rs-url',
     'input-email',
     'input-hotmail-email',
     'input-mail2925-email',
-    'input-ip-proxy-host',
     'input-signup-phone',
   ].forEach((inputId) => {
     assert.match(source, new RegExp(`'${inputId}'`));
@@ -69,7 +64,6 @@ test('sidepanel masks bulk text areas with an eye toggle', () => {
     'input-custom-email-pool-import',
     'input-hotmail-import',
     'input-mail2925-import',
-    'input-ip-proxy-account-list',
   ].forEach((textareaId) => {
     assert.match(source, new RegExp(`'${textareaId}'`));
   });

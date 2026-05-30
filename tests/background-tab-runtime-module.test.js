@@ -168,7 +168,7 @@ test('tab runtime replays retryable transport recovery hook and surfaces a local
         get: async () => ({
           id: 9,
           windowId: 1,
-          url: 'https://profile.aws.amazon.com/complete',
+          url: 'https://auth.openai.com/authorize',
           status: 'complete',
         }),
         query: async () => [],
@@ -177,10 +177,10 @@ test('tab runtime replays retryable transport recovery hook and surfaces a local
         },
       },
     },
-    getSourceLabel: () => 'Kiro 授权页',
+    getSourceLabel: () => 'OpenAI 授权页',
     getState: async () => ({
       tabRegistry: {
-        'kiro-register-page': { tabId: 9, ready: true },
+        'openai-auth': { tabId: 9, ready: true },
       },
       sourceLastUrls: {},
     }),
@@ -192,8 +192,8 @@ test('tab runtime replays retryable transport recovery hook and surfaces a local
   });
 
   await assert.rejects(
-    runtime.sendToContentScriptResilient('kiro-register-page', {
-      type: 'ENSURE_KIRO_PAGE_STATE',
+    runtime.sendToContentScriptResilient('openai-auth', {
+      type: 'ENSURE_AUTH_PAGE_STATE',
       payload: {},
     }, {
       timeoutMs: 5,

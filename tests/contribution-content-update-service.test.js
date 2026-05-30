@@ -105,13 +105,13 @@ test('getContentUpdateSnapshot returns a prompt version for visible contribution
     }),
   });
 
-  const snapshot = await api.getContentUpdateSnapshot({ flowId: 'kiro', targetId: 'kiro-rs' });
+  const snapshot = await api.getContentUpdateSnapshot({ flowId: 'openai', targetId: 'cpa' });
 
   assert.equal(snapshot.status, 'update-available');
   assert.equal(snapshot.promptVersion, 'auto_run_notice:2026-04-21T12:05:00Z');
-  assert.equal(snapshot.flowId, 'kiro');
-  assert.equal(snapshot.targetId, 'kiro-rs');
-  assert.equal(getFetchUrls()[0], 'https://flowpilot.qlhazycoder.top/api/content-summary?flow=kiro&target=kiro-rs');
+  assert.equal(snapshot.flowId, 'openai');
+  assert.equal(snapshot.targetId, 'cpa');
+  assert.equal(getFetchUrls()[0], 'https://flowpilot.qlhazycoder.top/api/content-summary?flow=openai&target=cpa');
   assert.equal(snapshot.hasVisibleUpdates, true);
   assert.equal(snapshot.latestUpdatedAt, '2026-04-21T12:05:00Z');
   assert.equal(snapshot.items.length, 1);
@@ -160,34 +160,36 @@ test('getContentUpdateSnapshot falls back to cached snapshot when the live reque
   assert.equal(snapshot.items[0].slug, 'announcement');
 });
 
-test('getContentUpdateSnapshot keeps flow caches isolated', async () => {
+test('getContentUpdateSnapshot keeps target caches isolated', async () => {
   const cachedSnapshot = {
     status: 'update-available',
-    promptVersion: 'flow:kiro|target:kiro-rs|auto_run_notice:2026-04-22T00:00:00Z',
+    promptVersion: 'flow:openai|target:sub2api|auto_run_notice:2026-04-22T00:00:00Z',
     hasVisibleUpdates: true,
     latestUpdatedAt: '2026-04-22T00:00:00Z',
     latestUpdatedAtDisplay: '2026-04-22 08:00',
-    flowId: 'kiro',
-    targetId: 'kiro-rs',
-    items: [{ slug: 'auto_run_notice', isVisible: true, text: 'Kiro 提示' }],
+    flowId: 'openai',
+    targetId: 'sub2api',
+    items: [{ slug: 'auto_run_notice', isVisible: true, text: 'SUB2API 提示' }],
     checkedAt: Date.now() - 1000,
   };
 
   const { api } = createContributionContentService({
     cachedSnapshot,
-    cacheKey: 'multipage-contribution-content-summary-v2:kiro:kiro-rs',
+    cacheKey: 'multipage-contribution-content-summary-v2:openai:sub2api',
     fetchImpl: async () => {
       throw new Error('offline');
     },
   });
 
-  const openAiSnapshot = await api.getContentUpdateSnapshot({ flowId: 'openai', targetId: 'cpa' });
-  const kiroSnapshot = await api.getContentUpdateSnapshot({ flowId: 'kiro', targetId: 'kiro-rs' });
+  const cpaSnapshot = await api.getContentUpdateSnapshot({ flowId: 'openai', targetId: 'cpa' });
+  const sub2apiSnapshot = await api.getContentUpdateSnapshot({ flowId: 'openai', targetId: 'sub2api' });
 
-  assert.equal(openAiSnapshot.status, 'error');
-  assert.equal(openAiSnapshot.fromCache, undefined);
-  assert.equal(openAiSnapshot.flowId, 'openai');
-  assert.equal(kiroSnapshot.fromCache, true);
-  assert.equal(kiroSnapshot.flowId, 'kiro');
-  assert.equal(kiroSnapshot.promptVersion, cachedSnapshot.promptVersion);
+  assert.equal(cpaSnapshot.status, 'error');
+  assert.equal(cpaSnapshot.fromCache, undefined);
+  assert.equal(cpaSnapshot.flowId, 'openai');
+  assert.equal(cpaSnapshot.targetId, 'cpa');
+  assert.equal(sub2apiSnapshot.fromCache, true);
+  assert.equal(sub2apiSnapshot.flowId, 'openai');
+  assert.equal(sub2apiSnapshot.targetId, 'sub2api');
+  assert.equal(sub2apiSnapshot.promptVersion, cachedSnapshot.promptVersion);
 });

@@ -54,13 +54,11 @@ const self = {
   MultiPageFlowRegistry: {
     normalizeFlowId(value, fallback = 'openai') {
       const normalized = String(value || '').trim().toLowerCase();
-      return ['openai', 'kiro', 'grok'].includes(normalized) ? normalized : fallback;
+      return normalized === 'openai' ? normalized : fallback;
     },
     normalizeTargetId(flowId, value, fallback = 'cpa') {
       const normalized = String(value || '').trim().toLowerCase();
       if (flowId === 'openai' && ['cpa', 'sub2api', 'codex2api'].includes(normalized)) return normalized;
-      if (flowId === 'kiro') return 'kiro-rs';
-      if (flowId === 'grok') return 'webchat2api';
       return fallback;
     },
     getDefaultTargetId(flowId) {

@@ -33,7 +33,7 @@ test('legacy account records importer normalizes old history records into canoni
       finalStatus: 'stopped',
       reason: '用户停止',
       failedStep: 7,
-      flowId: 'kiro',
+      flowId: 'openai',
     },
   ]);
 
@@ -60,7 +60,7 @@ test('legacy account records importer normalizes old history records into canoni
     accountContributionEnabled: false,
   });
   assert.equal(records[1].recordId, 'phone:+6612345');
-  assert.equal(records[1].flowId, 'kiro');
+  assert.equal(records[1].flowId, 'openai');
   assert.equal(records[1].accountIdentifierType, 'phone');
   assert.equal(records[1].phoneNumber, '+6612345');
   assert.equal(records[1].finalStatus, 'stopped');

@@ -50,13 +50,13 @@ test('flow capability registry keeps OpenAI phone signup available only when run
   assert.deepEqual(plusLockedState.effectiveSignupMethods, ['email']);
 });
 
-test('flow capability registry defaults unknown flows to minimal non-phone capabilities', () => {
+test('flow capability registry normalizes unknown flows to OpenAI capabilities', () => {
   const api = loadApi();
   const registry = api.createFlowCapabilityRegistry();
 
   const capabilityState = registry.resolveSidepanelCapabilities({
     state: {
-      activeFlowId: 'site-a',
+      activeFlowId: 'legacy-flow',
       targetId: 'codex2api',
       phoneVerificationEnabled: true,
       plusModeEnabled: true,
@@ -65,80 +65,23 @@ test('flow capability registry defaults unknown flows to minimal non-phone capab
     },
   });
 
-  assert.equal(capabilityState.activeFlowId, 'site-a');
-  assert.equal(capabilityState.canShowPhoneSettings, false);
-  assert.equal(capabilityState.canShowPlusSettings, false);
-  assert.equal(capabilityState.canShowLuckmail, false);
+  assert.equal(capabilityState.activeFlowId, 'openai');
+  assert.equal(capabilityState.canShowPhoneSettings, true);
+  assert.equal(capabilityState.canShowPlusSettings, true);
+  assert.equal(capabilityState.canShowLuckmail, true);
   assert.equal(capabilityState.canUsePhoneSignup, false);
   assert.equal(capabilityState.effectiveSignupMethod, 'email');
   assert.equal(capabilityState.effectiveTargetId, 'codex2api');
-  assert.deepEqual(capabilityState.supportedTargetIds, []);
+  assert.deepEqual(capabilityState.supportedTargetIds, ['cpa', 'sub2api', 'codex2api']);
 });
 
-test('flow capability registry exposes Kiro as an independent flow with its own visible groups', () => {
-  const api = loadApi();
-  const registry = api.createFlowCapabilityRegistry();
-
-  const capabilityState = registry.resolveSidepanelCapabilities({
-    state: {
-      activeFlowId: 'kiro',
-      targetId: 'kiro-rs',
-      signupMethod: 'phone',
-      plusModeEnabled: true,
-      phoneVerificationEnabled: true,
-    },
-  });
-
-  assert.equal(capabilityState.activeFlowId, 'kiro');
-  assert.equal(capabilityState.canShowPhoneSettings, false);
-  assert.equal(capabilityState.canShowPlusSettings, false);
-  assert.equal(capabilityState.canShowContributionMode, true);
-  assert.equal(capabilityState.effectiveSignupMethod, 'email');
-  assert.equal(capabilityState.effectiveTargetId, 'kiro-rs');
-  assert.deepEqual(capabilityState.flowCapabilities.contributionAdapterIds, ['kiro-builder-id']);
-  assert.deepEqual(
-    capabilityState.visibleGroupIds,
-    ['kiro-runtime-status', 'shared-auto-run', 'shared-settings-actions', 'kiro-target-kiro-rs', 'service-account', 'service-email', 'service-proxy']
-  );
-});
-
-test('flow capability registry exposes Grok as an independent SSO flow without OpenAI-only modes', () => {
-  const api = loadApi();
-  const registry = api.createFlowCapabilityRegistry();
-
-  const capabilityState = registry.resolveSidepanelCapabilities({
-    state: {
-      activeFlowId: 'grok',
-      targetId: 'webchat2api',
-      signupMethod: 'phone',
-      plusModeEnabled: true,
-      phoneVerificationEnabled: true,
-      accountContributionEnabled: true,
-    },
-  });
-
-  assert.equal(capabilityState.activeFlowId, 'grok');
-  assert.equal(capabilityState.canShowPhoneSettings, false);
-  assert.equal(capabilityState.canShowPlusSettings, false);
-  assert.equal(capabilityState.canShowContributionMode, false);
-  assert.equal(capabilityState.canShowLuckmail, false);
-  assert.equal(capabilityState.effectiveSignupMethod, 'email');
-  assert.equal(capabilityState.effectiveTargetId, 'webchat2api');
-  assert.deepEqual(capabilityState.supportedTargetIds, ['webchat2api']);
-  assert.deepEqual(capabilityState.flowCapabilities.contributionAdapterIds, []);
-  assert.deepEqual(
-    capabilityState.visibleGroupIds,
-    ['grok-runtime-status', 'shared-auto-run', 'shared-settings-actions', 'grok-target-webchat2api', 'service-account', 'service-email', 'service-proxy']
-  );
-});
 
 test('flow capability registry exposes shared auto-run validation for phone locks and target support', () => {
   const api = loadApi();
   const registry = api.createFlowCapabilityRegistry({
     flowCapabilities: {
-      openai: api.FLOW_CAPABILITIES.openai,
-      'site-a': {
-        ...api.DEFAULT_FLOW_CAPABILITIES,
+      openai: {
+        ...api.FLOW_CAPABILITIES.openai,
         supportedTargetIds: ['cpa'],
       },
     },
@@ -160,7 +103,7 @@ test('flow capability registry exposes shared auto-run validation for phone lock
 
   const unsupportedPanelResult = registry.validateAutoRunStart({
     state: {
-      activeFlowId: 'site-a',
+      activeFlowId: 'openai',
       targetId: 'sub2api',
       signupMethod: 'email',
     },
@@ -174,8 +117,7 @@ test('flow capability registry normalizes unsupported mode switches back to the 
   const api = loadApi();
   const registry = api.createFlowCapabilityRegistry({
     flowCapabilities: {
-      openai: api.FLOW_CAPABILITIES.openai,
-      'site-a': {
+      openai: {
         ...api.DEFAULT_FLOW_CAPABILITIES,
         supportedTargetIds: ['cpa'],
       },
@@ -184,19 +126,17 @@ test('flow capability registry normalizes unsupported mode switches back to the 
 
   const validation = registry.validateModeSwitch({
     state: {
-      activeFlowId: 'site-a',
+      activeFlowId: 'legacy-flow',
       targetId: 'sub2api',
       signupMethod: 'phone',
       phoneVerificationEnabled: true,
       plusModeEnabled: true,
-      accountContributionEnabled: true,
     },
     changedKeys: [
       'targetId',
       'signupMethod',
       'phoneVerificationEnabled',
       'plusModeEnabled',
-      'accountContributionEnabled',
     ],
   });
 
@@ -206,15 +146,12 @@ test('flow capability registry normalizes unsupported mode switches back to the 
     signupMethod: 'email',
     phoneVerificationEnabled: false,
     plusModeEnabled: false,
-    accountContributionEnabled: false,
-    accountContributionEnabled: false,
   });
   assert.deepEqual(
     validation.errors.map((entry) => entry.code),
     [
       'panel_mode_unsupported',
       'plus_mode_unsupported',
-      'contribution_mode_unsupported',
       'phone_verification_unsupported',
       'phone_signup_flow_unsupported',
     ]

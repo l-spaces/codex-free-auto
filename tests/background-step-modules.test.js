@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 
-test('background imports workflow step modules including rebuilt Kiro modules', () => {
+test('background imports OpenAI workflow step modules', () => {
   const source = fs.readFileSync('background.js', 'utf8');
 
   [
@@ -16,15 +16,7 @@ test('background imports workflow step modules including rebuilt Kiro modules', 
     'flows/openai/background/steps/fetch-login-code.js',
     'flows/openai/background/steps/confirm-oauth.js',
     'flows/openai/background/steps/platform-verify.js',
-    'shared/kiro-timeouts.js',
-    'flows/kiro/background/state.js',
-    'flows/kiro/background/register-runner.js',
-    'flows/kiro/background/desktop-client.js',
-    'flows/kiro/background/desktop-authorize-runner.js',
-    'flows/kiro/background/publisher-kiro-rs.js',
   ].forEach((path) => {
     assert.match(source, new RegExp(path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   });
-
-  assert.doesNotMatch(source, /background\/steps\/kiro-device-auth\.js/);
 });

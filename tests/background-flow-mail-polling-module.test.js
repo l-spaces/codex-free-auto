@@ -38,16 +38,16 @@ test('flow mail polling service dispatches API mail providers through shared hel
   });
 
   const result = await service.pollFlowVerificationCode({
-    flowId: 'kiro',
-    nodeId: 'kiro-submit-verification-code',
-    state: { activeFlowId: 'kiro', email: 'user@example.com' },
+    flowId: 'openai',
+    nodeId: 'fetch-signup-code',
+    state: { activeFlowId: 'openai', email: 'user@example.com' },
     step: 4,
     filterAfterTimestamp: 123,
-    logStepKey: 'kiro-submit-verification-code',
+    logStepKey: 'fetch-signup-code',
   });
 
   assert.equal(result.code, '123456');
-  assert.equal(buildCall.nodeId, 'kiro-submit-verification-code');
+  assert.equal(buildCall.nodeId, 'fetch-signup-code');
   assert.equal(buildCall.overrides.filterAfterTimestamp, 123);
   assert.equal(hotmailCall.step, 4);
   assert.equal(hotmailCall.payload.filterAfterTimestamp, 123);
@@ -62,8 +62,8 @@ test('flow mail polling service prepares browser mail provider sessions and payl
   const service = api.createFlowMailPollingService({
     addLog: async () => {},
     buildVerificationPollPayloadForNode: () => ({
-      flowId: 'kiro',
-      nodeId: 'kiro-submit-verification-code',
+      flowId: 'openai',
+      nodeId: 'fetch-signup-code',
       step: 4,
       targetEmail: 'user@example.com',
       maxAttempts: 2,
@@ -85,10 +85,10 @@ test('flow mail polling service prepares browser mail provider sessions and payl
   });
 
   const result = await service.pollFlowVerificationCode({
-    flowId: 'kiro',
-    nodeId: 'kiro-submit-verification-code',
+    flowId: 'openai',
+    nodeId: 'fetch-signup-code',
     state: {
-      activeFlowId: 'kiro',
+      activeFlowId: 'openai',
       currentMail2925AccountId: 'acct-1',
       mail2925UseAccountPool: true,
       mail2925Accounts: [
@@ -96,7 +96,7 @@ test('flow mail polling service prepares browser mail provider sessions and payl
       ],
     },
     step: 4,
-    logStepKey: 'kiro-submit-verification-code',
+    logStepKey: 'fetch-signup-code',
   });
 
   assert.equal(result.code, '654321');
@@ -104,7 +104,7 @@ test('flow mail polling service prepares browser mail provider sessions and payl
   assert.equal(ensured2925.expectedMailboxEmail, 'pool@example.com');
   assert.equal(mailMessage.type, 'POLL_EMAIL');
   assert.equal(mailMessage.payload.targetEmail, 'user@example.com');
-  assert.equal(mailOptions.logStepKey, 'kiro-submit-verification-code');
+  assert.equal(mailOptions.logStepKey, 'fetch-signup-code');
   assert.equal(mailOptions.responseTimeoutMs, 45000);
 });
 
@@ -138,9 +138,9 @@ test('flow mail polling service lets 2925 limit errors flow through shared recov
 
   await assert.rejects(
     () => service.pollFlowVerificationCode({
-      flowId: 'kiro',
-      nodeId: 'kiro-submit-verification-code',
-      state: { activeFlowId: 'kiro' },
+      flowId: 'openai',
+      nodeId: 'fetch-signup-code',
+      state: { activeFlowId: 'openai' },
       step: 4,
     }),
     /switched-account/

@@ -116,11 +116,7 @@ function getSelectedFlowId(state = latestState) {
   return String(selectFlow.value || state.activeFlowId || state.flowId || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID;
 }
 function getSelectedTargetId(flowId = getSelectedFlowId()) {
-  return String(
-    flowId === 'kiro'
-      ? (selectPanelMode.value || latestState.targetId || 'kiro-rs')
-      : normalizePanelMode(selectPanelMode.value || latestState.targetId || 'cpa')
-  ).trim().toLowerCase() || (flowId === 'kiro' ? 'kiro-rs' : 'cpa');
+  return String(normalizePanelMode(selectPanelMode.value || latestState.targetId || 'cpa')).trim().toLowerCase() || 'cpa';
 }
 function shouldOfferAutoModeChoice() { return false; }
 async function openAutoStartChoiceDialog() { throw new Error('should not be called'); }
@@ -228,15 +224,12 @@ test('startAutoRunFromCurrentSettings freezes run count before async settings sy
   assert.equal(events[3].message.payload.totalRuns, 20);
 });
 
-test('startAutoRunFromCurrentSettings sends current flow selection with auto run payload', async () => {
+test('startAutoRunFromCurrentSettings sends current OpenAI target selection with auto run payload', async () => {
   const api = createApi({
     persistImpl: `(events) => {
-      selectFlow.value = 'kiro';
-      selectPanelMode.value = 'kiro-rs';
-      latestState.activeFlowId = 'openai';
-      latestState.flowId = 'openai';
-      latestState.targetId = 'kiro-rs';
-      events.push({ type: 'flow-switch-race' });
+      selectPanelMode.value = 'sub2api';
+      latestState.targetId = 'cpa';
+      events.push({ type: 'target-switch-race' });
     }`,
   });
 
@@ -244,8 +237,8 @@ test('startAutoRunFromCurrentSettings sends current flow selection with auto run
   const sendEvent = api.getEvents().find((entry) => entry.type === 'send');
 
   assert.equal(result, true);
-  assert.equal(sendEvent.message.payload.activeFlowId, 'kiro');
-  assert.equal(sendEvent.message.payload.targetId, 'kiro-rs');
+  assert.equal(sendEvent.message.payload.activeFlowId, 'openai');
+  assert.equal(sendEvent.message.payload.targetId, 'sub2api');
 });
 
 test('startAutoRunFromCurrentSettings blocks when shared flow capability validation fails', async () => {

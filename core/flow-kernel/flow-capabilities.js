@@ -83,15 +83,18 @@
       return flowRegistryApi.normalizeFlowId(value, fallback);
     }
     const normalized = String(value || '').trim().toLowerCase();
-    return normalized || String(fallback || '').trim().toLowerCase() || DEFAULT_FLOW_ID;
+    if (REGISTERED_FLOW_ID_SET.has(normalized)) {
+      return normalized;
+    }
+    const fallbackValue = String(fallback || '').trim().toLowerCase();
+    if (REGISTERED_FLOW_ID_SET.has(fallbackValue)) {
+      return fallbackValue;
+    }
+    return DEFAULT_FLOW_ID;
   }
 
   function normalizeCapabilityFlowId(value = '', fallback = DEFAULT_FLOW_ID) {
-    const normalized = String(value || '').trim().toLowerCase();
-    if (normalized) {
-      return normalized;
-    }
-    return normalizeFlowId(fallback, DEFAULT_FLOW_ID);
+    return normalizeFlowId(value, fallback);
   }
 
   function isRegisteredFlowId(flowId = '') {

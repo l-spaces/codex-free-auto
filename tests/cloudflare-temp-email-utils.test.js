@@ -140,38 +140,6 @@ test('normalizeCloudflareTempEmailMailApiMessages supports nested CFTE rows with
   assert.doesNotMatch(messages[0].bodyPreview, /<p/);
 });
 
-test('normalized CFTE AWS Builder ID mail matches Kiro verification rules', () => {
-  const messages = normalizeCloudflareTempEmailMailApiMessages({
-    data: {
-      results: [
-        {
-          id: 'aws-mail-2',
-          to: { address: 'tmpjjwk205m0h@edu.email.qlhazycoder.tech' },
-          from: { address: 'no-reply@signin.aws' },
-          subject: '验证您的 AWS 构建者 ID 电子邮件地址',
-          html: '<div>验证码</div><div>248680</div>',
-          receivedAt: '2026-05-22T09:41:00.000Z',
-        },
-      ],
-    },
-  });
-
-  const result = pickVerificationMessageWithTimeFallback(messages, {
-    afterTimestamp: Date.UTC(2026, 4, 22, 9, 40, 0),
-    senderFilters: ['no-reply@signin.aws', 'aws'],
-    subjectFilters: ['aws builder id', 'verification', '验证码', 'code', 'aws'],
-    requiredKeywords: ['verification', '验证码', 'code', 'aws'],
-    codePatterns: [
-      { source: '(?:verification\\s*code|验证码|Your code is|code is)[：:\\s]*(\\d{6})', flags: 'gi' },
-      { source: '^\\s*(\\d{6})\\s*$', flags: 'gm' },
-      { source: '>\\s*(\\d{6})\\s*<', flags: 'g' },
-    ],
-    excludeCodes: [],
-  });
-
-  assert.equal(result.match?.message.id, 'aws-mail-2');
-  assert.equal(result.match?.code, '248680');
-});
 
 test('getCloudflareTempEmailAddressFromResponse supports direct and nested response shapes', () => {
   assert.equal(getCloudflareTempEmailAddressFromResponse({ address: 'one@example.com' }), 'one@example.com');

@@ -649,57 +649,6 @@ test('message router delegates OpenAI manual step 4 to the OpenAI node executor'
   assert.deepStrictEqual(events.executedSteps, [4]);
 });
 
-test('message router delegates Kiro manual step 4 without OpenAI auth-tab prerequisites', async () => {
-  const kiroNodeByStep = {
-    1: 'kiro-open-register-page',
-    2: 'kiro-submit-email',
-    3: 'kiro-submit-name',
-    4: 'kiro-submit-verification-code',
-    5: 'kiro-submit-password',
-    6: 'kiro-complete-register-consent',
-    7: 'kiro-start-desktop-authorize',
-    8: 'kiro-complete-desktop-authorize',
-    9: 'kiro-upload-credential',
-  };
-  const kiroStepByNode = Object.fromEntries(
-    Object.entries(kiroNodeByStep).map(([step, nodeId]) => [nodeId, Number(step)])
-  );
-  const { router, events } = createRouter({
-    state: {
-      activeFlowId: 'kiro',
-      flowId: 'kiro',
-      nodeStatuses: {
-        'kiro-open-register-page': 'completed',
-        'kiro-submit-email': 'completed',
-        'kiro-submit-name': 'completed',
-        'kiro-submit-verification-code': 'failed',
-      },
-    },
-    nodeByStep: kiroNodeByStep,
-    stepByNode: kiroStepByNode,
-    getNodeIdsForState: () => Object.values(kiroNodeByStep),
-    getTabId: async (sourceId) => {
-      assert.notEqual(sourceId, 'openai-auth');
-      return null;
-    },
-    isTabAlive: async (sourceId) => {
-      assert.notEqual(sourceId, 'openai-auth');
-      return false;
-    },
-  });
-
-  await router.handleMessage({
-    type: 'EXECUTE_NODE',
-    source: 'sidepanel',
-    nodeId: 'kiro-submit-verification-code',
-    payload: { nodeId: 'kiro-submit-verification-code' },
-  }, {});
-
-  assert.deepStrictEqual(events.invalidations, [
-    { step: 4, options: { logLabel: '节点 kiro-submit-verification-code 重新执行' } },
-  ]);
-  assert.deepStrictEqual(events.executedSteps, [4]);
-});
 
 test('message router resolves GPC OTP manual confirmation without completing step early', async () => {
   const state = {

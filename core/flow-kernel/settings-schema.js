@@ -53,26 +53,28 @@
       deps.defaultFlowId || flowRegistry.DEFAULT_FLOW_ID || 'openai'
     ).trim().toLowerCase() || 'openai';
     const defaultOpenAiTargetId = flowRegistry.DEFAULT_OPENAI_TARGET_ID || 'cpa';
-    const defaultKiroTargetId = flowRegistry.DEFAULT_KIRO_TARGET_ID || 'kiro-rs';
-    const defaultKiroRsUrl = String(flowRegistry.DEFAULT_KIRO_RS_URL || '').trim();
     const normalizeFlowId = typeof flowRegistry.normalizeFlowId === 'function'
       ? flowRegistry.normalizeFlowId
       : ((value = '', fallback = defaultFlowId) => {
         const normalized = String(value || '').trim().toLowerCase();
-        return normalized || String(fallback || '').trim().toLowerCase() || defaultFlowId;
+        if (normalized === defaultFlowId) {
+          return normalized;
+        }
+        const fallbackValue = String(fallback || '').trim().toLowerCase();
+        return fallbackValue === defaultFlowId ? fallbackValue : defaultFlowId;
       });
     const normalizeTargetId = typeof flowRegistry.normalizeTargetId === 'function'
       ? flowRegistry.normalizeTargetId
       : ((_flowId, value = '', fallback = '') => String(value || fallback || '').trim().toLowerCase());
     const getRegisteredFlowIds = typeof flowRegistry.getRegisteredFlowIds === 'function'
       ? flowRegistry.getRegisteredFlowIds
-      : (() => ['openai', 'kiro']);
+      : (() => ['openai']);
     const getFlowDefinition = typeof flowRegistry.getFlowDefinition === 'function'
       ? flowRegistry.getFlowDefinition
       : (() => null);
     const getDefaultTargetId = typeof flowRegistry.getDefaultTargetId === 'function'
       ? flowRegistry.getDefaultTargetId
-      : ((flowId) => (flowId === 'kiro' ? defaultKiroTargetId : defaultOpenAiTargetId));
+      : (() => defaultOpenAiTargetId);
     const getTargetDefinitions = typeof flowRegistry.getTargetDefinitions === 'function'
       ? flowRegistry.getTargetDefinitions
       : (() => ({}));
@@ -154,7 +156,7 @@
       const defaultTargetId = normalizeTargetId(
         flowId,
         getDefaultTargetId(flowId),
-        flowId === 'kiro' ? defaultKiroTargetId : defaultOpenAiTargetId
+        defaultOpenAiTargetId
       );
       const base = {
         selectedTargetId: defaultTargetId,
@@ -184,11 +186,6 @@
           },
           email: {
             provider: '163',
-          },
-          proxy: {
-            enabled: false,
-            provider: '711proxy',
-            mode: 'account',
           },
         },
         flows: buildDefaultFlows(),
@@ -232,20 +229,6 @@
           ...targetState,
           codex2apiUrl: String(targetState.codex2apiUrl ?? '').trim(),
           codex2apiAdminKey: String(targetState.codex2apiAdminKey ?? '').trim(),
-        };
-      }
-      if (flowId === 'kiro' && targetId === 'kiro-rs') {
-        return {
-          ...targetState,
-          baseUrl: String(targetState.baseUrl ?? defaultKiroRsUrl).trim() || defaultKiroRsUrl,
-          apiKey: String(targetState.apiKey ?? ''),
-        };
-      }
-      if (flowId === 'grok' && targetId === 'webchat2api') {
-        return {
-          ...targetState,
-          baseUrl: String(targetState.baseUrl ?? '').trim(),
-          apiKey: String(targetState.apiKey ?? ''),
         };
       }
       return targetState;
@@ -434,27 +417,6 @@
       };
     }
 
-    function normalizeKiroSettings(input = {}, defaults = {}, currentFlow = {}) {
-      const defaultKiroFlow = isPlainObject(defaults?.flows?.kiro)
-        ? defaults.flows.kiro
-        : {};
-      const defaultKiroTargets = isPlainObject(defaultKiroFlow.targets)
-        ? defaultKiroFlow.targets
-        : {};
-      const targetSource = {
-        ...currentFlow.targets['kiro-rs'],
-        baseUrl: input?.kiroRsUrl ?? input?.kiroRsBaseUrl ?? currentFlow.targets['kiro-rs'].baseUrl,
-        apiKey: input?.kiroRsKey ?? input?.kiroRsApiKey ?? currentFlow.targets['kiro-rs'].apiKey,
-      };
-      return {
-        ...currentFlow,
-        targets: {
-          ...currentFlow.targets,
-          'kiro-rs': normalizeFlowTargetState('kiro', 'kiro-rs', targetSource, defaultKiroTargets['kiro-rs'] || {}),
-        },
-      };
-    }
-
     function normalizeSettingsState(input = {}, options = {}) {
       const defaults = buildDefaultSettingsState();
       const nested = isPlainObject(input?.settingsState)
@@ -478,23 +440,6 @@
               ?? defaults.services.email.provider
             ).trim() || defaults.services.email.provider,
           },
-          proxy: {
-            enabled: Boolean(
-              nested?.services?.proxy?.enabled
-              ?? input?.ipProxyEnabled
-              ?? defaults.services.proxy.enabled
-            ),
-            provider: String(
-              nested?.services?.proxy?.provider
-              ?? input?.ipProxyService
-              ?? defaults.services.proxy.provider
-            ).trim() || defaults.services.proxy.provider,
-            mode: String(
-              nested?.services?.proxy?.mode
-              ?? input?.ipProxyMode
-              ?? defaults.services.proxy.mode
-            ).trim() || defaults.services.proxy.mode,
-          },
           account: {
             customPassword: String(
               input?.customPassword
@@ -514,9 +459,6 @@
       });
       if (normalized.flows.openai) {
         normalized.flows.openai = normalizeOpenAiSettings(input, nested, defaults, normalized.flows.openai);
-      }
-      if (normalized.flows.kiro) {
-        normalized.flows.kiro = normalizeKiroSettings(input, defaults, normalized.flows.kiro);
       }
       return normalized;
     }
@@ -581,8 +523,6 @@
         ...(isPlainObject(baseInput) ? cloneValue(baseInput) : {}),
       };
       const openaiState = normalizedState.flows.openai || buildDefaultFlowSettings('openai');
-      const kiroState = normalizedState.flows.kiro || buildDefaultFlowSettings('kiro');
-      const grokState = normalizedState.flows.grok || buildDefaultFlowSettings('grok');
       next.activeFlowId = normalizedState.activeFlowId;
       next.targetId = getSelectedTargetId(normalizedState, normalizedState.activeFlowId);
       next.vpsUrl = openaiState.targets.cpa?.vpsUrl || '';
@@ -608,13 +548,6 @@
       next.hostedCheckoutPhoneNumber = openaiState.plus?.hostedCheckoutPhoneNumber || '';
       next.plusHostedCheckoutOauthDelaySeconds = openaiState.plus?.plusHostedCheckoutOauthDelaySeconds ?? 3;
       next.mailProvider = normalizedState.services.email.provider;
-      next.ipProxyEnabled = normalizedState.services.proxy.enabled;
-      next.ipProxyService = normalizedState.services.proxy.provider;
-      next.ipProxyMode = normalizedState.services.proxy.mode;
-      next.kiroRsUrl = kiroState.targets['kiro-rs']?.baseUrl || '';
-      next.kiroRsKey = kiroState.targets['kiro-rs']?.apiKey || '';
-      next.grokWebchat2ApiUrl = grokState.targets.webchat2api?.baseUrl || '';
-      next.grokWebchat2ApiAdminKey = grokState.targets.webchat2api?.apiKey || '';
       next.stepExecutionRangeByFlow = buildStepExecutionRangeByFlow(normalizedState);
       next.settingsSchemaVersion = normalizedState.schemaVersion;
       next.settingsState = cloneValue(normalizedState);
@@ -625,15 +558,6 @@
       const normalizedState = normalizeSettingsState(settingsState);
       const normalizedFlowId = normalizeFlowId(flowId, normalizedState.activeFlowId);
       const targetId = getSelectedTargetId(normalizedState, normalizedFlowId);
-      if (normalizedFlowId === 'kiro') {
-        const targetSettings = getTargetSettings(normalizedState, normalizedFlowId, targetId);
-        return {
-          activeFlowId: normalizedFlowId,
-          targetId,
-          kiroRsUrl: targetSettings.baseUrl || '',
-          kiroRsKey: targetSettings.apiKey || '',
-        };
-      }
       return {
         activeFlowId: normalizedFlowId,
         targetId,

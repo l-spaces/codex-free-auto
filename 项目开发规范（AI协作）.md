@@ -171,7 +171,7 @@
 - `resolvedSignupMethod` 是当前轮冻结结果，不等同于用户此刻 UI 上选择的 `signupMethod`。
 - 强制绑定邮箱后重登用邮箱身份，只能通过单次执行参数覆盖登录身份，不能持久改写 `signupMethod`。
 - flow 能力不足时必须在步骤定义层或启动校验层处理，不能等执行到不存在的节点后才报错。
-- flow 私有远程上传、发布型 flow、贡献型 flow 必须显式区分：只有声明了 `publicationTargets` 或明确支持贡献能力的 flow 才能进入发布/贡献 adapter 校验；例如 Grok / `webchat2api` SSO Cookie 上传属于 Grok flow 自己的收尾节点，不是 publication target，也不能因为有 target 就默认接入贡献模式。
+- flow 私有远程上传、发布型 flow、贡献型 flow 必须显式区分：只有声明了 `publicationTargets` 或明确支持贡献能力的 flow 才能进入发布/贡献 adapter 校验；不能因为某个 flow 有 target 就默认接入贡献模式。
 
 ### 1.7 日志步骤号原则
 

@@ -366,6 +366,7 @@ let latestState = {};
 const PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH = 'oauth';
 const PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION = 'sub2api_codex_session';
 const DEFAULT_PLUS_ACCOUNT_ACCESS_STRATEGY = PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH;
+const DEFAULT_SIGNUP_METHOD = 'email';
 const inputEmail = { value: '' };
 const inputVpsUrl = { value: '' };
 const inputVpsPassword = { value: '' };
@@ -373,7 +374,6 @@ const selectPanelMode = { value: 'cpa' };
 const inputSub2ApiUrl = { value: '' };
 const inputSub2ApiEmail = { value: '' };
 const inputSub2ApiPassword = { value: '' };
-const inputSub2ApiGroup = { value: '' };
 const inputSub2ApiDefaultProxy = { value: '' };
 const inputCodex2ApiUrl = { value: '' };
 const inputCodex2ApiAdminKey = { value: '' };
@@ -451,16 +451,16 @@ const HERO_SMS_ACQUIRE_PRIORITY_PRICE = 'price';
 const DEFAULT_HERO_SMS_ACQUIRE_PRIORITY = HERO_SMS_ACQUIRE_PRIORITY_COUNTRY;
 const DEFAULT_HERO_SMS_COUNTRY_ID = 52;
 const DEFAULT_HERO_SMS_COUNTRY_LABEL = 'Thailand';
+const window = {};
 function syncLatestState(state) { latestState = { ...latestState, ...state }; }
 function syncAutoRunState() {}
 function syncPasswordField() {}
 function renderStepStatuses() {}
 function setLocalCpaStep9Mode() {}
-function normalizePanelMode(value = '') {
-  const normalized = String(value || '').trim().toLowerCase();
-  return normalized === 'sub2api' || normalized === 'codex2api' ? normalized : 'cpa';
-}
+function normalizeSignupMethod(value = '') { return String(value || '').trim().toLowerCase() === 'phone' ? 'phone' : 'email'; }
+function normalizePlusPaymentMethod(value = '') { return String(value || '').trim().toLowerCase() || 'paypal'; }
 function normalizePlusAccountAccessStrategy(value = '') { return String(value || '').trim().toLowerCase() === PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION ? PLUS_ACCOUNT_ACCESS_STRATEGY_SUB2API_CODEX_SESSION : PLUS_ACCOUNT_ACCESS_STRATEGY_OAUTH; }
+function normalizePlusAccountAccessStrategyUiValue(value = '') { return normalizePlusAccountAccessStrategy(value); }
 function isCustomMailProvider() { return false; }
 function setMail2925Mode() {}
 function normalizeIcloudFetchMode(value) { return String(value || '') === 'always_new' ? 'always_new' : 'reuse_existing'; }
@@ -490,7 +490,6 @@ function setPhoneSmsProviderSelectValue(provider) {
   selectPhoneSmsProvider.value = normalizedProvider;
   return normalizedProvider;
 }
-function getSelectedPhoneSmsProvider() { return normalizePhoneSmsProvider(selectPhoneSmsProvider?.value || latestState?.phoneSmsProvider); }
 function normalizeFiveSimCountryId(value, fallback = DEFAULT_FIVE_SIM_COUNTRY_ID) { return String(value || '').trim().toLowerCase().replace(/[^a-z0-9_-]+/g, '') || fallback; }
 function normalizeFiveSimCountryLabel(value = '', fallback = DEFAULT_FIVE_SIM_COUNTRY_LABEL) { return String(value || '').trim() || fallback; }
 function normalizeFiveSimOperator(value = '', fallback = DEFAULT_FIVE_SIM_OPERATOR) { return String(value || '').trim().toLowerCase().replace(/[^a-z0-9_-]+/g, '') || fallback; }
@@ -510,16 +509,15 @@ function applyHeroSmsFallbackSelection() {}
 function updateHeroSmsPlatformDisplay() {}
 function updatePhoneSmsProviderOrderSummary() {}
 function applyAutoRunStatus() {}
-function markSettingsDirty() {}
 function updateFallbackThreadIntervalInputState() {}
 function updateAccountRunHistorySettingsUI() {}
 function updatePhoneVerificationSettingsUI() {}
 function updatePanelModeUI() {}
 function updateMailProviderUI() { calls.push({ target: selectIcloudTargetMailboxType.value, provider: selectIcloudForwardMailProvider.value }); }
-function renderGrokRuntimeState() {}
 function renderSub2ApiGroupOptions() {}
 function isLuckmailProvider() { return false; }
 function updateButtonStates() {}
+function markSettingsDirty() {}
 ${bundle}
 return { applySettingsState, selectIcloudTargetMailboxType, selectIcloudForwardMailProvider };
 `)(calls);

@@ -85,7 +85,6 @@ function createExecutorHarness({
   queryTabsInAutomationWindow = null,
   markCurrentRegistrationAccountUsed = async () => {},
   onClickSubscribe = null,
-  probeIpProxyExit = null,
   onSetState = null,
   sleepWithStop = null,
   submitRedirectUrl = 'https://www.paypal.com/checkoutnow',
@@ -184,7 +183,6 @@ function createExecutorHarness({
       assert.equal(matcher(submitRedirectUrl), true);
       return { id: tabId, url: submitRedirectUrl };
     },
-    ...(typeof probeIpProxyExit === 'function' ? { probeIpProxyExit } : {}),
   });
 
   return { checkoutTab, events, executor };
@@ -359,7 +357,7 @@ test('Plus checkout billing sends the billing command to the iframe that contain
   assert.equal(events.completed[0].step, 'plus-checkout-billing');
 });
 
-test('Plus checkout billing uses proxy exit country for GoPay address when available', async () => {
+test('Plus checkout billing uses checkout country for GoPay address when available', async () => {
   const requestedCountries = [];
   const fetchRequests = [];
   const { events, executor } = createExecutorHarness({
@@ -377,7 +375,7 @@ test('Plus checkout billing uses proxy exit country for GoPay address when avail
         paypalCandidates: [],
         gopayCandidates: [],
         billingFieldsVisible: true,
-        countryText: 'United States',
+        countryText: 'Japan',
       },
     },
     getAddressSeedForCountry: (countryValue) => {
@@ -417,7 +415,6 @@ test('Plus checkout billing uses proxy exit country for GoPay address when avail
   await executor.executePlusCheckoutBilling({
     plusPaymentMethod: 'gopay',
     plusCheckoutCountry: 'ID',
-    ipProxyAppliedExitRegion: 'JP',
   });
 
   const fillMessage = events.messages.find((entry) => entry.message.type === 'PLUS_CHECKOUT_FILL_BILLING_ADDRESS');
@@ -429,128 +426,9 @@ test('Plus checkout billing uses proxy exit country for GoPay address when avail
     path: '/jp-address',
     method: 'refresh',
   });
-  assert.equal(events.logs.some((entry) => /GoPay 账单地址将按当前代理出口地区 JP/.test(entry.message)), true);
 });
 
-test('Plus checkout billing refreshes stale GoPay proxy country before filling address', async () => {
-  const requestedCountries = [];
-  const probeCalls = [];
-  const { events, executor } = createExecutorHarness({
-    frames: [
-      { frameId: 0, url: 'https://chatgpt.com/checkout/openai_llc/cs_test' },
-      { frameId: 7, url: 'https://js.stripe.com/v3/elements-inner-payment.html' },
-      { frameId: 8, url: 'https://js.stripe.com/v3/elements-inner-address.html' },
-    ],
-    stateByFrame: {
-      0: { hasPayPal: false, hasGoPay: false, paypalCandidates: [], gopayCandidates: [], hasSubscribeButton: true },
-      7: { hasPayPal: false, hasGoPay: true, gopayCandidates: [{ tag: 'button', text: 'GoPay' }] },
-      8: {
-        hasPayPal: false,
-        hasGoPay: false,
-        paypalCandidates: [],
-        gopayCandidates: [],
-        billingFieldsVisible: true,
-        countryText: 'Indonesia',
-      },
-    },
-    getAddressSeedForCountry: (countryValue) => {
-      requestedCountries.push(countryValue);
-      return countryValue === 'JP' ? {
-        countryCode: 'JP',
-        query: 'Tokyo Chiyoda-ku',
-        suggestionIndex: 1,
-        fallback: {
-          address1: 'Marunouchi 1-1',
-          city: 'Chiyoda-ku',
-          region: 'Tokyo',
-          postalCode: '100-0005',
-        },
-      } : createKrAddressSeed();
-    },
-    fetchImpl: async () => ({
-      ok: false,
-      status: 503,
-      json: async () => ({ status: 'error' }),
-    }),
-    probeIpProxyExit: async (options) => {
-      probeCalls.push(options);
-      return {
-        proxyRouting: {
-          exitRegion: 'JP',
-          exitIp: '203.0.113.8',
-          exitSource: 'page_context',
-          exitEndpoint: 'https://ipinfo.io/json',
-        },
-      };
-    },
-    submitRedirectUrl: 'https://app.midtrans.com/snap/v4/redirection/session#/gopay-tokenization/linking',
-  });
-
-  await executor.executePlusCheckoutBilling({
-    plusPaymentMethod: 'gopay',
-    plusCheckoutCountry: 'ID',
-    ipProxyAppliedExitRegion: 'KR',
-  });
-
-  const fillMessage = events.messages.find((entry) => entry.message.type === 'PLUS_CHECKOUT_FILL_BILLING_ADDRESS');
-  assert.equal(probeCalls.length, 1);
-  assert.equal(probeCalls[0].detectWhenDisabled, true);
-  assert.equal(requestedCountries[0], 'JP');
-  assert.equal(fillMessage.message.payload.addressSeed.countryCode, 'JP');
-  assert.equal(events.logs.some((entry) => entry.message.includes('当前代理出口复测结果：JP / 203.0.113.8')), true);
-  assert.equal(events.logs.some((entry) => /GoPay 账单地址将按当前代理出口地区 JP/.test(entry.message)), true);
-  assert.equal(events.logs.some((entry) => /GoPay 账单地址将按当前代理出口地区 KR/.test(entry.message)), false);
-});
-
-test('Plus checkout billing refuses to reuse stale GoPay proxy country when refresh has no region', async () => {
-  const requestedCountries = [];
-  const { events, executor } = createExecutorHarness({
-    frames: [
-      { frameId: 0, url: 'https://chatgpt.com/checkout/openai_llc/cs_test' },
-      { frameId: 7, url: 'https://js.stripe.com/v3/elements-inner-payment.html' },
-      { frameId: 8, url: 'https://js.stripe.com/v3/elements-inner-address.html' },
-    ],
-    stateByFrame: {
-      0: { hasPayPal: false, hasGoPay: false, paypalCandidates: [], gopayCandidates: [], hasSubscribeButton: true },
-      7: { hasPayPal: false, hasGoPay: true, gopayCandidates: [{ tag: 'button', text: 'GoPay' }] },
-      8: {
-        hasPayPal: false,
-        hasGoPay: false,
-        paypalCandidates: [],
-        gopayCandidates: [],
-        billingFieldsVisible: true,
-        countryText: 'Indonesia',
-      },
-    },
-    getAddressSeedForCountry: (countryValue) => {
-      requestedCountries.push(countryValue);
-      return createKrAddressSeed();
-    },
-    probeIpProxyExit: async () => ({
-      proxyRouting: {
-        reason: 'disabled_probe_only',
-        exitIp: '203.0.113.9',
-        exitRegion: '',
-        exitError: 'missing_region',
-      },
-    }),
-  });
-
-  await assert.rejects(
-    () => executor.executePlusCheckoutBilling({
-      plusPaymentMethod: 'gopay',
-      plusCheckoutCountry: 'ID',
-      ipProxyAppliedExitRegion: 'KR',
-    }),
-    /本次复测没有拿到国家码/
-  );
-
-  assert.equal(requestedCountries.length, 0);
-  assert.equal(events.logs.some((entry) => /已清空旧出口地区 KR/.test(entry.message)), true);
-  assert.equal(events.logs.some((entry) => /GoPay 账单地址将按当前代理出口地区 KR/.test(entry.message)), false);
-});
-
-test('Plus checkout billing normalizes legacy Korean postal code for GoPay address', async () => {
+test('Plus checkout billing normalizes legacy Korean postal code for GoPay checkout country address', async () => {
   const requestedCountries = [];
   const fetchRequests = [];
   const { events, executor } = createExecutorHarness({
@@ -568,7 +446,7 @@ test('Plus checkout billing normalizes legacy Korean postal code for GoPay addre
         paypalCandidates: [],
         gopayCandidates: [],
         billingFieldsVisible: true,
-        countryText: 'United States',
+        countryText: 'South Korea',
       },
     },
     getAddressSeedForCountry: (countryValue) => {
@@ -598,7 +476,6 @@ test('Plus checkout billing normalizes legacy Korean postal code for GoPay addre
   await executor.executePlusCheckoutBilling({
     plusPaymentMethod: 'gopay',
     plusCheckoutCountry: 'ID',
-    ipProxyAppliedExitRegion: 'KR',
   });
 
   const fillMessage = events.messages.find((entry) => entry.message.type === 'PLUS_CHECKOUT_FILL_BILLING_ADDRESS');
@@ -613,7 +490,6 @@ test('Plus checkout billing normalizes legacy Korean postal code for GoPay addre
     path: '/kr-address',
     method: 'refresh',
   });
-  assert.equal(events.logs.some((entry) => /GoPay 账单地址将按当前代理出口地区 KR/.test(entry.message)), true);
 });
 
 test('Plus checkout billing selects GoPay and waits for a GoPay redirect', async () => {

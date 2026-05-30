@@ -25,7 +25,6 @@
       hasSavedNodeProgress,
       isAddPhoneAuthFailure,
       isGpcTaskEndedFailure,
-      isKiroProxyFailure,
       isPhoneSmsPlatformRateLimitFailure,
       isPlusCheckoutNonFreeTrialFailure,
       isRestartCurrentAttemptError,
@@ -154,8 +153,6 @@
         phoneSignupReloginAfterBindEmailEnabled: state.phoneSignupReloginAfterBindEmailEnabled,
         paypalEmail: state.paypalEmail,
         paypalPassword: state.paypalPassword,
-        kiroRsUrl: state.kiroRsUrl,
-        kiroRsKey: state.kiroRsKey,
         autoRunSkipFailures: state.autoRunSkipFailures,
         autoRunFallbackThreadIntervalMinutes: state.autoRunFallbackThreadIntervalMinutes,
         autoStepDelaySeconds: state.autoStepDelaySeconds,
@@ -741,15 +738,12 @@
               && isSignupUserAlreadyExistsFailure(err);
             const blockedByStep4Route405 = typeof isStep4Route405RecoveryLimitFailure === 'function'
               && isStep4Route405RecoveryLimitFailure(err);
-            const blockedByKiroProxy = typeof isKiroProxyFailure === 'function'
-              && isKiroProxyFailure(err);
             const canRetry = !blockedByAddPhone
               && !blockedByPhoneNoSupply
               && !blockedByPlusNonFreeTrial
               && !blockedByGpcTaskEnded
               && !blockedBySignupUserAlreadyExists
               && !blockedByStep4Route405
-              && !blockedByKiroProxy
               && autoRunSkipFailures
               && attemptRun < maxAttemptsForRound;
 
@@ -964,27 +958,6 @@
                 'warn'
               );
               forceFreshTabsNextRun = true;
-              break;
-            }
-
-            if (blockedByKiroProxy) {
-              roundSummary.status = 'failed';
-              roundSummary.finalFailureReason = reason;
-              await setState({
-                autoRunRoundSummaries: serializeAutoRunRoundSummaries(totalRuns, roundSummaries),
-              });
-              await appendRoundRecordIfNeeded('failed', reason, err);
-              cancelPendingCommands('当前轮检测到 Kiro 代理异常页，已停止自动运行，等待用户切换代理。');
-              await broadcastStopToContentScripts();
-              await addLog(`第 ${targetRun}/${totalRuns} 轮检测到 Kiro 代理异常页：${reason}`, 'error');
-              await addLog('当前代理可能不可用，请先切换代理后再继续。自动运行已停止。', 'warn');
-              stoppedEarly = true;
-              await broadcastAutoRunStatus('stopped', {
-                currentRun: targetRun,
-                totalRuns,
-                attemptRun,
-                sessionId: 0,
-              });
               break;
             }
 

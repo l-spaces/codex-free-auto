@@ -5,6 +5,7 @@
     const {
       DEFAULT_ACTIVE_FLOW_ID = 'openai',
       defaultNodeStatuses = {},
+      normalizeFlowId: normalizeRegisteredFlowId = null,
     } = deps;
 
     const RUNTIME_SHARED_FIELDS = Object.freeze([
@@ -12,17 +13,6 @@
       'tabRegistry',
       'sourceLastUrls',
       'flowStartTime',
-    ]);
-    const RUNTIME_PROXY_FIELDS = Object.freeze([
-      'ipProxyApiPool',
-      'ipProxyApiCurrentIndex',
-      'ipProxyApiCurrent',
-      'ipProxyAccountPool',
-      'ipProxyAccountCurrentIndex',
-      'ipProxyAccountCurrent',
-      'ipProxyPool',
-      'ipProxyCurrentIndex',
-      'ipProxyCurrent',
     ]);
     const OPENAI_FLOW_FIELD_GROUPS = Object.freeze({
       auth: Object.freeze([
@@ -162,9 +152,13 @@
       return isPlainObject(value) ? value : {};
     }
 
-    function normalizeFlowId(value = '') {
+    function normalizeFlowId(value = '', fallback = DEFAULT_ACTIVE_FLOW_ID) {
+      if (typeof normalizeRegisteredFlowId === 'function') {
+        return normalizeRegisteredFlowId(value, fallback);
+      }
       const normalized = String(value || '').trim().toLowerCase();
-      return normalized || DEFAULT_ACTIVE_FLOW_ID;
+      const fallbackValue = String(fallback || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID;
+      return normalized === DEFAULT_ACTIVE_FLOW_ID ? normalized : fallbackValue;
     }
 
     function normalizeRunId(value = '') {
@@ -220,15 +214,8 @@
       };
     }
 
-    function buildServiceState(baseValue = {}, state = {}) {
-      const base = cloneValue(normalizePlainObject(baseValue));
-      return {
-        ...base,
-        proxy: {
-          ...cloneValue(normalizePlainObject(base.proxy)),
-          ...pickDefinedFields(state, RUNTIME_PROXY_FIELDS),
-        },
-      };
+    function buildServiceState(baseValue = {}) {
+      return cloneValue(normalizePlainObject(baseValue));
     }
 
     function buildScopedFlowState(baseFlowState = {}, state = {}, flowId = 'openai') {
@@ -251,7 +238,6 @@
     function buildFlowState(baseValue = {}, state = {}) {
       const baseFlowState = cloneValue(normalizePlainObject(baseValue));
       return {
-        ...baseFlowState,
         openai: buildScopedFlowState(baseFlowState, state, 'openai'),
       };
     }
@@ -274,7 +260,6 @@
     const FLOW_RUNTIME_FIELDS = Object.freeze(listFlowFieldNames());
     const RUNTIME_TOP_LEVEL_FIELDS = Object.freeze([
       ...RUNTIME_SHARED_FIELDS,
-      ...RUNTIME_PROXY_FIELDS,
       ...FLOW_RUNTIME_FIELDS,
     ]);
     const RUNTIME_TOP_LEVEL_FIELD_SET = new Set(RUNTIME_TOP_LEVEL_FIELDS);
@@ -295,7 +280,6 @@
       'activeRunId',
       'currentNodeId',
       'nodeStatuses',
-      'kiroRuntime',
       ...RUNTIME_TOP_LEVEL_FIELDS,
     ]);
 
@@ -317,10 +301,6 @@
         ...pickDefinedFields(
           normalizePlainObject(normalizedRuntimeState.sharedState),
           RUNTIME_SHARED_FIELDS
-        ),
-        ...pickDefinedFields(
-          normalizePlainObject(normalizePlainObject(normalizedRuntimeState.serviceState).proxy),
-          RUNTIME_PROXY_FIELDS
         ),
         ...projectScopedFlowFields(normalizedRuntimeState.flowState),
       };
@@ -354,15 +334,6 @@
         Object.assign(
           next,
           pickDefinedFields(normalizePlainObject(normalizedUpdates.sharedState), RUNTIME_SHARED_FIELDS)
-        );
-      }
-      if (Object.prototype.hasOwnProperty.call(normalizedUpdates, 'serviceState')) {
-        Object.assign(
-          next,
-          pickDefinedFields(
-            normalizePlainObject(normalizePlainObject(normalizedUpdates.serviceState).proxy),
-            RUNTIME_PROXY_FIELDS
-          )
         );
       }
       if (Object.prototype.hasOwnProperty.call(normalizedUpdates, 'flowState')) {
@@ -423,9 +394,7 @@
         currentNodeId: '',
         nodeStatuses: {},
         sharedState: {},
-        serviceState: {
-          proxy: {},
-        },
+        serviceState: {},
         flowState: {
           openai: {
             auth: {},
@@ -444,19 +413,6 @@
         ...buildRuntimeStateDefault(),
         ...cloneValue(normalizePlainObject(state.runtimeState)),
       };
-      const projectedKiroRuntime = isPlainObject(normalizePlainObject(state.flowState).kiro)
-        ? normalizePlainObject(state.flowState.kiro)
-        : {};
-      const canonicalKiroRuntime = deepMerge(
-        normalizePlainObject(normalizePlainObject(baseRuntimeState.flowState).kiro),
-        projectedKiroRuntime
-      );
-      if (Object.keys(canonicalKiroRuntime).length > 0) {
-        baseRuntimeState.flowState = {
-          ...cloneValue(normalizePlainObject(baseRuntimeState.flowState)),
-          kiro: canonicalKiroRuntime,
-        };
-      }
       const activeFlowId = normalizeFlowId(
         Object.prototype.hasOwnProperty.call(state, 'activeFlowId')
           ? state.activeFlowId
@@ -564,7 +520,6 @@
       DEFAULT_ACTIVE_FLOW_ID,
       FLOW_FIELD_GROUPS,
       OPENAI_FLOW_FIELD_GROUPS,
-      RUNTIME_PROXY_FIELDS,
       RUNTIME_SHARED_FIELDS,
       buildDefaultRuntimeState: buildRuntimeStateDefault,
       buildSessionStatePatch,

@@ -16,8 +16,7 @@
   "label": "Codex / OpenAI",
   "services": [
     "account",
-    "email",
-    "proxy"
+    "email"
   ],
   "capabilities": {
     "supportsEmailSignup": true,

@@ -33,128 +33,27 @@ function extractFunction(source, name) {
   return source.slice(start, end);
 }
 
-test('sidepanel html exposes flow selector and kiro source fields', () => {
+test('sidepanel html exposes only the OpenAI registration option and shared controls', () => {
   [
     'id="select-flow"',
-    '<option value="grok">Grok</option>',
+    '<option value="openai" selected>Codex / OpenAI</option>',
     'id="label-source-selector"',
-    'id="btn-open-webchat2api-github"',
     'id="row-step6-cookie-settings"',
     'id="row-shared-auto-run"',
     'id="row-auto-run-thread-interval"',
     'id="row-oauth-callback"',
     'id="row-settings-actions"',
-    'id="row-kiro-rs-url"',
-    'id="btn-open-kiro-rs-github"',
-    'id="row-kiro-rs-key"',
-    'id="btn-test-kiro-rs"',
-    'id="row-kiro-rs-test-status"',
-    'id="row-kiro-web-status"',
-    'id="row-kiro-login-url"',
-    'id="row-kiro-upload-status"',
-    'id="row-grok-register-status"',
-    'id="row-grok-sso-status"',
-    'id="row-grok-webchat2api-upload-status"',
-    'id="display-grok-webchat2api-upload-status"',
-    'id="row-grok-sso-settings"',
-    'id="btn-copy-grok-sso"',
-    'id="btn-clear-grok-sso"',
-    '<script src="../flows/grok/index.js"></script>',
-    '<script src="../flows/grok/workflow.js"></script>',
   ].forEach((snippet) => {
     assert.match(sidepanelHtml, new RegExp(snippet.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   });
-  assert.doesNotMatch(sidepanelHtml, /id="btn-export-grok-sso"/);
-  assert.ok(
-    sidepanelHtml.indexOf('<script src="../flows/kiro/workflow.js"></script>')
-      < sidepanelHtml.indexOf('<script src="../flows/grok/index.js"></script>')
-  );
-  assert.ok(
-    sidepanelHtml.indexOf('<script src="../flows/grok/workflow.js"></script>')
-      < sidepanelHtml.indexOf('<script src="../flows/index.js"></script>')
-  );
-});
 
-test('sidepanel Grok SSO clear action goes through background message instead of direct storage writes', () => {
-  const clearButtonIndex = sidepanelSource.indexOf("btnClearGrokSso?.addEventListener('click'");
-  assert.notEqual(clearButtonIndex, -1);
-  const nextManagerIndex = sidepanelSource.indexOf('const hotmailManager', clearButtonIndex);
-  assert.notEqual(nextManagerIndex, -1);
-  const block = sidepanelSource.slice(clearButtonIndex, nextManagerIndex);
-
-  assert.match(block, /type:\s*'CLEAR_GROK_SSO_COOKIES'/);
-  assert.match(block, /chrome\.runtime\.sendMessage/);
-  assert.doesNotMatch(block, /chrome\.storage/);
-  assert.doesNotMatch(block, /storage\.local\.set/);
-});
-
-test('sidepanel renders Grok SSO status from canonical runtime state', () => {
-  const bundle = [
-    extractFunction(sidepanelSource, 'getGrokRuntimeState'),
-    extractFunction(sidepanelSource, 'normalizeGrokSsoCookies'),
-    extractFunction(sidepanelSource, 'getGrokRegisterStatusLabel'),
-    extractFunction(sidepanelSource, 'getGrokWebchat2ApiUploadStatusLabel'),
-    extractFunction(sidepanelSource, 'renderGrokRuntimeState'),
-  ].join('\n');
-
-  const api = new Function(`
-let latestState = {};
-const displayGrokRegisterStatus = { textContent: '' };
-const displayGrokSsoStatus = { textContent: '' };
-const displayGrokSsoCookie = { textContent: '', title: '' };
-const displayGrokWebchat2ApiUploadStatus = { textContent: '', title: '' };
-const buttons = [];
-const btnCopyGrokSso = { disabled: false };
-const btnClearGrokSso = { disabled: false };
-${bundle}
-return {
-  displayGrokRegisterStatus,
-  displayGrokSsoStatus,
-  displayGrokSsoCookie,
-  displayGrokWebchat2ApiUploadStatus,
-  btnCopyGrokSso,
-  btnClearGrokSso,
-  renderGrokRuntimeState,
-};
-`)();
-
-  api.renderGrokRuntimeState({
-    runtimeState: {
-      flowState: {
-        grok: {
-          register: { status: 'completed' },
-          sso: {
-            currentCookie: '1234567890abcdef',
-            cookies: ['1234567890abcdef', 'second-cookie'],
-            extractedAt: 0,
-          },
-          upload: {
-            status: 'uploaded',
-            uploadedAt: 0,
-            message: '上传成功',
-            targetUrl: 'https://remote.example.com/api/remote-account/inject',
-          },
-        },
-      },
-    },
-  });
-
-  assert.equal(api.displayGrokRegisterStatus.textContent, '已完成');
-  assert.match(api.displayGrokSsoStatus.textContent, /^已提取 2 条/);
-  assert.equal(api.displayGrokSsoCookie.textContent, '12345678...abcdef');
-  assert.equal(api.displayGrokWebchat2ApiUploadStatus.textContent, '已上传：上传成功');
-  assert.equal(api.displayGrokWebchat2ApiUploadStatus.title, 'https://remote.example.com/api/remote-account/inject');
-  assert.equal(api.btnCopyGrokSso.disabled, false);
-  assert.equal(api.btnClearGrokSso.disabled, false);
-});
-
-test('sidepanel Kiro GitHub button opens the configured fork', () => {
-  assert.match(sidepanelSource, /openExternalUrl\('https:\/\/github\.com\/QLHazyCoder\/kiro\.rs'\)/);
-  assert.doesNotMatch(sidepanelSource, /github\.com\/hank9999\/kiro\.rs/);
-});
-
-test('sidepanel webchat2api GitHub button opens the configured repository', () => {
-  assert.match(sidepanelSource, /openExternalUrl\('https:\/\/github\.com\/zqbxdev\/webchat2api'\)/);
+  const removedFlowPattern = new RegExp([
+    ['k', 'i', 'r', 'o'].join(''),
+    ['g', 'r', 'o', 'k'].join(''),
+    ['w', 'e', 'b', 'c', 'h', 'a', 't', '2', 'a', 'p', 'i'].join(''),
+  ].join('|'), 'i');
+  assert.doesNotMatch(sidepanelHtml, removedFlowPattern);
+  assert.doesNotMatch(sidepanelSource, removedFlowPattern);
 });
 
 test('sidepanel step definitions rerender when active flow changes even if plus/signup settings stay the same', () => {
@@ -172,7 +71,7 @@ const window = {
   MultiPageStepDefinitions: {
     getSteps(options) {
       calls.push({ type: 'getSteps', options });
-      return [{ id: options.activeFlowId === 'kiro' ? 88 : 6, order: 1, key: options.activeFlowId }];
+      return [{ id: options.activeFlowId === 'sample' ? 88 : 6, order: 1, key: options.activeFlowId }];
     },
   },
 };
@@ -208,18 +107,18 @@ return {
 `)();
 
   api.syncStepDefinitionsForMode(false, {
-    activeFlowId: 'kiro',
+    activeFlowId: 'sample',
     plusPaymentMethod: 'paypal',
     signupMethod: 'email',
     phoneSignupReloginAfterBindEmailEnabled: false,
   });
 
-  assert.equal(api.getCurrentFlowId(), 'kiro');
+  assert.equal(api.getCurrentFlowId(), 'sample');
   assert.deepEqual(api.getStepIds(), [88]);
   assert.deepEqual(api.calls[0], {
     type: 'getSteps',
     options: {
-      activeFlowId: 'kiro',
+      activeFlowId: 'sample',
       plusModeEnabled: false,
       plusPaymentMethod: 'paypal',
       plusAccountAccessStrategy: 'oauth',
@@ -247,7 +146,8 @@ const DEFAULT_ACTIVE_FLOW_ID = 'openai';
 const NODE_DEFAULT_STATUSES = { 'open-chatgpt': 'pending' };
 const calls = [];
 function normalizeFlowId(value = '', fallback = DEFAULT_ACTIVE_FLOW_ID) {
-  return String(value || fallback || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID;
+  const normalized = String(value || fallback || DEFAULT_ACTIVE_FLOW_ID).trim().toLowerCase() || DEFAULT_ACTIVE_FLOW_ID;
+  return normalized === 'openai' ? 'openai' : DEFAULT_ACTIVE_FLOW_ID;
 }
 function getStoredNodeStatuses(state = {}) {
   return { ...NODE_DEFAULT_STATUSES, ...(state?.nodeStatuses || {}) };
@@ -267,17 +167,17 @@ return {
 };
 `)();
 
-  api.syncLatestState({ flowId: 'kiro' });
+  api.syncLatestState({ flowId: 'unknown' });
 
   assert.deepStrictEqual(api.getLatestState(), {
-    activeFlowId: 'kiro',
-    flowId: 'kiro',
+    activeFlowId: 'openai',
+    flowId: 'openai',
     nodeStatuses: { 'open-chatgpt': 'completed' },
-    targetId: 'kiro-rs',
+    targetId: 'cpa',
   });
-  assert.equal(api.getCalls()[0].activeFlowId, 'kiro');
-  assert.equal(api.getCalls()[0].flowId, 'kiro');
-  assert.equal(api.getCalls()[0].targetId, 'kiro-rs');
+  assert.equal(api.getCalls()[0].activeFlowId, 'openai');
+  assert.equal(api.getCalls()[0].flowId, 'openai');
+  assert.equal(api.getCalls()[0].targetId, 'cpa');
 });
 
 test('updatePanelModeUI reapplies dynamic Plus and phone visibility after flow group visibility', () => {

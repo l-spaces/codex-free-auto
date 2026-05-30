@@ -12,7 +12,7 @@
 
 ### 2.1 当前分析基线
 
-- `codex注册扩展` 当前工作树分支名为 `feature/kiro-desktop-auth-rebuild`，但它与本地 `dev` 指向同一提交 `4aa459e`，本地 `dev` 比 `origin/dev` 还新 8 个提交，因此本次分析不需要先回退或切换到远端 `origin/dev`
+- `codex注册扩展` 当前工作树与本地 `dev` 指向同一提交 `4aa459e`，本地 `dev` 比 `origin/dev` 还新 8 个提交，因此本次分析不需要先回退或切换到远端 `origin/dev`
 - `sub2api` 已在本次分析前同步到远端最新 `main`，当前基线为 `1d78dde8`
 - `GPTSession2CPAandSub2API` 已本地拉取，用于分析“session 导入类逻辑”的取精华方向，而不是复制其代码
 

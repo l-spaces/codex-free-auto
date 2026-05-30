@@ -5,7 +5,7 @@
   const flowsIndexApi = rootScope.MultiPageFlowsIndex || {};
 
   const DEFAULT_FLOW_ID = 'openai';
-  const SHARED_SERVICE_IDS = Object.freeze(['account', 'email', 'proxy']);
+  const SHARED_SERVICE_IDS = Object.freeze(['account', 'email']);
 
   const DEFAULT_FLOW_CAPABILITIES = Object.freeze({
     supportsEmailSignup: true,
@@ -42,11 +42,6 @@
     'service-email': {
       id: 'service-email',
       label: '\u90ae\u7bb1\u670d\u52a1',
-    },
-    'service-proxy': {
-      id: 'service-proxy',
-      label: 'IP \u4ee3\u7406',
-      sectionIds: ['ip-proxy-section'],
     },
     'shared-auto-run': {
       id: 'shared-auto-run',
@@ -147,10 +142,6 @@
 
   function normalizeOpenAiTargetId(value = '', fallback = undefined) {
     return normalizeTargetId('openai', value, fallback);
-  }
-
-  function normalizeKiroTargetId(value = '', fallback = undefined) {
-    return normalizeTargetId('kiro', value, fallback);
   }
 
   function getTargetDefinitions(flowId) {
@@ -267,20 +258,10 @@
 
   const OPENAI_TARGET_IDS = Object.freeze(Object.keys(getTargetDefinitions('openai')));
   const DEFAULT_OPENAI_TARGET_ID = String(getDefaultTargetId('openai') || OPENAI_TARGET_IDS[0] || 'cpa');
-  const DEFAULT_KIRO_TARGET_ID = String(getDefaultTargetId('kiro') || 'kiro-rs');
-  const DEFAULT_KIRO_PUBLICATION_TARGET_ID = String(
-    getFlowDefinition('kiro')?.defaultPublicationTargetId || DEFAULT_KIRO_TARGET_ID
-  );
-  const DEFAULT_KIRO_RS_URL = String(
-    getFlowDefinition('kiro')?.defaultTargetState?.baseUrl || ''
-  ).trim();
 
   return {
     DEFAULT_FLOW_CAPABILITIES,
     DEFAULT_FLOW_ID,
-    DEFAULT_KIRO_PUBLICATION_TARGET_ID,
-    DEFAULT_KIRO_RS_URL,
-    DEFAULT_KIRO_TARGET_ID,
     DEFAULT_OPENAI_TARGET_ID,
     FLOW_DEFINITIONS,
     OPENAI_TARGET_IDS,
@@ -306,7 +287,6 @@
     getTargetOptions,
     getVisibleGroupIds,
     normalizeFlowId,
-    normalizeKiroTargetId,
     normalizeOpenAiTargetId,
     normalizeTargetId,
   };

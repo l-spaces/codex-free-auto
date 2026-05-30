@@ -108,26 +108,18 @@
         return selectedTargetId;
       }
       return normalizeString(currentState.targetId).toLowerCase()
-        || (activeFlowId === 'kiro' ? 'kiro-rs' : 'cpa');
+        || 'cpa';
     }
 
     function applySelectedFlowToState(nextState = {}, flowId = 'openai', targetId = '') {
       const selectedFlowId = normalizeString(flowId).toLowerCase() || 'openai';
       const selectedTargetId = normalizeString(targetId).toLowerCase();
       const baseState = nextState && typeof nextState === 'object' ? nextState : {};
-      if (selectedFlowId === 'openai') {
-        return {
-          ...baseState,
-          activeFlowId: selectedFlowId,
-          flowId: selectedFlowId,
-          targetId: selectedTargetId || normalizeString(baseState.targetId).toLowerCase() || 'cpa',
-        };
-      }
       return {
         ...baseState,
         activeFlowId: selectedFlowId,
         flowId: selectedFlowId,
-        targetId: selectedTargetId || normalizeString(baseState.targetId).toLowerCase() || 'kiro-rs',
+        targetId: selectedTargetId || normalizeString(baseState.targetId).toLowerCase() || 'cpa',
       };
     }
 

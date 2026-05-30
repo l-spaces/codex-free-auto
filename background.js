@@ -3,10 +3,6 @@
 importScripts(
   'flows/openai/index.js',
   'flows/openai/workflow.js',
-  'flows/kiro/index.js',
-  'flows/kiro/workflow.js',
-  'flows/grok/index.js',
-  'flows/grok/workflow.js',
   'flows/index.js',
   'core/flow-kernel/flow-registry.js',
   'shared/contribution-registry.js',
@@ -14,7 +10,6 @@ importScripts(
   'imports/legacy/settings-importer.js',
   'core/flow-kernel/source-registry.js',
   'core/flow-kernel/flow-capabilities.js',
-  'shared/kiro-timeouts.js',
   'managed-alias-utils.js',
   'mail2925-utils.js',
   'paypal-utils.js',
@@ -27,30 +22,16 @@ importScripts(
   'background/contribution-oauth.js',
   'background/mail-2925-session.js',
   'background/paypal-account-store.js',
-  'background/ip-proxy-provider-711proxy.js',
-  'background/ip-proxy-core.js',
   'background/sub2api-api.js',
   'background/cpa-api.js',
   'background/panel-bridge.js',
   'background/registration-email-state.js',
   'core/flow-kernel/workflow-engine.js',
   'core/flow-kernel/runtime-state.js',
-  'flows/kiro/background/state.js',
-  'flows/grok/background/state.js',
-  'flows/kiro/background/credential-artifact.js',
-  'background/contribution/adapters/kiro-builder-id.js',
-  'flows/kiro/background/register-runner.js',
-  'flows/grok/background/register-runner.js',
-  'flows/kiro/background/desktop-client.js',
-  'flows/kiro/background/desktop-authorize-runner.js',
-  'flows/kiro/background/publisher-kiro-rs.js',
-  'flows/grok/background/publisher-webchat2api.js',
   'background/generated-email-helpers.js',
   'background/signup-flow-helpers.js',
   'background/mail-rule-registry.js',
   'flows/openai/mail-rules.js',
-  'flows/kiro/mail-rules.js',
-  'flows/grok/mail-rules.js',
   'background/flow-mail-polling.js',
   'background/message-router.js',
   'background/verification-flow.js',
@@ -430,9 +411,8 @@ const registrationEmailStateHelpers = self.MultiPageRegistrationEmailState?.crea
 const runtimeStateHelpers = self.MultiPageBackgroundRuntimeState?.createRuntimeStateHelpers?.({
   DEFAULT_ACTIVE_FLOW_ID,
   defaultNodeStatuses: DEFAULT_NODE_STATUSES,
+  normalizeFlowId: self.MultiPageFlowRegistry?.normalizeFlowId,
 }) || null;
-const kiroStateHelpers = self.MultiPageBackgroundKiroState || null;
-const grokStateHelpers = self.MultiPageBackgroundGrokState || null;
 const DEFAULT_REGISTRATION_EMAIL_STATE = registrationEmailStateHelpers?.DEFAULT_REGISTRATION_EMAIL_STATE || {
   current: '',
   previous: '',
@@ -501,12 +481,6 @@ function buildStateViewWithRuntimeState(state = {}) {
   let nextState = state;
   if (runtimeStateHelpers?.buildStateView) {
     nextState = runtimeStateHelpers.buildStateView(nextState);
-  }
-  if (kiroStateHelpers?.buildStateView) {
-    nextState = kiroStateHelpers.buildStateView(nextState);
-  }
-  if (grokStateHelpers?.buildStateView) {
-    nextState = grokStateHelpers.buildStateView(nextState);
   }
   return nextState;
 }
@@ -587,62 +561,9 @@ const DEFAULT_SUB2API_GROUP_NAMES = [
   CONTRIBUTION_SUB2API_PLUS_GROUP_NAME,
 ];
 const DEFAULT_SUB2API_REDIRECT_URI = 'http://localhost:1455/auth/callback';
-const DEFAULT_IP_PROXY_SERVICE = '711proxy';
-const IP_PROXY_SERVICE_VALUES = ['711proxy', 'lumiproxy', 'iproyal', 'omegaproxy'];
-const IP_PROXY_ENABLED_SERVICE_VALUES = ['711proxy'];
-const DEFAULT_IP_PROXY_MODE = 'account';
-const IP_PROXY_MODE_VALUES = ['api', 'account'];
-const DEFAULT_IP_PROXY_PROTOCOL = 'http';
-const IP_PROXY_PROTOCOL_VALUES = ['http', 'https', 'socks4', 'socks5'];
-const IP_PROXY_FETCH_TIMEOUT_MS = 20000;
-const IP_PROXY_SETTINGS_SCOPE = 'regular';
-const IP_PROXY_BYPASS_LIST = ['<local>', 'localhost', '127.0.0.1'];
-const IP_PROXY_ROUTE_ALL_TRAFFIC = true;
-const IP_PROXY_FORCE_DIRECT_HOST_PATTERNS = [
-  'pm-redirects.stripe.com',
-  '*.pm-redirects.stripe.com',
-  'hwork.pro',
-  '*.hwork.pro',
-  'auth.openai.com',
-  'auth0.openai.com',
-  'accounts.openai.com',
-  'luckyous.com',
-  '*.luckyous.com',
-];
-const IP_PROXY_FORCE_DIRECT_FALLBACK = 'PROXY 127.0.0.1:7897';
-const IP_PROXY_ACCOUNT_LIST_ENABLED = false;
-const IP_PROXY_INIT_ENABLE_EXIT_PROBE = false;
-const IP_PROXY_INIT_SUPPRESS_AUTH_REBIND = true;
-const IP_PROXY_INIT_AUTO_APPLY = false;
-const IP_PROXY_TARGET_HOST_PATTERNS = [
-  'openai.com',
-  '*.openai.com',
-  'chatgpt.com',
-  '*.chatgpt.com',
-  'ipwho.is',
-  '*.ipwho.is',
-  'ipapi.co',
-  '*.ipapi.co',
-  'ipinfo.io',
-  '*.ipinfo.io',
-  'api.ipify.org',
-  'api64.ipify.org',
-  'api.ip.cc',
-  'ifconfig.me',
-  'checkip.amazonaws.com',
-  'ipv4.icanhazip.com',
-  'ident.me',
-  'httpbin.org',
-  'ip-api.com',
-  'myip.ipip.net',
-];
 const AUTO_RUN_TIMER_ALARM_NAME = 'auto-run-timer';
-const IP_PROXY_AUTO_SYNC_ALARM_NAME = 'ip-proxy-auto-sync';
 const AUTO_RUN_TIMER_KIND_BETWEEN_ROUNDS = 'between_rounds';
 const AUTO_RUN_TIMER_KIND_BEFORE_RETRY = 'before_retry';
-const IP_PROXY_AUTO_SYNC_INTERVAL_MIN_MINUTES = 1;
-const IP_PROXY_AUTO_SYNC_INTERVAL_MAX_MINUTES = 1440;
-const IP_PROXY_AUTO_SYNC_DEFAULT_INTERVAL_MINUTES = 15;
 const AUTO_RUN_RETRY_DELAY_MS = 3000;
 const AUTO_RUN_MAX_RETRIES_PER_ROUND = 3;
 const AUTO_STEP_DELAY_MIN_ALLOWED_SECONDS = 0;
@@ -1282,10 +1203,6 @@ function setupDeclarativeNetRequestRules() {
 const PERSISTED_SETTING_DEFAULTS = {
   targetId: 'cpa',
   activeFlowId: DEFAULT_ACTIVE_FLOW_ID,
-  kiroRsUrl: String(self.MultiPageFlowRegistry?.DEFAULT_KIRO_RS_URL || '').trim(),
-  kiroRsKey: '',
-  grokWebchat2ApiUrl: '',
-  grokWebchat2ApiAdminKey: '',
   vpsUrl: '',
   vpsPassword: '',
   localCpaStep9Mode: DEFAULT_LOCAL_CPA_STEP9_MODE,
@@ -1296,23 +1213,6 @@ const PERSISTED_SETTING_DEFAULTS = {
   sub2apiGroupNames: DEFAULT_SUB2API_GROUP_NAMES,
   sub2apiAccountPriority: DEFAULT_SUB2API_ACCOUNT_PRIORITY,
   sub2apiDefaultProxyName: DEFAULT_SUB2API_PROXY_NAME,
-  ipProxyEnabled: false,
-  ipProxyService: DEFAULT_IP_PROXY_SERVICE,
-  ipProxyMode: DEFAULT_IP_PROXY_MODE,
-  ipProxyApiUrl: '',
-  ipProxyServiceProfiles: {},
-  ipProxyAccountList: '',
-  ipProxyAccountSessionPrefix: '',
-  ipProxyAccountLifeMinutes: '',
-  ipProxyPoolTargetCount: '20',
-  ipProxyAutoSyncEnabled: false,
-  ipProxyAutoSyncIntervalMinutes: IP_PROXY_AUTO_SYNC_DEFAULT_INTERVAL_MINUTES,
-  ipProxyHost: '',
-  ipProxyPort: '',
-  ipProxyProtocol: DEFAULT_IP_PROXY_PROTOCOL,
-  ipProxyUsername: '',
-  ipProxyPassword: '',
-  ipProxyRegion: '',
   codex2apiUrl: DEFAULT_CODEX2API_URL,
   codex2apiAdminKey: '',
   customPassword: '',
@@ -1495,13 +1395,6 @@ const SETTINGS_SCHEMA_VIEW_KEYS = Object.freeze([
   'hostedCheckoutPhoneNumber',
   'plusHostedCheckoutOauthDelaySeconds',
   'mailProvider',
-  'ipProxyEnabled',
-  'ipProxyService',
-  'ipProxyMode',
-  'kiroRsUrl',
-  'kiroRsKey',
-  'grokWebchat2ApiUrl',
-  'grokWebchat2ApiAdminKey',
   'stepExecutionRangeByFlow',
 ]);
 const SETTINGS_SCHEMA_VIEW_KEY_SET = new Set(SETTINGS_SCHEMA_VIEW_KEYS);
@@ -1558,21 +1451,6 @@ const DEFAULT_STATE = {
   currentHotmailAccountId: null,
   currentMail2925AccountId: null,
   preferredIcloudHost: '',
-  ipProxyApplied: false,
-  ipProxyAppliedReason: 'disabled',
-  ipProxyAppliedAt: 0,
-  ipProxyAppliedHost: '',
-  ipProxyAppliedPort: 0,
-  ipProxyAppliedRegion: '',
-  ipProxyAppliedHasAuth: false,
-  ipProxyAppliedProvider: DEFAULT_IP_PROXY_SERVICE,
-  ipProxyAppliedError: '',
-  ipProxyAppliedWarning: '',
-  ipProxyAppliedExitIp: '',
-  ipProxyAppliedExitRegion: '',
-  ipProxyAppliedExitDetecting: false,
-  ipProxyAppliedExitError: '',
-  ipProxyAppliedExitSource: '',
 };
 
 function normalizeAutoRunFallbackThreadIntervalMinutes(value) {
@@ -1589,27 +1467,6 @@ function normalizeAutoRunFallbackThreadIntervalMinutes(value) {
   return Math.min(
     1440,
     Math.max(0, Math.floor(numeric))
-  );
-}
-
-function normalizeIpProxyAutoSyncIntervalMinutes(value, fallback = IP_PROXY_AUTO_SYNC_DEFAULT_INTERVAL_MINUTES) {
-  const rawValue = String(value ?? '').trim();
-  if (!rawValue) {
-    return Math.min(
-      IP_PROXY_AUTO_SYNC_INTERVAL_MAX_MINUTES,
-      Math.max(IP_PROXY_AUTO_SYNC_INTERVAL_MIN_MINUTES, Math.floor(Number(fallback) || IP_PROXY_AUTO_SYNC_DEFAULT_INTERVAL_MINUTES))
-    );
-  }
-  const numeric = Number(rawValue);
-  if (!Number.isFinite(numeric)) {
-    return Math.min(
-      IP_PROXY_AUTO_SYNC_INTERVAL_MAX_MINUTES,
-      Math.max(IP_PROXY_AUTO_SYNC_INTERVAL_MIN_MINUTES, Math.floor(Number(fallback) || IP_PROXY_AUTO_SYNC_DEFAULT_INTERVAL_MINUTES))
-    );
-  }
-  return Math.min(
-    IP_PROXY_AUTO_SYNC_INTERVAL_MAX_MINUTES,
-    Math.max(IP_PROXY_AUTO_SYNC_INTERVAL_MIN_MINUTES, Math.floor(numeric))
   );
 }
 
@@ -3127,13 +2984,7 @@ function normalizePersistentSettingValue(key, value) {
       if (typeof self.MultiPageFlowRegistry?.normalizeFlowId === 'function') {
         return self.MultiPageFlowRegistry.normalizeFlowId(value, DEFAULT_ACTIVE_FLOW_ID);
       }
-      return String(value || '').trim().toLowerCase() === 'kiro' ? 'kiro' : DEFAULT_ACTIVE_FLOW_ID;
-    case 'kiroRsUrl':
-    case 'grokWebchat2ApiUrl':
-      return String(value || '').trim();
-    case 'kiroRsKey':
-    case 'grokWebchat2ApiAdminKey':
-      return String(value || '').trim();
+      return DEFAULT_ACTIVE_FLOW_ID;
     case 'vpsUrl':
       return String(value || '').trim();
     case 'vpsPassword':
@@ -3154,70 +3005,6 @@ function normalizePersistentSettingValue(key, value) {
       return normalizeSub2ApiAccountPriority(value);
     case 'sub2apiDefaultProxyName':
       return String(value || '').trim();
-    case 'ipProxyEnabled':
-      return Boolean(value);
-    case 'ipProxyService':
-      return normalizeIpProxyProviderValue(value);
-    case 'ipProxyMode':
-      return normalizeIpProxyMode(value);
-    case 'ipProxyApiUrl':
-      return String(value || '').trim();
-    case 'ipProxyServiceProfiles':
-      return normalizeIpProxyServiceProfiles(value || {}, PERSISTED_SETTING_DEFAULTS);
-    case 'ipProxyAccountList':
-      return normalizeIpProxyAccountList(value || '');
-    case 'ipProxyAccountSessionPrefix':
-      return normalizeIpProxyAccountSessionPrefix(value || '');
-    case 'ipProxyAccountLifeMinutes':
-      return normalizeIpProxyAccountLifeMinutes(value || '');
-    case 'ipProxyPoolTargetCount':
-      return normalizeIpProxyPoolTargetCount(value || '', 20);
-    case 'ipProxyAutoSyncEnabled':
-      return Boolean(value);
-    case 'ipProxyAutoSyncIntervalMinutes':
-      return normalizeIpProxyAutoSyncIntervalMinutes(
-        value,
-        PERSISTED_SETTING_DEFAULTS.ipProxyAutoSyncIntervalMinutes
-      );
-    case 'ipProxyHost':
-      return String(value || '').trim();
-    case 'ipProxyPort':
-      return String(normalizeIpProxyPort(value || '') || '');
-    case 'ipProxyProtocol':
-      return normalizeIpProxyProtocol(value);
-    case 'ipProxyUsername':
-      return String(value || '').trim();
-    case 'ipProxyPassword':
-      return String(value || '');
-    case 'ipProxyRegion':
-      return String(value || '').trim();
-    case 'ipProxyApiPool':
-      return normalizeProxyPoolEntries(
-        value,
-        normalizeIpProxyProviderValue(value?.provider || DEFAULT_IP_PROXY_SERVICE)
-      );
-    case 'ipProxyApiCurrentIndex':
-      return normalizeIpProxyCurrentIndex(value, 0);
-    case 'ipProxyApiCurrent':
-      return normalizeProxyPoolEntries(value ? [value] : [], DEFAULT_IP_PROXY_SERVICE)[0] || null;
-    case 'ipProxyAccountPool':
-      return normalizeProxyPoolEntries(
-        value,
-        normalizeIpProxyProviderValue(value?.provider || DEFAULT_IP_PROXY_SERVICE)
-      );
-    case 'ipProxyAccountCurrentIndex':
-      return normalizeIpProxyCurrentIndex(value, 0);
-    case 'ipProxyAccountCurrent':
-      return normalizeProxyPoolEntries(value ? [value] : [], DEFAULT_IP_PROXY_SERVICE)[0] || null;
-    case 'ipProxyPool':
-      return normalizeProxyPoolEntries(
-        value,
-        normalizeIpProxyProviderValue(value?.provider || DEFAULT_IP_PROXY_SERVICE)
-      );
-    case 'ipProxyCurrentIndex':
-      return normalizeIpProxyCurrentIndex(value, 0);
-    case 'ipProxyCurrent':
-      return normalizeProxyPoolEntries(value ? [value] : [], DEFAULT_IP_PROXY_SERVICE)[0] || null;
     case 'codex2apiUrl':
       return normalizeCodex2ApiUrl(value);
     case 'codex2apiAdminKey':
@@ -3644,35 +3431,6 @@ function buildPersistentSettingsPayload(input = {}, options = {}) {
     || Object.prototype.hasOwnProperty.call(payload, 'activeFlowId')) {
     payload.signupMethod = resolveSignupMethod(nextSignupConstraintState);
   }
-  if (payload.ipProxyServiceProfiles) {
-    const selectedService = normalizeIpProxyProviderValue(
-      payload.ipProxyService || PERSISTED_SETTING_DEFAULTS.ipProxyService
-    );
-    const normalizedProfiles = normalizeIpProxyServiceProfiles(payload.ipProxyServiceProfiles, {
-      ...PERSISTED_SETTING_DEFAULTS,
-      ...payload,
-    });
-    payload.ipProxyServiceProfiles = normalizedProfiles;
-    const activeProfile = normalizedProfiles[selectedService]
-      || buildIpProxyServiceProfileFromState({
-        ...PERSISTED_SETTING_DEFAULTS,
-        ...payload,
-      });
-    payload.ipProxyService = selectedService;
-    payload.ipProxyMode = normalizeIpProxyMode(activeProfile?.mode || payload.ipProxyMode);
-    payload.ipProxyApiUrl = String(activeProfile?.apiUrl || payload.ipProxyApiUrl || '').trim();
-    payload.ipProxyAccountList = normalizeIpProxyAccountList(activeProfile?.accountList || payload.ipProxyAccountList || '');
-    payload.ipProxyAccountSessionPrefix = normalizeIpProxyAccountSessionPrefix(activeProfile?.accountSessionPrefix || payload.ipProxyAccountSessionPrefix || '');
-    payload.ipProxyAccountLifeMinutes = normalizeIpProxyAccountLifeMinutes(activeProfile?.accountLifeMinutes || payload.ipProxyAccountLifeMinutes || '');
-    payload.ipProxyPoolTargetCount = normalizeIpProxyPoolTargetCount(activeProfile?.poolTargetCount || payload.ipProxyPoolTargetCount || '', 20);
-    payload.ipProxyHost = String(activeProfile?.host || payload.ipProxyHost || '').trim();
-    payload.ipProxyPort = String(normalizeIpProxyPort(activeProfile?.port || payload.ipProxyPort || '') || '');
-    payload.ipProxyProtocol = normalizeIpProxyProtocol(activeProfile?.protocol || payload.ipProxyProtocol);
-    payload.ipProxyUsername = String(activeProfile?.username || payload.ipProxyUsername || '').trim();
-    payload.ipProxyPassword = String(activeProfile?.password || payload.ipProxyPassword || '');
-    payload.ipProxyRegion = String(activeProfile?.region || payload.ipProxyRegion || '').trim();
-  }
-
   const hasExplicitSettingsSchema = hasExplicitSettingsState
     || Object.prototype.hasOwnProperty.call(normalizedInput, 'settingsSchemaVersion');
   if (fillDefaults || hasExplicitSettingsSchema) {
@@ -3799,14 +3557,6 @@ function buildSettingsStatePatchFromFlatUpdates(updates = {}) {
   assignIfUpdated('plusPaymentMethod', ['flows', 'openai', 'plus', 'plusPaymentMethod']);
   assignIfUpdated('plusAccountAccessStrategy', ['flows', 'openai', 'plus', 'plusAccountAccessStrategy']);
   assignIfUpdated('mailProvider', ['services', 'email', 'provider']);
-  assignIfUpdated('ipProxyEnabled', ['services', 'proxy', 'enabled']);
-  assignIfUpdated('ipProxyService', ['services', 'proxy', 'provider']);
-  assignIfUpdated('ipProxyMode', ['services', 'proxy', 'mode']);
-  assignIfUpdated('kiroRsUrl', ['flows', 'kiro', 'targets', 'kiro-rs', 'baseUrl']);
-  assignIfUpdated('kiroRsKey', ['flows', 'kiro', 'targets', 'kiro-rs', 'apiKey']);
-  assignIfUpdated('grokWebchat2ApiUrl', ['flows', 'grok', 'targets', 'webchat2api', 'baseUrl']);
-  assignIfUpdated('grokWebchat2ApiAdminKey', ['flows', 'grok', 'targets', 'webchat2api', 'apiKey']);
-
   if (hasUpdate('stepExecutionRangeByFlow') && isPlainObjectValue(updates.stepExecutionRangeByFlow)) {
     Object.entries(updates.stepExecutionRangeByFlow).forEach(([rawFlowId, range]) => {
       if (!isPlainObjectValue(range)) {
@@ -3905,8 +3655,6 @@ function collectAutoRunFreshResetRuntimeSettingKeys() {
 
   const sharedRuntimeFieldGroups = [
     runtimeStateHelpers?.RUNTIME_SHARED_FIELDS,
-    runtimeStateHelpers?.RUNTIME_PROXY_FIELDS,
-    kiroStateHelpers?.FLAT_FIELD_KEYS,
   ];
   for (const fields of sharedRuntimeFieldGroups) {
     if (!Array.isArray(fields)) {
@@ -3944,7 +3692,7 @@ function buildAutoRunFreshResetSettingsState(prevState = {}, activeFlowId = DEFA
     ? self.MultiPageFlowRegistry.getRegisteredFlowIds()
       .map((flowId) => self.MultiPageFlowRegistry.normalizeFlowId?.(flowId, '') || String(flowId || '').trim().toLowerCase())
       .filter(Boolean)
-    : ['openai', 'kiro'];
+    : ['openai'];
   const flowPatch = {};
   flowIds.forEach((flowId) => {
     const selectedTargetId = settingsSchemaApi?.getSelectedTargetId
@@ -3967,11 +3715,6 @@ function buildAutoRunFreshResetSettingsState(prevState = {}, activeFlowId = DEFA
       },
       email: {
         provider: prevState?.mailProvider,
-      },
-      proxy: {
-        enabled: prevState?.ipProxyEnabled,
-        provider: prevState?.ipProxyService,
-        mode: prevState?.ipProxyMode,
       },
     },
     flows: flowPatch,
@@ -4014,12 +3757,6 @@ function buildFreshAutoRunKeepState(prevState = {}) {
     : null;
   if (settingsSchemaApi?.getSelectedTargetId) {
     keepState.targetId = settingsSchemaApi.getSelectedTargetId(settingsState, activeFlowId);
-  }
-  if (typeof kiroStateHelpers?.buildFreshKeepState === 'function') {
-    Object.assign(keepState, kiroStateHelpers.buildFreshKeepState(sourceState));
-  }
-  if (typeof grokStateHelpers?.buildFreshKeepState === 'function') {
-    Object.assign(keepState, grokStateHelpers.buildFreshKeepState(sourceState));
   }
   if (Object.prototype.hasOwnProperty.call(sourceState, 'settingsSchemaVersion')) {
     keepState.settingsSchemaVersion = Number(sourceState.settingsSchemaVersion) || 0;
@@ -4327,38 +4064,6 @@ function broadcastDataUpdate(payload) {
     type: 'DATA_UPDATED',
     payload,
   }).catch(() => { });
-}
-
-async function clearGrokSsoCookies() {
-  const currentState = await getState();
-  const patch = typeof grokStateHelpers?.buildRuntimeStatePatch === 'function'
-    ? grokStateHelpers.buildRuntimeStatePatch(currentState, {
-      sso: {
-        currentCookie: '',
-        cookies: [],
-        extractedAt: 0,
-      },
-      upload: {
-        status: '',
-        uploadedAt: 0,
-        message: '',
-        targetUrl: '',
-      },
-    })
-    : {
-      grokSsoCookie: '',
-      grokSsoCookies: [],
-      grokSsoExtractedAt: 0,
-      grokWebchat2ApiUploadStatus: '',
-      grokWebchat2ApiUploadedAt: 0,
-      grokWebchat2ApiUploadMessage: '',
-      grokWebchat2ApiTargetUrl: '',
-    };
-  await setState(patch);
-  const nextState = await getState();
-  broadcastDataUpdate(patch);
-  await addLog('Grok SSO Cookie 已清空。', 'info', { nodeId: 'grok-extract-sso-cookie' });
-  return { ok: true, state: nextState };
 }
 
 function broadcastIcloudAliasesChanged(payload = {}) {
@@ -9457,14 +9162,6 @@ function isSignupUserAlreadyExistsFailure(error) {
   return /SIGNUP_USER_ALREADY_EXISTS::|user_already_exists/i.test(message);
 }
 
-function isKiroProxyFailure(error) {
-  if (typeof loggingStatus !== 'undefined' && loggingStatus?.isKiroProxyFailure) {
-    return loggingStatus.isKiroProxyFailure(error);
-  }
-  const message = getErrorMessage(error);
-  return /Kiro\s*(?:注册页|桌面授权页).*(?:CloudFront\s*拒绝请求|AWS\s*请求异常)|(?:当前代理\s*IP|出口区域异常).*(?:切换代理|更换代理)|AWS\s*风控.*(?:切换代理|更换代理)/i.test(message);
-}
-
 function isStep4Route405RecoveryLimitFailure(error) {
   const message = getErrorMessage(error);
   return /STEP4_405_RECOVERY_LIMIT::|步骤\s*4：检测到\s*405\s*错误页面，已连续点击“重试”恢复/i.test(message);
@@ -9632,25 +9329,6 @@ function hasSavedProgress(statuses = {}, stateOverride = null) {
 
 function getDownstreamStateResets(step, state = {}) {
   const stepKey = getStepExecutionKeyForState(step, state);
-  if (String(stepKey || '').trim().toLowerCase().startsWith('kiro-')) {
-    const kiroResets = typeof kiroStateHelpers?.buildDownstreamResetPatch === 'function'
-      ? kiroStateHelpers.buildDownstreamResetPatch(stepKey, state)
-      : {};
-    if (Object.keys(kiroResets).length > 0) {
-      return {
-        ...(stepKey === 'kiro-open-register-page' ? { flowStartTime: null } : {}),
-        ...kiroResets,
-      };
-    }
-  }
-  if (String(stepKey || '').trim().toLowerCase().startsWith('grok-')) {
-    const grokResets = typeof grokStateHelpers?.buildDownstreamResetPatch === 'function'
-      ? grokStateHelpers.buildDownstreamResetPatch(stepKey, state)
-      : {};
-    if (Object.keys(grokResets).length > 0) {
-      return grokResets;
-    }
-  }
   const plusRuntimeResets = {
     plusCheckoutTabId: null,
     plusCheckoutUrl: null,
@@ -10379,7 +10057,6 @@ async function skipNode(nodeId) {
 
   const linkedSkipNodeIdsByRoot = {
     'open-chatgpt': ['submit-signup-email', 'fill-password', 'fetch-signup-code', 'fill-profile', 'wait-registration-success'],
-    'kiro-open-register-page': ['kiro-submit-email', 'kiro-submit-name', 'kiro-submit-verification-code', 'kiro-submit-password', 'kiro-complete-register-consent'],
   };
   const linkedSkipNodeIds = linkedSkipNodeIdsByRoot[normalizedNodeId] || [];
   if (linkedSkipNodeIds.length) {
@@ -10680,27 +10357,6 @@ async function handleStepData(step, payload) {
 
 async function handleNodeData(nodeId, payload) {
   const state = await getState();
-  const nodeDefinition = getNodeDefinitionForState(nodeId, state);
-  if (String(nodeDefinition?.flowId || '').trim().toLowerCase() === 'kiro') {
-    const updates = typeof kiroStateHelpers?.applyNodeCompletionPayload === 'function'
-      ? kiroStateHelpers.applyNodeCompletionPayload(state, payload || {})
-      : {};
-    if (Object.keys(updates).length > 0) {
-      await setState(updates);
-      broadcastDataUpdate(updates);
-    }
-    return;
-  }
-  if (String(nodeDefinition?.flowId || '').trim().toLowerCase() === 'grok') {
-    const updates = typeof grokStateHelpers?.applyNodeCompletionPayload === 'function'
-      ? grokStateHelpers.applyNodeCompletionPayload(state, payload || {})
-      : {};
-    if (Object.keys(updates).length > 0) {
-      await setState(updates);
-      broadcastDataUpdate(updates);
-    }
-    return;
-  }
   const step = getStepIdByNodeIdForState(nodeId, state);
   if (!Number.isInteger(step) || step <= 0) {
     return;
@@ -10749,21 +10405,6 @@ const AUTO_RUN_BACKGROUND_COMPLETED_STEP_KEYS = new Set([
   'fetch-bound-email-login-code',
   'post-bound-email-phone-verification',
   'confirm-oauth',
-  'kiro-open-register-page',
-  'kiro-submit-email',
-  'kiro-submit-name',
-  'kiro-submit-verification-code',
-  'kiro-submit-password',
-  'kiro-complete-register-consent',
-  'kiro-start-desktop-authorize',
-  'kiro-complete-desktop-authorize',
-  'kiro-upload-credential',
-  'grok-open-signup-page',
-  'grok-submit-email',
-  'grok-submit-verification-code',
-  'grok-submit-profile',
-  'grok-extract-sso-cookie',
-  'grok-upload-sso-to-webchat2api',
 ]);
 const STEP_COMPLETION_SIGNAL_STEP_KEYS = new Set([
   'fill-password',
@@ -11920,7 +11561,6 @@ let autoRunTotalRuns = 1;
 let autoRunAttemptRun = 0;
 let autoRunSessionId = 0;
 let autoRunSessionSeed = 0;
-let ipProxyAutoSyncRunning = false;
 const EMAIL_FETCH_MAX_ATTEMPTS = 5;
 const VERIFICATION_POLL_MAX_ROUNDS = 5;
 const STANDARD_MAIL_VERIFICATION_RESEND_INTERVAL_MS = 25000;
@@ -12022,161 +11662,6 @@ async function deleteAndBroadcastAccountRunHistoryRecords(recordIds = [], stateO
   const result = await accountRunHistoryHelpers.deleteAccountRunHistoryRecords(recordIds, stateOverride);
   await broadcastAccountRunHistoryUpdate();
   return result;
-}
-
-function resolveIpProxyCandidateCountForAutoSwitch(state = {}, mode = 'account', provider = DEFAULT_IP_PROXY_SERVICE) {
-  const normalizedMode = typeof normalizeIpProxyMode === 'function'
-    ? normalizeIpProxyMode(mode)
-    : String(mode || 'account').trim().toLowerCase();
-  const normalizedProvider = typeof normalizeIpProxyProviderValue === 'function'
-    ? normalizeIpProxyProviderValue(provider)
-    : String(provider || DEFAULT_IP_PROXY_SERVICE).trim().toLowerCase();
-  if (normalizedMode === 'account' && typeof getAccountModeProxyPoolFromState === 'function') {
-    const pool = getAccountModeProxyPoolFromState(state, normalizedProvider);
-    return Array.isArray(pool) ? pool.length : 0;
-  }
-  if (typeof getIpProxyRuntimeSnapshot === 'function') {
-    const runtime = getIpProxyRuntimeSnapshot(state, normalizedMode, normalizedProvider);
-    return Array.isArray(runtime?.pool) ? runtime.pool.length : 0;
-  }
-  return 0;
-}
-
-function resolveIpProxyAutoSyncIntervalMinutes(value, fallback = IP_PROXY_AUTO_SYNC_DEFAULT_INTERVAL_MINUTES) {
-  return normalizeIpProxyAutoSyncIntervalMinutes(value, fallback);
-}
-
-async function clearIpProxyAutoSyncAlarm() {
-  await chrome.alarms.clear(IP_PROXY_AUTO_SYNC_ALARM_NAME);
-}
-
-async function ensureIpProxyAutoSyncAlarm(stateOverride = null) {
-  const state = stateOverride || await getState();
-  const enabled = Boolean(state?.ipProxyAutoSyncEnabled);
-  if (!enabled) {
-    await clearIpProxyAutoSyncAlarm();
-    return false;
-  }
-  const intervalMinutes = resolveIpProxyAutoSyncIntervalMinutes(
-    state?.ipProxyAutoSyncIntervalMinutes,
-    PERSISTED_SETTING_DEFAULTS.ipProxyAutoSyncIntervalMinutes
-  );
-  const existingAlarm = await chrome.alarms.get(IP_PROXY_AUTO_SYNC_ALARM_NAME);
-  const existingPeriod = Number(existingAlarm?.periodInMinutes) || 0;
-  if (!existingAlarm || Math.abs(existingPeriod - intervalMinutes) > 0.0001) {
-    await chrome.alarms.clear(IP_PROXY_AUTO_SYNC_ALARM_NAME);
-    await chrome.alarms.create(IP_PROXY_AUTO_SYNC_ALARM_NAME, {
-      periodInMinutes: intervalMinutes,
-      delayInMinutes: intervalMinutes,
-    });
-  }
-  return true;
-}
-
-async function runIpProxyAutoSync(trigger = 'alarm') {
-  if (ipProxyAutoSyncRunning) {
-    return { skipped: true, reason: 'running' };
-  }
-  ipProxyAutoSyncRunning = true;
-  try {
-    const state = await getState();
-    if (!state?.ipProxyAutoSyncEnabled) {
-      await clearIpProxyAutoSyncAlarm();
-      return { skipped: true, reason: 'disabled' };
-    }
-    if (!state?.ipProxyEnabled) {
-      return { skipped: true, reason: 'proxy_disabled' };
-    }
-    const mode = typeof normalizeIpProxyMode === 'function'
-      ? normalizeIpProxyMode(state?.ipProxyMode)
-      : String(state?.ipProxyMode || 'account').trim().toLowerCase();
-    const result = await refreshIpProxyPool({
-      state,
-      mode,
-      skipExitProbe: true,
-    });
-    if (typeof addLog === 'function') {
-      const display = String(result?.display || '').trim();
-      await addLog(
-        display
-          ? `IP 代理自动同步完成（${trigger}）：${display}`
-          : `IP 代理自动同步完成（${trigger}）。`,
-        'info'
-      ).catch(() => {});
-    }
-    return { skipped: false, result };
-  } catch (error) {
-    if (typeof addLog === 'function') {
-      await addLog(
-        `IP 代理自动同步失败：${error?.message || String(error || '未知错误')}`,
-        'warn'
-      ).catch(() => {});
-    }
-    return { skipped: true, reason: 'error', error: error?.message || String(error || '未知错误') };
-  } finally {
-    ipProxyAutoSyncRunning = false;
-  }
-}
-
-async function maybeSwitchIpProxyAfterAutoRunRoundSuccess(payload = {}) {
-  if (typeof switchIpProxy !== 'function') {
-    return null;
-  }
-  const successfulRuns = Number(payload?.successfulRuns) || 0;
-  if (successfulRuns <= 0) {
-    return null;
-  }
-
-  const state = await getState();
-  if (!state?.ipProxyEnabled) {
-    return null;
-  }
-
-  const mode = typeof normalizeIpProxyMode === 'function'
-    ? normalizeIpProxyMode(state?.ipProxyMode)
-    : String(state?.ipProxyMode || 'account').trim().toLowerCase();
-  const provider = typeof normalizeIpProxyProviderValue === 'function'
-    ? normalizeIpProxyProviderValue(state?.ipProxyService)
-    : String(state?.ipProxyService || DEFAULT_IP_PROXY_SERVICE).trim().toLowerCase();
-  const threshold = typeof resolveIpProxyAutoSwitchThreshold === 'function'
-    ? resolveIpProxyAutoSwitchThreshold(state)
-    : Math.max(1, Math.min(500, Number(state?.ipProxyPoolTargetCount) || 20));
-  if (successfulRuns % threshold !== 0) {
-    return null;
-  }
-
-  const candidateCount = resolveIpProxyCandidateCountForAutoSwitch(state, mode, provider);
-  if (candidateCount <= 1) {
-    await addLog(
-      `任务切换阈值命中（成功 ${successfulRuns} 轮 / 阈值 ${threshold}），但当前仅 ${candidateCount} 条可切换代理，已跳过自动切换。`,
-      'info'
-    );
-    return {
-      skipped: true,
-      reason: 'insufficient_candidates',
-      candidateCount,
-      threshold,
-      successfulRuns,
-    };
-  }
-
-  const switchResult = await switchIpProxy('next', {
-    mode,
-    state,
-    forceRefresh: mode === 'api',
-    maxItems: typeof resolveIpProxyPoolTargetCountForMode === 'function'
-      ? resolveIpProxyPoolTargetCountForMode(state, mode)
-      : undefined,
-  });
-  const display = String(switchResult?.display || '').trim();
-  const routingApplied = Boolean(switchResult?.proxyRouting?.applied);
-  await addLog(
-    routingApplied
-      ? `任务切换阈值命中（成功 ${successfulRuns} 轮 / 阈值 ${threshold}），已自动切换代理：${display || '已切换到下一条'}。`
-      : `任务切换阈值命中（成功 ${successfulRuns} 轮 / 阈值 ${threshold}），已尝试自动切换代理，但连通性仍异常。`,
-    routingApplied ? 'ok' : 'warn'
-  );
-  return switchResult;
 }
 
 function resolveGpcHelperBaseUrl(apiUrl = '') {
@@ -12362,14 +11847,12 @@ const autoRunController = self.MultiPageBackgroundAutoRunController?.createAutoR
   isPhoneSmsPlatformRateLimitFailure,
   isPlusCheckoutNonFreeTrialFailure,
   isGpcTaskEndedFailure,
-  isKiroProxyFailure,
   isRestartCurrentAttemptError,
   isStep4Route405RecoveryLimitFailure,
   isSignupUserAlreadyExistsFailure,
   isStopError,
   launchAutoRunTimerPlan,
   normalizeAutoRunFallbackThreadIntervalMinutes,
-  onAutoRunRoundSuccess: (payload = {}) => maybeSwitchIpProxyAfterAutoRunRoundSuccess(payload),
   persistAutoRunTimerPlan,
   resetState,
   runAutoSequenceFromNode: (...args) => runAutoSequenceFromNode(...args),
@@ -13356,9 +12839,6 @@ async function resumeAutoRun() {
 
 const SIGNUP_ENTRY_URL = 'https://chatgpt.com/';
 const OPENAI_AUTH_INJECT_FILES = ['content/utils.js', 'content/operation-delay.js', 'flows/openai/content/auth-page-recovery.js', 'flows/openai/content/phone-country-utils.js', 'flows/openai/content/phone-auth.js', 'flows/openai/content/openai-auth.js'];
-const KIRO_REGISTER_INJECT_FILES = ['flows/openai/index.js', 'flows/kiro/index.js', 'flows/grok/index.js', 'flows/index.js', 'core/flow-kernel/flow-registry.js', 'core/flow-kernel/source-registry.js', 'shared/kiro-timeouts.js', 'content/utils.js', 'flows/kiro/content/register-page.js'];
-const KIRO_DESKTOP_AUTHORIZE_INJECT_FILES = ['flows/openai/index.js', 'flows/kiro/index.js', 'flows/grok/index.js', 'flows/index.js', 'core/flow-kernel/flow-registry.js', 'core/flow-kernel/source-registry.js', 'shared/kiro-timeouts.js', 'content/utils.js', 'flows/kiro/content/desktop-authorize-page.js'];
-const GROK_REGISTER_INJECT_FILES = ['flows/openai/index.js', 'flows/kiro/index.js', 'flows/grok/index.js', 'flows/index.js', 'core/flow-kernel/flow-registry.js', 'core/flow-kernel/source-registry.js', 'content/utils.js', 'flows/grok/content/register-page.js'];
 const panelBridge = self.MultiPageBackgroundPanelBridge?.createPanelBridge({
   chrome,
   addLog,
@@ -13416,22 +12896,10 @@ const openAiMailRules = self.MultiPageOpenAiMailRules?.createOpenAiMailRules({
   MAIL_2925_VERIFICATION_INTERVAL_MS,
   MAIL_2925_VERIFICATION_MAX_ATTEMPTS,
 });
-const kiroMailRules = self.MultiPageKiroMailRules?.createKiroMailRules({
-  LUCKMAIL_PROVIDER,
-  MAIL_2925_VERIFICATION_INTERVAL_MS,
-  MAIL_2925_VERIFICATION_MAX_ATTEMPTS,
-});
-const grokMailRules = self.MultiPageGrokMailRules?.createGrokMailRules({
-  LUCKMAIL_PROVIDER,
-  MAIL_2925_VERIFICATION_INTERVAL_MS,
-  MAIL_2925_VERIFICATION_MAX_ATTEMPTS,
-});
 const mailRuleRegistry = self.MultiPageBackgroundMailRuleRegistry?.createMailRuleRegistry({
   defaultFlowId: DEFAULT_ACTIVE_FLOW_ID,
   flowBuilders: {
     openai: openAiMailRules,
-    kiro: kiroMailRules,
-    grok: grokMailRules,
   },
 });
 const flowMailPollingService = self.MultiPageBackgroundFlowMailPolling?.createFlowMailPollingService({
@@ -13740,7 +13208,6 @@ const plusCheckoutBillingExecutor = self.MultiPageBackgroundPlusCheckoutBilling?
   throwIfStopped,
   waitForTabCompleteUntilStopped,
   waitForTabUrlMatchUntilStopped,
-  probeIpProxyExit,
 });
 const goPayManualConfirmExecutor = self.MultiPageBackgroundGoPayManualConfirm?.createGoPayManualConfirmExecutor({
   addLog,
@@ -13823,59 +13290,6 @@ const cpaSessionImportExecutor = self.MultiPageBackgroundCpaSessionImport?.creat
   throwIfStopped,
   waitForTabCompleteUntilStopped,
 });
-const kiroRegisterRunner = self.MultiPageBackgroundKiroRegisterRunner?.createKiroRegisterRunner({
-  addLog,
-  chrome,
-  ensureContentScriptReadyOnTab,
-  completeNodeFromBackground,
-  fetchImpl: typeof fetch === 'function' ? fetch.bind(globalThis) : null,
-  generatePassword,
-  generateRandomName,
-  getTabId,
-  getState,
-  isTabAlive,
-  isRetryableContentScriptTransportError,
-  pollFlowVerificationCode: flowMailPollingService?.pollFlowVerificationCode,
-  registerTab,
-  resolveSignupEmailForFlow,
-  reuseOrCreateTab,
-  sendToContentScriptResilient,
-  setPasswordState,
-  setState,
-  sleepWithStop,
-  throwIfStopped,
-  waitForTabStableComplete,
-  KIRO_REGISTER_INJECT_FILES,
-});
-const grokRegisterRunner = self.MultiPageBackgroundGrokRegisterRunner?.createGrokRegisterRunner({
-  addLog,
-  chrome,
-  ensureContentScriptReadyOnTab,
-  completeNodeFromBackground,
-  generatePassword,
-  generateRandomName,
-  getTabId,
-  getState,
-  isTabAlive,
-  pollFlowVerificationCode: flowMailPollingService?.pollFlowVerificationCode,
-  registerTab,
-  resolveSignupEmailForFlow,
-  reuseOrCreateTab,
-  sendToContentScriptResilient,
-  setPasswordState,
-  setState,
-  sleepWithStop,
-  throwIfStopped,
-  waitForTabStableComplete,
-  GROK_REGISTER_INJECT_FILES,
-  markCurrentRegistrationAccountUsed,
-});
-const kiroBuilderIdContributionAdapter = self.MultiPageBackgroundKiroBuilderIdContributionAdapter?.createKiroBuilderIdContributionAdapter?.({
-  addLog,
-  fetchImpl: typeof fetch === 'function' ? fetch.bind(globalThis) : null,
-  getState,
-  setState,
-});
 async function maybeSubmitFlowContribution(state = {}, options = {}) {
   const currentState = state && typeof state === 'object' && !Array.isArray(state) && Object.keys(state).length
     ? state
@@ -13885,53 +13299,8 @@ async function maybeSubmitFlowContribution(state = {}, options = {}) {
   if (!currentState.accountContributionEnabled) {
     return { ok: true, skipped: true, reason: 'account_contribution_disabled' };
   }
-  if (activeFlowId === 'kiro' && adapterId === 'kiro-builder-id') {
-    if (!kiroBuilderIdContributionAdapter?.maybeSubmitFlowContribution) {
-      return { ok: false, skipped: true, reason: 'kiro_builder_id_adapter_missing' };
-    }
-    return kiroBuilderIdContributionAdapter.maybeSubmitFlowContribution({
-      ...currentState,
-      contributionAdapterId: adapterId,
-    }, options);
-  }
   return { ok: true, skipped: true, reason: 'adapter_not_handled_by_flow_submission' };
 }
-const kiroDesktopAuthorizeRunner = self.MultiPageBackgroundKiroDesktopAuthorizeRunner?.createKiroDesktopAuthorizeRunner({
-  addLog,
-  chrome,
-  completeNodeFromBackground,
-  ensureContentScriptReadyOnTab,
-  fetchImpl: typeof fetch === 'function' ? fetch.bind(globalThis) : null,
-  getTabId,
-  getState,
-  isTabAlive,
-  KIRO_REGISTER_INJECT_FILES,
-  maybeSubmitFlowContribution,
-  pollFlowVerificationCode: flowMailPollingService?.pollFlowVerificationCode,
-  registerTab,
-  reuseOrCreateTab,
-  sendToContentScriptResilient,
-  setState,
-  sleepWithStop,
-  throwIfStopped,
-  waitForTabStableComplete,
-  KIRO_DESKTOP_AUTHORIZE_INJECT_FILES,
-});
-const kiroPublisher = self.MultiPageBackgroundKiroPublisherKiroRs?.createKiroRsPublisher({
-  addLog,
-  completeNodeFromBackground,
-  fetchImpl: typeof fetch === 'function' ? fetch.bind(globalThis) : null,
-  getState,
-  maybeSubmitFlowContribution,
-  setState,
-});
-const grokWebchat2ApiPublisher = self.MultiPageBackgroundGrokPublisherWebchat2Api?.createGrokWebchat2ApiPublisher({
-  addLog,
-  completeNodeFromBackground,
-  fetchImpl: typeof fetch === 'function' ? fetch.bind(globalThis) : null,
-  getState,
-  setState,
-});
 const step10Executor = self.MultiPageBackgroundStep10?.createStep10Executor({
   addLog,
   chrome,
@@ -14017,21 +13386,6 @@ const stepExecutorsByKey = {
   'post-bound-email-phone-verification': (state) => step8Executor.executeBoundEmailPostLoginPhoneVerification(state),
   'confirm-oauth': (state) => step9Executor.executeStep9(state),
   'platform-verify': (state) => executeStep10(state),
-  'kiro-open-register-page': (state) => kiroRegisterRunner.executeKiroOpenRegisterPage(state),
-  'kiro-submit-email': (state) => kiroRegisterRunner.executeKiroSubmitEmail(state),
-  'kiro-submit-name': (state) => kiroRegisterRunner.executeKiroSubmitName(state),
-  'kiro-submit-verification-code': (state) => kiroRegisterRunner.executeKiroSubmitVerificationCode(state),
-  'kiro-submit-password': (state) => kiroRegisterRunner.executeKiroSubmitPassword(state),
-  'kiro-complete-register-consent': (state) => kiroRegisterRunner.executeKiroCompleteRegisterConsent(state),
-  'kiro-start-desktop-authorize': (state) => kiroDesktopAuthorizeRunner.executeKiroStartDesktopAuthorize(state),
-  'kiro-complete-desktop-authorize': (state) => kiroDesktopAuthorizeRunner.executeKiroCompleteDesktopAuthorize(state),
-  'kiro-upload-credential': (state) => kiroPublisher.executeKiroUploadCredential(state),
-  'grok-open-signup-page': (state) => grokRegisterRunner.executeGrokOpenSignupPage(state),
-  'grok-submit-email': (state) => grokRegisterRunner.executeGrokSubmitEmail(state),
-  'grok-submit-verification-code': (state) => grokRegisterRunner.executeGrokSubmitVerificationCode(state),
-  'grok-submit-profile': (state) => grokRegisterRunner.executeGrokSubmitProfile(state),
-  'grok-extract-sso-cookie': (state) => grokRegisterRunner.executeGrokExtractSsoCookie(state),
-  'grok-upload-sso-to-webchat2api': (state) => grokWebchat2ApiPublisher.executeGrokUploadSsoToWebchat2Api(state),
 };
 const messageRouter = self.MultiPageBackgroundMessageRouter?.createMessageRouter({
   addLog,
@@ -14041,13 +13395,11 @@ const messageRouter = self.MultiPageBackgroundMessageRouter?.createMessageRouter
   buildLuckmailSessionSettingsPayload,
   buildPersistentSettingsPayload,
   broadcastDataUpdate,
-  applyIpProxySettingsFromState,
   checkIcloudSession,
   clearAccountRunHistory: (...args) => clearAndBroadcastAccountRunHistory(...args),
   deleteAccountRunHistoryRecords: (...args) => deleteAndBroadcastAccountRunHistoryRecords(...args),
   clearAutoRunTimerAlarm,
   clearFreeReusablePhoneActivation,
-  clearGrokSsoCookies,
   clearLuckmailRuntimeState,
   clearYydsMailRuntimeState,
   clearStopRequest,
@@ -14070,16 +13422,6 @@ const messageRouter = self.MultiPageBackgroundMessageRouter?.createMessageRouter
   fetchGeneratedEmail,
   refreshGpcCardBalance,
   finalizePhoneActivationAfterSuccessfulFlow,
-  testKiroRsConnection: async (baseUrl, apiKey) => {
-    if (typeof self.MultiPageBackgroundKiroPublisherKiroRs?.checkKiroRsConnection !== 'function') {
-      throw new Error('kiro.rs 连接测试能力尚未接入。');
-    }
-    return self.MultiPageBackgroundKiroPublisherKiroRs.checkKiroRsConnection(
-      baseUrl,
-      apiKey,
-      typeof fetch === 'function' ? fetch.bind(globalThis) : null
-    );
-  },
   finalizeStep3Completion: async () => {
     const currentState = await getState();
     const signupTabId = await getTabId('openai-auth');
@@ -14136,9 +13478,6 @@ const messageRouter = self.MultiPageBackgroundMessageRouter?.createMessageRouter
   isStopError,
   isTabAlive,
   launchAutoRunTimerPlan,
-  ensureIpProxyAutoSyncAlarm,
-  clearIpProxyAutoSyncAlarm,
-  runIpProxyAutoSync,
   listIcloudAliases,
   listLuckmailPurchasesForManagement,
   markCurrentCustomEmailPoolEntryUsed,
@@ -14154,12 +13493,9 @@ const messageRouter = self.MultiPageBackgroundMessageRouter?.createMessageRouter
   patchMail2925Account,
   registerTab,
   requestStop,
-  probeIpProxyExit,
   resetState,
   resumeAutoRun,
   selectLuckmailPurchase,
-  switchIpProxy,
-  changeIpProxyExit,
   setCurrentPayPalAccount,
   setCurrentHotmailAccount,
   setCurrentMail2925Account,
@@ -16062,12 +15398,6 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     launchAutoRunTimerPlan('alarm').catch((err) => {
       console.error(LOG_PREFIX, 'Failed to resume auto run from timer alarm:', err);
     });
-    return;
-  }
-  if (alarm.name === IP_PROXY_AUTO_SYNC_ALARM_NAME) {
-    runIpProxyAutoSync('alarm').catch((err) => {
-      console.error(LOG_PREFIX, 'Failed to run IP proxy auto sync alarm:', err);
-    });
   }
 });
 
@@ -16078,17 +15408,6 @@ chrome.runtime.onStartup.addListener(() => {
   restoreAutoRunTimerIfNeeded().catch((err) => {
     console.error(LOG_PREFIX, 'Failed to restore auto run timer on startup:', err);
   });
-  if (IP_PROXY_INIT_AUTO_APPLY) {
-    ensureIpProxySettingsAppliedFromCurrentState({
-      skipExitProbe: !IP_PROXY_INIT_ENABLE_EXIT_PROBE,
-      suppressAuthRebind: IP_PROXY_INIT_SUPPRESS_AUTH_REBIND,
-    }).catch((err) => {
-      console.error(LOG_PREFIX, 'Failed to restore IP proxy settings on startup:', err);
-    });
-  }
-  ensureIpProxyAutoSyncAlarm().catch((err) => {
-    console.error(LOG_PREFIX, 'Failed to restore IP proxy auto sync alarm on startup:', err);
-  });
 });
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -16098,17 +15417,6 @@ chrome.runtime.onInstalled.addListener(() => {
   restoreAutoRunTimerIfNeeded().catch((err) => {
     console.error(LOG_PREFIX, 'Failed to restore auto run timer on install/update:', err);
   });
-  if (IP_PROXY_INIT_AUTO_APPLY) {
-    ensureIpProxySettingsAppliedFromCurrentState({
-      skipExitProbe: !IP_PROXY_INIT_ENABLE_EXIT_PROBE,
-      suppressAuthRebind: IP_PROXY_INIT_SUPPRESS_AUTH_REBIND,
-    }).catch((err) => {
-      console.error(LOG_PREFIX, 'Failed to restore IP proxy settings on install/update:', err);
-    });
-  }
-  ensureIpProxyAutoSyncAlarm().catch((err) => {
-    console.error(LOG_PREFIX, 'Failed to restore IP proxy auto sync alarm on install/update:', err);
-  });
 });
 
 migrateLegacyAccountContributionState().catch((err) => {
@@ -16116,15 +15424,4 @@ migrateLegacyAccountContributionState().catch((err) => {
 });
 restoreAutoRunTimerIfNeeded().catch((err) => {
   console.error(LOG_PREFIX, 'Failed to restore auto run timer:', err);
-});
-if (IP_PROXY_INIT_AUTO_APPLY) {
-  ensureIpProxySettingsAppliedFromCurrentState({
-    skipExitProbe: !IP_PROXY_INIT_ENABLE_EXIT_PROBE,
-    suppressAuthRebind: IP_PROXY_INIT_SUPPRESS_AUTH_REBIND,
-  }).catch((err) => {
-    console.error(LOG_PREFIX, 'Failed to restore IP proxy settings:', err);
-  });
-}
-ensureIpProxyAutoSyncAlarm().catch((err) => {
-  console.error(LOG_PREFIX, 'Failed to restore IP proxy auto sync alarm:', err);
 });

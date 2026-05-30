@@ -9,9 +9,6 @@
     "alarms",
     "tabs",
     "webNavigation",
-    "webRequest",
-    "webRequestAuthProvider",
-    "proxy",
     "declarativeNetRequest",
     "debugger",
     "browsingData",
@@ -50,8 +47,6 @@
       "js": [
         "content/activation-utils.js",
         "flows/openai/index.js",
-        "flows/kiro/index.js",
-        "flows/grok/index.js",
         "flows/index.js",
         "core/flow-kernel/flow-registry.js",
         "core/flow-kernel/source-registry.js",
@@ -72,8 +67,6 @@
       "js": [
         "content/activation-utils.js",
         "flows/openai/index.js",
-        "flows/kiro/index.js",
-        "flows/grok/index.js",
         "flows/index.js",
         "core/flow-kernel/flow-registry.js",
         "core/flow-kernel/source-registry.js",
@@ -94,8 +87,6 @@
       "js": [
         "content/activation-utils.js",
         "flows/openai/index.js",
-        "flows/kiro/index.js",
-        "flows/grok/index.js",
         "flows/index.js",
         "core/flow-kernel/flow-registry.js",
         "core/flow-kernel/source-registry.js",
@@ -113,8 +104,6 @@
       "js": [
         "content/activation-utils.js",
         "flows/openai/index.js",
-        "flows/kiro/index.js",
-        "flows/grok/index.js",
         "flows/index.js",
         "core/flow-kernel/flow-registry.js",
         "core/flow-kernel/source-registry.js",
@@ -131,8 +120,6 @@
       "js": [
         "content/activation-utils.js",
         "flows/openai/index.js",
-        "flows/kiro/index.js",
-        "flows/grok/index.js",
         "flows/index.js",
         "core/flow-kernel/flow-registry.js",
         "core/flow-kernel/source-registry.js",

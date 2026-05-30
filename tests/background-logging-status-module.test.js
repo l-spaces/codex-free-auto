@@ -50,16 +50,4 @@ test('logging/status add-phone detection ignores step 2 phone-entry switch failu
     loggingStatus.getErrorMessage(new Error('GPC_TASK_ENDED::GPC OTP 超时，请重新创建任务')),
     'GPC OTP 超时，请重新创建任务'
   );
-  assert.equal(
-    loggingStatus.isKiroProxyFailure('Kiro 注册页出现 AWS 请求异常，通常是当前代理 IP 或出口区域异常，请先切换代理后再重试。'),
-    true
-  );
-  assert.equal(
-    loggingStatus.isKiroProxyFailure('Kiro 注册页返回 403（CloudFront 拒绝请求），通常是当前代理 IP 或区域触发了 AWS 风控，请更换代理后重试。'),
-    true
-  );
-  assert.equal(
-    loggingStatus.isKiroProxyFailure('步骤 2：邮箱已提交，当前已进入姓名页。'),
-    false
-  );
 });

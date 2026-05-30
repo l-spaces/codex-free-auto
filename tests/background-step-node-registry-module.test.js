@@ -7,22 +7,22 @@ test('background node registry preserves node metadata even before an executor i
   const api = new Function('self', `${source}; return self.MultiPageBackgroundStepRegistry;`)({});
   const registry = api.createNodeRegistry([
     {
-      flowId: 'kiro',
-      nodeId: 'kiro-open-register-page',
+      flowId: 'openai',
+      nodeId: 'open-chatgpt',
       displayOrder: 1,
-      executeKey: 'kiro-open-register-page',
+      executeKey: 'open-chatgpt',
       title: '打开注册页',
     },
   ]);
 
-  const node = registry.getNodeDefinition('kiro-open-register-page');
+  const node = registry.getNodeDefinition('open-chatgpt');
 
-  assert.equal(node.flowId, 'kiro');
+  assert.equal(node.flowId, 'openai');
   assert.equal(node.displayOrder, 1);
   assert.equal(node.title, '打开注册页');
   assert.throws(
-    () => registry.executeNode('kiro-open-register-page', {}),
-    /Missing node executor: kiro-open-register-page/
+    () => registry.executeNode('open-chatgpt', {}),
+    /Missing node executor: open-chatgpt/
   );
 });
 

@@ -10,13 +10,11 @@
       buildLuckmailSessionSettingsPayload,
       buildPersistentSettingsPayload,
       broadcastDataUpdate,
-      applyIpProxySettingsFromState,
       checkIcloudSession,
       clearAccountRunHistory,
       deleteAccountRunHistoryRecords,
       clearAutoRunTimerAlarm,
       clearFreeReusablePhoneActivation,
-      clearGrokSsoCookies,
       clearLuckmailRuntimeState,
       clearYydsMailRuntimeState,
       clearStopRequest,
@@ -37,7 +35,6 @@
       exportSettingsBundle,
       fetchGeneratedEmail,
       refreshGpcCardBalance,
-      testKiroRsConnection,
       finalizePhoneActivationAfterSuccessfulFlow,
       finalizeStep3Completion,
       finalizeStep5Completion = null,
@@ -133,9 +130,6 @@
       isStopError,
       isTabAlive,
       launchAutoRunTimerPlan,
-      ensureIpProxyAutoSyncAlarm,
-      clearIpProxyAutoSyncAlarm,
-      runIpProxyAutoSync,
       listIcloudAliases,
       listLuckmailPurchasesForManagement,
       markCurrentCustomEmailPoolEntryUsed,
@@ -152,13 +146,10 @@
       submitFlowContribution,
       registerTab,
       requestStop,
-      probeIpProxyExit,
       handleCloudflareSecurityBlocked,
       resetState,
       resumeAutoRun,
       selectLuckmailPurchase,
-      switchIpProxy,
-      changeIpProxyExit,
       setCurrentPayPalAccount,
       setCurrentMail2925Account,
       setCurrentHotmailAccount,
@@ -202,7 +193,7 @@
       if (!normalized || normalized === 'codex') {
         return fallbackFlowId;
       }
-      return normalized;
+      return normalized === 'openai' ? normalized : fallbackFlowId;
     }
 
     function normalizeMessageTargetId(flowId, targetId = '', fallback = '') {
@@ -211,7 +202,7 @@
         return rootScope.MultiPageFlowRegistry.normalizeTargetId(flowId, targetId, fallback);
       }
       const fallbackSourceId = String(
-        fallback || (normalizeMessageFlowId(flowId) === 'kiro' ? 'kiro-rs' : 'cpa')
+        fallback || 'cpa'
       ).trim().toLowerCase();
       return String(targetId || fallbackSourceId).trim().toLowerCase() || fallbackSourceId;
     }
@@ -231,7 +222,7 @@
         updates.targetId = normalizeMessageTargetId(
           activeFlowId,
           payload.targetId,
-          activeFlowId === 'kiro' ? 'kiro-rs' : 'cpa'
+          'cpa'
         );
       }
       return updates;
@@ -1146,13 +1137,6 @@
           return await clearFreeReusablePhoneActivation();
         }
 
-        case 'CLEAR_GROK_SSO_COOKIES': {
-          if (typeof clearGrokSsoCookies !== 'function') {
-            throw new Error('Grok SSO 清空能力未接入。');
-          }
-          return await clearGrokSsoCookies();
-        }
-
         case 'SET_FREE_REUSABLE_PHONE': {
           if (typeof setFreeReusablePhoneActivation !== 'function') {
             throw new Error('白嫖复用手机号记录能力未接入。');
@@ -1481,47 +1465,6 @@
             stateUpdates.currentNodeId = '';
           }
           await setState(stateUpdates);
-          const mergedState = await getState();
-          const hasIpProxyAutoSyncSettingChanged = (
-            Object.prototype.hasOwnProperty.call(updates, 'ipProxyAutoSyncEnabled')
-            || Object.prototype.hasOwnProperty.call(updates, 'ipProxyAutoSyncIntervalMinutes')
-          );
-          if (hasIpProxyAutoSyncSettingChanged) {
-            if (Boolean(mergedState?.ipProxyAutoSyncEnabled)) {
-              if (typeof ensureIpProxyAutoSyncAlarm === 'function') {
-                await ensureIpProxyAutoSyncAlarm(mergedState);
-              }
-            } else if (typeof clearIpProxyAutoSyncAlarm === 'function') {
-              await clearIpProxyAutoSyncAlarm();
-            }
-          }
-          const hasIpProxyUpdates = Object.keys(updates).some((key) => key.startsWith('ipProxy'));
-          const hasIpProxyEnabledUpdate = Object.prototype.hasOwnProperty.call(updates, 'ipProxyEnabled');
-          const previousIpProxyEnabled = Boolean(currentState?.ipProxyEnabled);
-          const nextIpProxyEnabled = hasIpProxyEnabledUpdate
-            ? Boolean(updates.ipProxyEnabled)
-            : previousIpProxyEnabled;
-          // 仅在“手动开关代理”时自动应用。
-          // 其他字段改动（host/账号/地区/session 等）需由“同步/下一条/检测出口/Change”显式触发。
-          const shouldApplyIpProxyOnSave = hasIpProxyUpdates
-            && hasIpProxyEnabledUpdate
-            && previousIpProxyEnabled !== nextIpProxyEnabled;
-          let proxyRouting = null;
-          if (shouldApplyIpProxyOnSave && typeof applyIpProxySettingsFromState === 'function') {
-            const isEnablingProxy = !previousIpProxyEnabled && nextIpProxyEnabled;
-            proxyRouting = await applyIpProxySettingsFromState(mergedState, {
-              // 手动开启时自动应用一次代理，不做出口探测；
-              // 出口探测由“同步/检测出口”按钮显式触发，避免开启即误判为失败。
-              skipExitProbe: true,
-              resetNetworkState: false,
-              forceAuthRebind: false,
-              suppressAuthRebind: !isEnablingProxy,
-            }).catch((error) => ({
-              applied: false,
-              reason: 'apply_failed',
-              error: error?.message || String(error || '代理应用失败'),
-            }));
-          }
           if (Boolean(currentState?.accountContributionEnabled) && typeof setAccountContributionMode === 'function') {
             await setAccountContributionMode(true, {
               adapterId: currentState?.contributionAdapterId,
@@ -1564,7 +1507,6 @@
           return {
             ok: true,
             modeValidation,
-            proxyRouting,
             state: await getState(),
           };
         }
@@ -1579,132 +1521,6 @@
             ...(message.payload || {}),
           }, {
             reason: message.payload?.reason,
-          });
-          return { ok: true, ...result };
-        }
-
-        case 'CHECK_KIRO_RS_CONNECTION': {
-          if (typeof testKiroRsConnection !== 'function') {
-            throw new Error('kiro.rs 连接测试能力尚未接入。');
-          }
-          const currentState = await getState();
-          const activeFlowId = normalizeMessageFlowId(
-            message.payload?.activeFlowId || currentState?.activeFlowId || 'kiro',
-            'kiro'
-          );
-          const targetId = normalizeMessageTargetId(
-            activeFlowId,
-            message.payload?.targetId || currentState?.targetId || 'kiro-rs',
-            'kiro-rs'
-          );
-          const nestedTargetConfig = currentState?.settingsState?.flows?.kiro?.targets?.[targetId]
-            || currentState?.flows?.kiro?.targets?.[targetId]
-            || {};
-          const baseUrl = String(
-            message.payload?.baseUrl
-            ?? nestedTargetConfig.baseUrl
-            ?? currentState?.kiroRsUrl
-            ?? ''
-          ).trim();
-          const apiKey = String(
-            message.payload?.apiKey
-            ?? nestedTargetConfig.apiKey
-            ?? currentState?.kiroRsKey
-            ?? ''
-          );
-          const result = await testKiroRsConnection(baseUrl, apiKey);
-          return {
-            ok: Boolean(result?.ok),
-            targetId,
-            status: Number(result?.status) || 0,
-            message: String(result?.message || '').trim(),
-          };
-        }
-
-        case 'RUN_IP_PROXY_AUTO_SYNC_NOW': {
-          if (typeof runIpProxyAutoSync !== 'function') {
-            throw new Error('IP 代理自动同步能力尚未接入。');
-          }
-          const result = await runIpProxyAutoSync('manual');
-          return { ok: true, ...result };
-        }
-
-        case 'REFRESH_IP_PROXY_POOL': {
-          if (typeof refreshIpProxyPool !== 'function') {
-            throw new Error('IP 代理池能力尚未接入。');
-          }
-          const result = await refreshIpProxyPool({
-            maxItems: message.payload?.maxItems,
-            mode: message.payload?.mode,
-            skipExitProbe: message.payload?.skipExitProbe,
-          });
-          return { ok: true, ...result };
-        }
-
-        case 'SWITCH_IP_PROXY': {
-          if (typeof switchIpProxy !== 'function') {
-            throw new Error('IP 代理切换能力尚未接入。');
-          }
-          const result = await switchIpProxy(message.payload?.direction || 'next', {
-            maxItems: message.payload?.maxItems,
-            mode: message.payload?.mode,
-            forceRefresh: message.payload?.forceRefresh,
-            skipExitProbe: message.payload?.skipExitProbe,
-          });
-          return { ok: true, ...result };
-        }
-
-        case 'CHANGE_IP_PROXY_EXIT': {
-          if (typeof changeIpProxyExit !== 'function') {
-            throw new Error('IP 代理 Change 能力尚未接入。');
-          }
-          const result = await changeIpProxyExit({
-            mode: message.payload?.mode,
-            skipExitProbe: message.payload?.skipExitProbe,
-          });
-          return { ok: true, ...result };
-        }
-
-        case 'PROBE_IP_PROXY_EXIT': {
-          if (message.source === 'sidepanel') {
-            await lockAutomationWindowFromMessage(message, sender);
-          }
-          if (typeof probeIpProxyExit !== 'function') {
-            throw new Error('IP 代理出口检测能力尚未接入。');
-          }
-          const probeState = await getState();
-          const mode = typeof normalizeIpProxyMode === 'function'
-            ? normalizeIpProxyMode(probeState?.ipProxyMode)
-            : String(probeState?.ipProxyMode || 'account').trim().toLowerCase();
-          const provider = typeof normalizeIpProxyProviderValue === 'function'
-            ? normalizeIpProxyProviderValue(probeState?.ipProxyService)
-            : String(probeState?.ipProxyService || '').trim().toLowerCase();
-          const is711AccountMode = mode === 'account' && provider === '711proxy';
-          const previousReason = String(probeState?.ipProxyAppliedReason || '').trim().toLowerCase();
-          const previousExitError = String(probeState?.ipProxyAppliedExitError || '').trim();
-          const hadMissingAuthChallenge = /challenge=0|provided=0|未触发代理鉴权挑战|未收到 407/i.test(previousExitError);
-          const shouldPreRebindBeforeProbe = Boolean(
-            probeState?.ipProxyEnabled
-            && is711AccountMode
-            && (hadMissingAuthChallenge || previousReason === 'connectivity_failed')
-          );
-          const timeoutMs = Number(message.payload?.timeoutMs) > 0
-            ? Number(message.payload.timeoutMs)
-            : (is711AccountMode ? (shouldPreRebindBeforeProbe ? 15000 : 12000) : undefined);
-
-          // 手动“检测出口”前先轻量应用当前配置，避免读取到旧代理链路状态。
-          if (probeState?.ipProxyEnabled && typeof applyIpProxySettingsFromState === 'function') {
-            await applyIpProxySettingsFromState(probeState, {
-              skipExitProbe: true,
-              resetNetworkState: shouldPreRebindBeforeProbe,
-              forceAuthRebind: shouldPreRebindBeforeProbe,
-              suppressAuthRebind: !shouldPreRebindBeforeProbe,
-            }).catch(() => null);
-          }
-
-          const result = await probeIpProxyExit({
-            timeoutMs,
-            authRebindMaxAttempts: is711AccountMode ? 1 : undefined,
           });
           return { ok: true, ...result };
         }
